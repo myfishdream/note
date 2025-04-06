@@ -3,7 +3,7 @@ title: 认知偏差+情绪放大
 date: 2025-4-6
 category: Life
 tags:
-    - 心里
+    - 心理
 description: 现在的我，是否比1年前的我更强？
 ---
 

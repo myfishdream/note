@@ -3,6 +3,7 @@ page: true
 title: About
 description: About me
 aside: false
+lastUpdated: false
 ---
 
 ## About me

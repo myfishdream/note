@@ -56,11 +56,11 @@
 a[rel~='noreferrer']:visited {
     color: var(--vp-c-brand);
     font-weight: 500 !important;
-    border-bottom: 1px solid var(--vp-c-brand);
+    /* border-bottom: 2px solid var(--vp-c-brand-1); */
 }
 
 .content a[rel~='noreferrer']:hover {
-    color: #888;
+    color: var(--vp-c-brand);
 }
 
 h1 {
