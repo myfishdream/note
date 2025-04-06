@@ -1,7 +1,7 @@
 ---
 title: JavaScrip模块化
 date: 2025-02-17
-category: 笔记
+category: Note
 tags:
     - JavaScript
 description: 学习JavaScript的一些笔记
