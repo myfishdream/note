@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: './package-lock.json'
       - name: 安装依赖项
         run: npm ci
       - name: 使用 VitePress 构建
