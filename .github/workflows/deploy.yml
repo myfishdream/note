@@ -36,7 +36,7 @@ jobs:
       - name: 上传构件
         uses: actions/upload-pages-artifact@v3
         with:
-          path: note/.vitepress/dist
+          path: .vitepress/dist
   # 2. 部署
   deploy:
     environment:
