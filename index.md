@@ -1,6 +1,6 @@
 ---
 page: true
-title: home
+title: Home
 aside: false
 ---
 <script setup>
