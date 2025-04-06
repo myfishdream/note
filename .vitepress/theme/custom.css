@@ -14,6 +14,7 @@
     --date-font-family: Georgia, sans-serif;
     --bt-theme-title: #000;
 }
+
 .dark {
     --vp-c-brand: #3b82f6;
     --bt-theme-title: #fff
@@ -23,7 +24,8 @@
 /* theme reset start */
 
 .Layout {
-    min-height: calc(100vh - 78px) !important; /* reduce copyright */
+    min-height: calc(100vh - 78px) !important;
+    /* reduce copyright */
 }
 
 .vp-doc a {
@@ -31,32 +33,42 @@
     font-weight: 500;
     text-decoration: none;
 }
+
 .vp-doc p {
     font-size: 0.9375rem;
 }
-.title {
+
+@font-face {
+    font-family: "Yuu";
+    font-weight: 400;
+    src: url("/static/font/yuu.woff") format("woff");
+    font-display: swap;
+}
+
+.VPNavBarTitle .title,
+.site-footer .title {
+    font-family: "Yuu", Optima, sans-serif !important;
+    color: var(--bt-theme-title) !important;
     font-size: 1.5rem !important;
-    letter-spacing: 1px;
-    font-weight: 600 !important;
-    text-transform: uppercase;
-    font-family: Optima, sans-serif !important;
 }
-.title a {
-    color: var(--bt-theme-title)!important;
-}
-.content a[rel~='noreferrer']:link, a[rel~='noreferrer']:visited {
+
+.content a[rel~='noreferrer']:link,
+a[rel~='noreferrer']:visited {
     color: var(--vp-c-brand);
     font-weight: 500 !important;
     border-bottom: 1px solid var(--vp-c-brand);
 }
+
 .content a[rel~='noreferrer']:hover {
     color: #888;
 }
+
 h1 {
     font-size: 1.375rem !important;
     font-weight: 500 !important;
     padding-top: 14px;
 }
+
 h2 {
     font-size: 1.125rem !important;
     font-weight: 500 !important;
@@ -64,26 +76,32 @@ h2 {
     border-top: none !important;
     margin: inherit !important;
 }
+
 h3 {
     font-size: 1rem !important;
     font-weight: 500 !important;
 }
+
 /* for aside start */
 .aside {
     position: fixed !important;
     right: 24px;
 }
+
 .VPDoc {
     padding-top: 10px !important;
 }
+
 .container {
     max-width: 60rem !important;
 }
+
 .VPContent .container {
     max-width: 60rem !important;
     display: block !important;
     position: relative;
 }
+
 /* content maxWidth*/
 .VPDoc.has-aside .content-container {
     max-width: 60rem !important;
@@ -95,6 +113,7 @@ h3 {
         padding-top: 10px !important;
     }
 }
+
 @media (min-width: 960px) {
     .VPDoc {
         padding-top: 10px !important;
@@ -103,13 +122,16 @@ h3 {
     .VPDoc:not(.has-sidebar) .content {
         max-width: inherit !important;
     }
+
     .VPDocAsideOutline .content {
         padding-left: 14px !important;
     }
+
     .content {
         padding: 0 !important;
     }
 }
+
 /* when witdh less 1440 hide the aside 小于1440就到下一挡*/
 @media (min-width: 1280px) {
     .VPDoc .aside {
@@ -130,15 +152,19 @@ h3 {
         padding-top: 10px !important;
         padding-bottom: 20px !important;
     }
+
     .vp-doc h1 {
         font-size: 1.25rem !important;
     }
+
     .posts {
         padding: 4px;
     }
+
     .post-dot {
         margin-right: 4px;
     }
+
     .post-container {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -157,6 +183,7 @@ h3 {
     justify-content: space-between;
     align-items: center;
 }
+
 .post-dot {
     display: inline-block;
     margin-right: 10px;
@@ -172,9 +199,11 @@ h3 {
     font-size: 0.9375rem;
     font-weight: 400;
 }
+
 .post-container:hover {
     color: var(--vp-c-brand);
 }
+
 .date {
     color: var(--date-color);
     font-family: var(--date-font-family);
@@ -183,6 +212,7 @@ h3 {
 .post-info {
     font-size: 12px;
 }
+
 .post-info span {
     display: inline-block;
     padding: 0 8px;
@@ -192,4 +222,3 @@ h3 {
     border-radius: 2px;
     color: var(--vp-c-text-1);
 }
-
