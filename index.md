@@ -1,7 +1,8 @@
 ---
 page: true
-title: home
+title: Home
 aside: false
+lastUpdated: false
 ---
 <script setup>
 import Page from "./.vitepress/theme/components/Page.vue";
