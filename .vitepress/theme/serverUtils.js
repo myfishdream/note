@@ -1,10 +1,10 @@
-import { globby } from 'globby'
-import matter from 'gray-matter'
-import fs from 'fs-extra'
-import { resolve } from 'path'
+import { globby } from 'globby'     // globby 是一个用于文件路径匹配的库，可以用于获取指定目录下的所有文件路径
+import matter from 'gray-matter'     // gray-matter 是一个用于解析markdown文件的库，可以用于解析markdown文件的frontmatter
+import fs from 'fs-extra'            // fs-extra 是一个用于文件操作的库，可以用于读取和写入文件
+import { resolve } from 'path'        // resolve 是一个用于解析文件路径的库，可以用于解析文件路径
 
 async function getPosts(pageSize) {
-    let paths = await globby(['posts/**.md'])
+    let paths = await globby(['posts/**.md'])   // 获取posts目录下的所有md文件
 
     //生成分页页面markdown
     await generatePaginationPages(paths.length, pageSize)
