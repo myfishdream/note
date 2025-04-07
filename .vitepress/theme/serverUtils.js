@@ -1,10 +1,9 @@
 import { globby } from 'globby'
 import matter from 'gray-matter'
-// @types/fs-extra 解决fs-extra的类型问题
 import fs from 'fs-extra'
 import { resolve } from 'path'
 
-async function getPosts(pageSize: number) {
+async function getPosts(pageSize) {
     let paths = await globby(['posts/**.md'])
 
     //生成分页页面markdown
@@ -21,11 +20,11 @@ async function getPosts(pageSize: number) {
             }
         })
     )
-    posts.sort(_compareDate as any)
+    posts.sort(_compareDate)
     return posts
 }
 
-async function generatePaginationPages(total: number, pageSize: number) {
+async function generatePaginationPages(total, pageSize) {
     //  pagesNum
     let pagesNum = total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
     const paths = resolve('./')
@@ -60,8 +59,8 @@ function _convertDate(date = new Date().toString()) {
     return json_date.split('T')[0]
 }
 
-function _compareDate(obj1: { frontMatter: { date: number } }, obj2: { frontMatter: { date: number } }) {
+function _compareDate(obj1, obj2) {
     return obj1.frontMatter.date < obj2.frontMatter.date ? 1 : -1
 }
 
-export { getPosts }
+export { getPosts } 

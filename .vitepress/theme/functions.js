@@ -1,28 +1,19 @@
-type Post = {
-    frontMatter: {
-        date: string
-        title: string
-        category: string
-        tags: string[]
-        description: string
-    }
-    regularPath: string
-}
-
-export function initTags(posts: Post[]): Record<string, Post[]> {
-    const data: Record<string, Post[]> = {}
+// 初始化标签
+export function initTags(posts) {
+    const data = {}
     posts.forEach((post) => {
         post.frontMatter.tags?.forEach((tag) => {
             data[tag] = data[tag] || []
             data[tag].push(post)
         })
     })
-
+    // 按标签数量降序排序
     return Object.fromEntries(Object.entries(data).sort(([, posts1], [, posts2]) => posts2.length - posts1.length))
 }
 
-export function initCategory(posts: Post[]) {
-    const data: Record<string, Post[]> = {}
+// 初始化分类
+export function initCategory(posts) {
+    const data = {}
     for (let index = 0; index < posts.length; index++) {
         const element = posts[index]
         const category = element.frontMatter.category
@@ -38,8 +29,9 @@ export function initCategory(posts: Post[]) {
     return data
 }
 
-export function useYearSort(post: Post[]) {
-    const data: Post[][] = []
+// 年份排序
+export function useYearSort(post) {
+    const data = []
     let year = '0'
     let num = -1
     for (let index = 0; index < post.length; index++) {
@@ -57,4 +49,4 @@ export function useYearSort(post: Post[]) {
         }
     }
     return data
-}
+} 

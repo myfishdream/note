@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { useData, withBase } from 'vitepress'
 import { computed } from 'vue'
 import { useYearSort } from '../functions'

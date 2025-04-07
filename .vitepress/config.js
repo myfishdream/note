@@ -1,9 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
-import type MarkdownIt from 'markdown-it'
-import type { UserConfig } from 'vitepress'
-import type { ThemeConfig } from 'vitepress'
 
 //每页的文章数量
 const pageSize = 10
@@ -17,7 +14,7 @@ export default defineConfig({
     ignoreDeadLinks: true,
     lastUpdated: true,
     markdown: {
-        config: (md: MarkdownIt) => {
+        config: (md) => {
             // use more markdown-it plugins!
             md.use(mdItCustomAttrs, 'image', {
                 'data-fancybox': "gallery"
@@ -28,8 +25,10 @@ export default defineConfig({
         }
     },
     head: [
-        ["link", { rel: "icon", href: "https://blog.yumeng.icu/logo.png" }],
-        ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },], // //全局控制图片放大样式
+        [
+            "link",
+            { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },   //全局控制图片放大样式
+        ],
         ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
     ],
     themeConfig: {
@@ -43,12 +42,6 @@ export default defineConfig({
         },
         posts: await getPosts(pageSize),
         website: '/pages/about', //copyright link
-        // 评论的仓库地址
-        comment: {
-            repo: 'airene/vitepress-blog-pure',
-            themes: 'github-light',
-            issueTerm: 'pathname'
-        },
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Category', link: '/pages/category' },
@@ -59,16 +52,14 @@ export default defineConfig({
         search: {
             provider: 'local',
         },
-        //outline:[2,3],
         outline: {
             label: '文章摘要'
         },
-        socialLinks: [{ icon: 'github' as const, link: 'https://github.com/myfishdream' }]
-    } satisfies ThemeConfig,
+        socialLinks: [{ icon: 'github', link: 'https://github.com/myfishdream' }]
+    },
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
 
     vite: {
-        //build: { minify: false }
         server: { port: 5000 }
     }
-} satisfies UserConfig)
+}) 
