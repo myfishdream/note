@@ -3,14 +3,31 @@ import matter from 'gray-matter'     // gray-matter 是一个用于解析markdow
 import fs from 'fs-extra'            // fs-extra 是一个用于文件操作的库，可以用于读取和写入文件
 import { resolve } from 'path'        // resolve 是一个用于解析文件路径的库，可以用于解析文件路径
 
+// 待发布文档的标识
+const DRAFT_FLAG = 'draft: true'
+
 async function getPosts(pageSize) {
     let paths = await globby(['posts/**.md'])   // 获取posts目录下的所有md文件
 
+    // 过滤掉待发布的文档
+    let validPaths = []
+    for (const path of paths) {
+        const content = await fs.readFile(path, 'utf-8')
+        const { data } = matter(content)
+        
+        // 检查是否包含待发布标识
+        if (!data.draft) {
+            validPaths.push(path)
+        } else {
+            console.log(`跳过待发布文档: ${path}`)
+        }
+    }
+
     //生成分页页面markdown
-    await generatePaginationPages(paths.length, pageSize)
+    await generatePaginationPages(validPaths.length, pageSize)
 
     let posts = await Promise.all(
-        paths.map(async (item) => {
+        validPaths.map(async (item) => {
             const content = await fs.readFile(item, 'utf-8')
             const { data } = matter(content)
             data.date = _convertDate(data.date)
