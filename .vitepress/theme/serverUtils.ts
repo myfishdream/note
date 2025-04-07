@@ -37,6 +37,7 @@ page: true
 title: ${i === 1 ? 'Home' : 'Page ' + i}
 aside: false
 lastUpdated: false
+comments: false
 ---
 <script setup>
 import Page from "./.vitepress/theme/components/Page.vue";

@@ -4,6 +4,7 @@ title: About
 description: About me
 aside: false
 lastUpdated: false
+comments: false
 ---
 
 ## About me

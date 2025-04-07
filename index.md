@@ -3,6 +3,7 @@ page: true
 title: Home
 aside: false
 lastUpdated: false
+comments: false
 ---
 <script setup>
 import Page from "./.vitepress/theme/components/Page.vue";
