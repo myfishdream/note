@@ -1,5 +1,9 @@
 import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
+import mdItCustomAttrs from 'markdown-it-custom-attrs'
+import type MarkdownIt from 'markdown-it'
+import type { UserConfig } from 'vitepress'
+import type { ThemeConfig } from 'vitepress'
 
 //每页的文章数量
 const pageSize = 10
@@ -13,11 +17,20 @@ export default defineConfig({
     ignoreDeadLinks: true,
     lastUpdated: true,
     markdown: {
+        config: (md: MarkdownIt) => {
+            // use more markdown-it plugins!
+            md.use(mdItCustomAttrs, 'image', {
+                'data-fancybox': "gallery"
+            })
+        },
         image: {
             lazyLoading: true,
-
         }
     },
+    head: [
+        ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },], // //全局控制图片放大样式
+        ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
+    ],
     themeConfig: {
         externalLinkIcon: true,
         lastUpdated: {
@@ -49,17 +62,12 @@ export default defineConfig({
         outline: {
             label: '文章摘要'
         },
-        socialLinks: [{ icon: 'github', link: 'https://github.com/myfishdream' }]
-    } as any,
+        socialLinks: [{ icon: 'github' as const, link: 'https://github.com/myfishdream' }]
+    } satisfies ThemeConfig,
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
 
     vite: {
         //build: { minify: false }
         server: { port: 5000 }
     }
-    /*
-      optimizeDeps: {
-          keepNames: true
-      }
-      */
-})
+} satisfies UserConfig)
