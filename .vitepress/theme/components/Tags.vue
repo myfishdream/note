@@ -19,23 +19,44 @@
     </a>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { initTags } from '../functions'
 
-let url = location.href.split('?')[1]
-let params = new URLSearchParams(url)
 const { theme } = useData()
 const data = computed(() => initTags(theme.value.posts || []))
-let selectTag = ref(params.get('tag') ? params.get('tag') : '')
+let selectTag = ref('')
+
+// 从URL中获取tag参数
+function getTagFromUrl() {
+    const url = window.location.href
+    const urlObj = new URL(url)
+    return urlObj.searchParams.get('tag')
+}
+
+// 切换标签并更新URL
 const toggleTag = (tag) => {
     selectTag.value = tag
+    // 更新URL，但不刷新页面
+    const url = new URL(window.location.href)
+    url.searchParams.set('tag', tag)
+    window.history.pushState({}, '', url.toString())
 }
-// choose the first key
-const defaultDisplayTag = Object.keys(data.value)[0]
-if (defaultDisplayTag) {
-    toggleTag(defaultDisplayTag)
-}
+
+// 组件挂载时从URL中读取tag参数
+onMounted(() => {
+    const tagFromUrl = getTagFromUrl()
+    if (tagFromUrl && data.value[tagFromUrl]) {
+        // 如果URL中有tag参数且该标签存在，则选中该标签
+        selectTag.value = tagFromUrl
+    } else {
+        // 否则选择第一个标签
+        const defaultDisplayTag = Object.keys(data.value)[0]
+        if (defaultDisplayTag) {
+            toggleTag(defaultDisplayTag)
+        }
+    }
+})
 </script>
 
 <style scoped>

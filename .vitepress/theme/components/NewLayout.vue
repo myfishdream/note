@@ -6,7 +6,7 @@
             </div>
         </template>
         <template #doc-footer-before>
-            <Giscus />
+            <!-- <Giscus /> -->
         </template>
     </Layout>
     <Copyright />
@@ -14,7 +14,7 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
-import Giscus from './giscus.vue'
+// import Giscus from './giscus.vue'
 import { withBase } from "vitepress";
 const { Layout } = DefaultTheme
 </script>
