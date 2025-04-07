@@ -13,6 +13,7 @@ export default defineConfig({
     description: 'vitepress,blog,blog-theme',
     ignoreDeadLinks: true,
     lastUpdated: true,
+    cleanUrls: true,    
     markdown: {
         config: (md) => {
             // use more markdown-it plugins!

@@ -33,7 +33,7 @@ async function getPosts(pageSize) {
             data.date = _convertDate(data.date)
             return {
                 frontMatter: data,
-                regularPath: `/${item.replace('.md', '.html')}`
+                regularPath: `/${item.replace('.md', '')}`
             }
         })
     )
