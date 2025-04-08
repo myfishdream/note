@@ -128,7 +128,7 @@ entryFileNames: 'tree-[name].js'
 
 **输出结果:**
 
-![image-20250408134406929]()
+![image-20250408134406929](https://github.com/yumengjh/picx-images-hosting/raw/master/20250408/IMG_0500.8ojvn6zhmn.JPEG)
 
 将一组文件转换为另一种格式，并同时保持**文件结构**和**导出签名**，推荐的方法是**将每个文件变成一个入口文件**
 
