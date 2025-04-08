@@ -75,3 +75,124 @@ import * from 'lodash'; // Rollup 不会打包它，但运行时能从全局变�
 官方文档：https://cn.rollupjs.org/configuration-options/#external
 
 ### input
+
+**数组**：
+
+```js
+input: ["src/index.js", "src/log.js"]
+```
+
+指定了多个入口文件，每个文件都会被视为一个独立的模块进行打包，最终生成**对应**的**多个输出文件**，需要配合`output.dir`配置项使用。
+
+> [!important]
+>
+> 文件名通常由`Rollup`根据入口文件路径自动生成，但可以通过额外配置进行定制
+
+**对象**：
+
+```js
+input: {
+    a: "src/index.js",
+    "b/index": "src/log.js"
+}
+```
+
+指定了多个入口，并为每个入口指定一个**名称（键名）**，这样在输出的文件名中的可以使用这些名称来区分不同的模块。
+
+> [!important]
+>
+> 对象的键表示打包后的文件名
+>
+> 可以是**相对路径**或**自定义名称**，值则是对应的入口文件**路径**
+
+> [!important]
+>
+> 当选项的值使用对象形式时，可以通过在名称中添加 `/` 来将入口文件放入不同的子文件夹。
+
+**示例:**
+
+```js
+export default {
+  input: {
+    main: 'src/main.js', // 将 src/main.js 打包为 main.js
+    'utils/index': 'src/app.js' // 将 src/app.js 打包为 index.js
+  },
+  output: {
+    dir: 'dist', // 输出目录
+    format: 'esm', // 输出格式
+entryFileNames: 'tree-[name].js'
+  }
+};
+
+```
+
+**输出结果:**
+
+![image-20250408134406929](./assets/image-20250408134406929.png)
+
+将一组文件转换为另一种格式，并同时保持**文件结构**和**导出签名**，推荐的方法是**将每个文件变成一个入口文件**
+
+> **Rollup官网示例**
+
+```js
+// @filename: glob.d.ts
+declare module 'glob' {
+export function globSync(pattern: string): string[];
+}
+
+// @filename: index.js
+// ---cut---
+import { globSync } from 'glob';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export default {
+input: Object.fromEntries(
+globSync('src/**/*.js').map(file => [
+// 这里将删除 `src/` 以及每个文件的扩展名。
+// 因此，例如 src/nested/foo.js 会变成 nested/foo
+path.relative(
+'src',
+file.slice(0, file.length - path.extname(file).length)
+),
+// 这里可以将相对路径扩展为绝对路径，例如
+// src/nested/foo 会变成 /project/src/nested/foo.js
+fileURLToPath(new URL(file, import.meta.url))
+])
+),
+output: {
+format: 'es',
+dir: 'dist'
+}
+};
+```
+
+**逐行解析**：
+
+```js
+import { globSync } from 'glob'; // 从 glob 库中导入的同步方法，用于匹配文件路径模式。
+import path from 'node:path'; // Node.js 内置模块，用于处理和转换文件路径。
+import { fileURLToPath } from 'node:url'; // 从 node:url 模块中导入的方法，用于将文件 URL 转换为文件系统路径。
+```
+
+```js
+input: Object.fromEntries(); // 将键值对数组转换为对象。
+
+globSync('src/**/*.js') // 使用 globSync 方法同步地查找所有匹配 src/**/*.js 模式的文件，即 src 目录下的所有 .js 文件（包括子目录中的文件）。
+
+map(file => [ ... ]) //对每一个找到的文件路径进行映射操作，生成一个包含两个元素的数组。
+```
+
+```js
+path.relative('src', file.slice(0, file.length - path.extname(file).length))
+
+file.slice(0, file.length - path.extname(file).length) // 去掉文件的扩展名。例如src/nested/foo.js 变成 src/nested/foo。
+
+path.relative('src', ...) // 计算相对于 src 目录的路径。例如，src/nested/foo 变成nested/foo。
+```
+
+```js
+fileURLToPath(new URL(file, import.meta.url))
+
+
+```
