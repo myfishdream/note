@@ -132,7 +132,7 @@ entryFileNames: 'tree-[name].js'
 
 将一组文件转换为另一种格式，并同时保持**文件结构**和**导出签名**，推荐的方法是**将每个文件变成一个入口文件**
 
-> **Rollup官网示例**
+> **Rollup官网示例** https://cn.rollupjs.org/configuration-options/#input
 
 ```js
 // @filename: glob.d.ts
@@ -171,7 +171,9 @@ dir: 'dist'
 
 ```js
 import { globSync } from 'glob'; // 从 glob 库中导入的同步方法，用于匹配文件路径模式。
+
 import path from 'node:path'; // Node.js 内置模块，用于处理和转换文件路径。
+
 import { fileURLToPath } from 'node:url'; // 从 node:url 模块中导入的方法，用于将文件 URL 转换为文件系统路径。
 ```
 
@@ -194,5 +196,14 @@ path.relative('src', ...) // 计算相对于 src 目录的路径。例如，src/
 ```js
 fileURLToPath(new URL(file, import.meta.url))
 
+new URL(file, import.meta.url) // 创建一个基于当前模块URL的新的URL对象。
 
+fileURLToPath(...)	// 将这个URL转换为文件系统路径，例如：src/main/eoo.js变成/project/src/main/eoo.js
 ```
+
+```js
+format: 'es'	// 指定输出的格式为ES模块（ESM)
+dir: 'dist'	// 指定输出的目录为dist
+```
+
+**总结**：这段代码的作用是，使用`globSync`查找`src`目录下的所有的`.js`文件，将这些文件路径转换为相对于`src`目录的路径，并且去掉文件扩展名，再**将这些相对路径作为键，对应的绝对路径作为值**，生成一个对象作为`input`的参数，让这些文件打包到`dist`目录中，配置了`output`输出为ES模块格式。
