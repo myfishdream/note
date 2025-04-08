@@ -43,7 +43,7 @@ outline: [2,3]
 - **导出（暴露）：**模块公开其内部的一部分（如变量、函数等），使这些内容可以被其他模块使用。  
 - **导入（引入）：**模块引入和使用其他模块导出的内容，以重用代码和功能。  
 
-![](https://myfishdream.github.io/picx-images-hosting/20250407/image-20250217202039964.4joa9wpzth.webp)
+![](https://yumengjh.github.io/picx-images-hosting/20250407/image-20250217202039964.4joa9wpzth.webp)
 
 
 ## **CommonJS 规范**
@@ -113,7 +113,7 @@ const student = require('./student')
 >
 > 每个模块内部的：`this`、`exports`、`modules.exports`在初始时，都指向**<span style="color:#CC0000;">同一个</span>**空对象，该空对象就是当前模块导出的数据，如下图：
 >
-> ![](https://myfishdream.github.io/picx-images-hosting/20250407/image-20250217202918792.491ggraro6.webp)
+> ![](https://yumengjh.github.io/picx-images-hosting/20250407/image-20250217202918792.491ggraro6.webp)
 >
 >
 > 无论如何修改导出对象，最终导出的都是`module.exports`的值。
