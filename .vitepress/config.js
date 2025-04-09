@@ -44,8 +44,8 @@ export default defineConfig({
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Category', link: '/pages/category' },
-            { text: 'Archives', link: '/pages/archives' },
             { text: 'Tags', link: '/pages/tags' },
+            { text: 'Archives', link: '/pages/archives' },
             { text: 'About', link: '/pages/about' },
         ],
         search: {

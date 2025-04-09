@@ -15,7 +15,10 @@
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
         </div>
-        <div class="date">{{ article.frontMatter.date }}</div>
+        <div class="date">
+            <span v-if="article.frontMatter.isWithinWeek">{{ article.frontMatter.relativeTime }}</span>
+            <span v-else>{{ article.frontMatter.date }}</span>
+        </div>
     </a>
 </template>
 <script setup>
