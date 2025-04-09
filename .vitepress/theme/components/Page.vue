@@ -84,6 +84,7 @@ defineProps({
     border-right: none;
     font-weight: 400;
     border-radius: 20px;
+    margin: 0 4px;
 }
 .link.active {
     background: var(--vp-c-text-1);
