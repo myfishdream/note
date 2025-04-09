@@ -207,3 +207,128 @@ dir: 'dist'	// 指定输出的目录为dist
 ```
 
 **总结**：这段代码的作用是，使用`globSync`查找`src`目录下的所有的`.js`文件，将这些文件路径转换为相对于`src`目录的路径，并且去掉文件扩展名，再**将这些相对路径作为键，对应的绝对路径作为值**，生成一个对象作为`input`的参数，让这些文件打包到`dist`目录中，配置了`output`输出为ES模块格式。
+
+### jsx
+
+**什么是JSX？**
+
+JSX是一种语法扩展，主要用于React框架中，它允许开发者在JavaScript中直接编写类似HTML的结构，
+
+JSX最终会被编译为标准的JavaScript代码。
+
+通常是`React.createElement()`调用，用来方便的构建UI组件
+
+**jsx.mode**
+
+该选项将决定如何处理 JSX
+
+- `preserve`：将在输出中保持 JSX 语法
+- `classic`：将执行 JSX 转换，旧版本的 React 或其他框架，例如 [Preact](https://preactjs.com)
+- `automatic`：将使用 React 17 引入的 [新版 JSX 转换](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html) 执行 JSX 转换
+
+**jsx.factory**
+
+当rollup在`classic`模式或`automatic`模式的回退中用来创建JSX元素的函数
+
+对于`React`，通常是`React.createElement`，对于其他框架，则可能为 `h`
+
+**jsx.fragment**
+
+用于创建JSX片段的元素函数
+
+**jsx.importSource**
+
+导入**元素工厂函数**及**片段元素**的位置
+
+**jsx.jsxImportSource**
+
+当使用 `automatic` 模式时，将指定从哪里导入进行该转换所需的 `jsx`、`jsxs` 和 `Fragment` 辅助函数，这些是无法从全局变量获取的。
+
+**jsx.preset**
+
+允许选择上述预设中的一个，同时覆盖一些选项。
+
+### output.dir
+
+用于指定所有生成的**chunk**被放置在哪个目录中。如果生成的**chunk**个数是一个以上，那么该选项是必须的，**否则使用`file`选项代替**。
+
+### output.file
+
+用于指定要写入的文件，如果适用的话，也可以用于生成 **sourcemap**。只有在生成的 chunk 不超过一个的情况下才可以使用。
+
+### output.format 
+
+用于指定生成的bundle的格式
+
+`amd` 异步模块加载，适用于require.js等模块加载器
+
+`cjs` commonjs，适用于Node环境和其他打包工具
+
+`es`    将bundle保留为ES模块文件，适用于其他打包工具，及支持`<script type=module>`的浏览器（别名：`esm`，`module`）
+
+`iife` 自执行函数，适用于`<script>`标签，为你的应用程序创建 bundle，`iife` 表示：“自执行 [函数表达式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)”
+
+`umd` 通用模块定义规范，同时支持`amd`，`cjs`，`iife`
+
+`system` SystemJS模块加载器的原生格式
+
+### output.globals
+
+用于在`umd` / `iife` bundle 中，使用 `id: variableName` 键值对指定外部依赖
+
+```js
+import $ from 'jquery';
+```
+
+告诉 Rollup `jquery` 是外部依赖，`jquery` 模块的 ID 为全局变量 `$`：
+
+```js
+export default {
+// ...
+external: ['jquery'],
+output: {
+format: 'iife',
+name: 'MyBundle',
+globals: {
+jquery: '$'
+}
+}
+};
+
+/*
+var MyBundle = (function ($) {
+  // 这里编辑代码
+}($));
+*/
+```
+
+或者，可以提供一个函数，将外部模块的 ID 变成一个**全局变量名**。
+
+当要用全局变量替换本地文件时，需要使用一个绝对路径的 ID。
+
+```js
+// rollup.config.js
+import { fileURLToPath } from 'node:url';
+const externalId = fileURLToPath(
+new URL(
+'src/some-local-file-that-should-not-be-bundled.js',
+import.meta.url
+)
+);
+
+export default {
+//...,
+external: [externalId],
+output: {
+format: 'iife',
+name: 'MyBundle',
+globals: {
+[externalId]: 'globalVariable'
+}
+}
+};
+```
+
+### output.name 
+
+...
