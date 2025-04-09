@@ -1,5 +1,5 @@
 ---
-title: 认知偏差+情绪放大
+title: 认知偏差与情绪放大：如何正确看待自我成长
 date: 2025-4-6
 category: Life
 tags:
