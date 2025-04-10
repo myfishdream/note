@@ -43,7 +43,7 @@ defineProps({
 
 <style scoped>
 .post-list {
-    border-bottom: 1px dashed var(--vp-c-divider);
+    /* border-bottom: 1px dashed var(--vp-c-divider); */
     padding: 14px 0 14px 0;
 }
 .post-header {

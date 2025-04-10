@@ -224,3 +224,9 @@ h3 {
     border-radius: 2px;
     color: var(--vp-c-text-1);
 }
+
+
+/* 匹配data-fancybox="gallery"的图片 */
+img[data-fancybox="gallery"] {
+    border-radius: 10px;
+}
