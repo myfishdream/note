@@ -1,12 +1,11 @@
 ---
 title: GitHub都有哪些功能，GitHub Desktop功能与git区别
-date: 2025-04-10 10:30
+date: 2025-04-10
 category: Note
 tags:
     - Github
     - Git
 description: 功能介绍
-outline: [2,3]
 ---
 
 # GitHub + Git整理
