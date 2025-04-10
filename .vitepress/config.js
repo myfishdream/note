@@ -31,7 +31,7 @@ export default defineConfig({
         ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
     ],
     themeConfig: {
-        logo: 'https://blog.yumeng.icu/logo.png',
+        // logo: 'https://blog.yumeng.icu/logo.png',
         externalLinkIcon: true,
         lastUpdated: {
             text: '最后更新时间',
@@ -45,8 +45,8 @@ export default defineConfig({
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Category', link: '/pages/category' },
-            { text: 'Archives', link: '/pages/archives' },
             { text: 'Tags', link: '/pages/tags' },
+            { text: 'Archives', link: '/pages/archives' },
             { text: 'About', link: '/pages/about' },
         ],
         search: {

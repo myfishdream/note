@@ -6,6 +6,7 @@ tags:
     - Github
     - Git
 description: 功能介绍
+outline: [2,3]
 ---
 
 # GitHub + Git整理
