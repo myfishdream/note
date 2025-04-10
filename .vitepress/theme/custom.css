@@ -8,7 +8,7 @@
 
     --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif;
 
-    /* pure theme color */
+    /* theme color */
     --li-dot-color: var(--vp-c-brand);
     --date-color: var(--vp-c-text-2);
     --date-font-family: Georgia, sans-serif;
@@ -20,6 +20,11 @@
     --bt-theme-title: #fff
 }
 
+
+/* 匹配target="_blank" */
+.vp-doc a[target="_blank"]:hover{
+    border-bottom: 2px dotted  var(--vp-c-brand);
+}
 
 /* theme reset start */
 
