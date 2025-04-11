@@ -8,7 +8,7 @@ const pageSize = 10
 
 export default defineConfig({
     title: 'YuMeng',
-    titleTemplate: ':title',
+    titleTemplate: ':title - YuMeng',
     base: '/',
     cacheDir: './node_modules/vitepress_cache',
     description: 'vitepress,blog,blog-theme',
