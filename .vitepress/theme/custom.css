@@ -1,7 +1,8 @@
 :root {
-
-    --vp-c-brand: #2563eb !important;
-    --vp-c-brand-light: var(--vp-c-brand);
+    --vp-c-indigo-1: #007e58;
+    --vp-c-brand: #00989d;
+    --vp-code-color:#05389e;
+    --vp-c-brand-light: var(--vp-c-brand);  
     --vp-c-brand-lighter: var(--vp-c-brand);
     --vp-c-brand-dark: var(--vp-c-brand);
     --vp-c-brand-darker: var(--vp-c-brand);
@@ -16,14 +17,16 @@
 }
 
 .dark {
-    --vp-c-brand: #3b82f6;
-    --bt-theme-title: #fff
+    --vp-c-indigo-1: #009b6d;
+    --vp-c-brand: #00989d;
+    --vp-code-color:#064cd8;
+    --bt-theme-title: #fff;
 }
 
 
 /* 匹配target="_blank" */
-.vp-doc a[target="_blank"]:hover{
-    border-bottom: 2px dotted  var(--vp-c-brand);
+.vp-doc a[target="_blank"]:hover {
+    border-bottom: 2px dotted var(--vp-c-brand);
 }
 
 /* theme reset start */
@@ -234,4 +237,9 @@ h3 {
 /* 匹配data-fancybox="gallery"的图片 */
 img[data-fancybox="gallery"] {
     border-radius: 10px;
+}
+
+
+.VPNavBarMenuLink {
+    /* font-weight: bold !important; */
 }
