@@ -1,6 +1,11 @@
 <template>
     <div class="tags">
-        <span @click="toggleTag(String(key))" v-for="(_, key) in data" class="tag">
+        <span 
+            @click="toggleTag(String(key))" 
+            v-for="(_, key) in data" 
+            class="tag"
+            :class="{ 'tag-active': selectTag === key }"
+        >
             {{ key }} <sup>{{ data[key].length }}</sup>
         </span>
     </div>
@@ -77,6 +82,15 @@ onMounted(() => {
     border-radius: 2px;
     color: var(--vp-c-text-1);
     cursor: pointer;
+}
+
+.tag-active {
+    background-color: var(--vp-c-brand);
+    color: white;
+}
+
+.tag-active sup {
+    color: white !important;
 }
 
 .tag sup {

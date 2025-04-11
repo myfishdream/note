@@ -12,9 +12,9 @@ comments: false
 
 
 -   👋 Hi, I'm [ 鱼梦江湖 ]
--   🚀️ I'm currently working as [ Shanghai ]
+
 -   📮️ How to reach me: <a style="border-bottom:2px solid var(--vp-c-brand-1);">yumengjh.outlook.com</a>
--   📖 My motto: [ Rest when you're tired, and walk when you're awake. ]
+
 
 ---
 
