@@ -19,6 +19,6 @@
     "vitepress": "^1.6.3"
   },
   "dependencies": {
-    "markdown-it-custom-attrs": "^1.0.2"
+    "medium-zoom": "^1.1.0"
   }
 }

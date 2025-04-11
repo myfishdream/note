@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
-import mdItCustomAttrs from 'markdown-it-custom-attrs'
+//     "markdown-it-custom-attrs": "^1.0.2",
+// import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
 //每页的文章数量
 const pageSize = 10
@@ -13,13 +14,13 @@ export default defineConfig({
     description: 'vitepress,blog,blog-theme',
     ignoreDeadLinks: true,
     lastUpdated: true,
-    cleanUrls: true,    
+    cleanUrls: true,
     markdown: {
         config: (md) => {
             // use more markdown-it plugins!
-            md.use(mdItCustomAttrs, 'image', {
-                'data-fancybox': "gallery"
-            })
+            // md.use(mdItCustomAttrs, 'image', {
+            //     'data-fancybox': "gallery"
+            // })
         },
         image: {
             lazyLoading: true,
@@ -27,11 +28,11 @@ export default defineConfig({
     },
     head: [
         ["link", { rel: "icon", href: "https://blog.yumeng.icu/logo.png" }],
-        ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },],// //全局控制图片放大样式
-        ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
+        // ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },],// //全局控制图片放大样式
+        // ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
     ],
     themeConfig: {
-        // logo: 'https://blog.yumeng.icu/logo.png',
+        logo: 'https://blog.yumeng.icu/logo.png',
         externalLinkIcon: true,
         lastUpdated: {
             text: '最后更新时间',
