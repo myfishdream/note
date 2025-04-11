@@ -55,7 +55,7 @@ export default defineConfig({
         outline: {
             label: '文章摘要'
         },
-        socialLinks: [{ icon: 'github', link: 'https://github.com/myfishdream' }]
+        socialLinks: [{ icon: 'github', link: 'https://github.com/yumengjh' }]
     },
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
 

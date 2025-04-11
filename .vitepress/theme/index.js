@@ -5,6 +5,7 @@ import Category from './components/Category.vue'
 import Tags from './components/Tags.vue'
 import Page from './components/Page.vue'
 
+import './style.css'
 import './custom.css'
 
 export default {
