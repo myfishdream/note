@@ -1,5 +1,6 @@
 :root {
     --vp-c-indigo-1: #007e58;
+    --vp-c-indigo-2:#1b8e71;
     --vp-c-brand: #00989d;
     --vp-code-color:#05389e;
     --vp-c-brand-light: var(--vp-c-brand);  
@@ -18,6 +19,7 @@
 
 .dark {
     --vp-c-indigo-1: #009b6d;
+    --vp-c-indigo-2:#1b8e71;
     --vp-c-brand: #00989d;
     --vp-code-color:#064cd8;
     --bt-theme-title: #fff;
