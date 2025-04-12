@@ -27,12 +27,12 @@ export default defineConfig({
         }
     },
     head: [
-        ["link", { rel: "icon", href: "https://blog.yumeng.icu/logo.png" }],
+        ["link", { rel: "icon", href: "/logo.png" }],
         // ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },],// //全局控制图片放大样式
         // ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
     ],
     themeConfig: {
-        // logo: 'https://blog.yumeng.icu/logo.png',
+        // logo: '/logo.png',
         externalLinkIcon: true,
         lastUpdated: {
             text: '最后更新时间',
