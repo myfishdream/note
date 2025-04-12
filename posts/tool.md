@@ -12,6 +12,8 @@ sticky: true
 # 实用网站导航
 
 > 本文档收集整理了各类实用的网站资源，包括开发工具、设计资源、AI工具等，旨在为开发者提供便捷的资源导航。文档会持续更新，欢迎推荐更多优质资源。
+>
+> ![image](https://fidsh81.github.io/picx-images-hosting/image.67xndvadov.webp)
 
 
 ## 目录
@@ -105,5 +107,4 @@ sticky: true
 - [Flutter](https://flutter.cn/) - Flutter 是 Google 开发的一个开源框架，用于构建跨平台的移动应用程序
 - [Dart](https://dart.cn/) - Dart 是 Google 开发的一种编程语言，用于构建跨平台的移动应用程序
 - [Bootstrap](https://www.bootcss.com/) - Bootstrap 是一个用于快速开发响应式网站的 HTML、CSS 和 JavaScript 框架
-
 

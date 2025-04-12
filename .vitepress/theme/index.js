@@ -24,6 +24,24 @@ export default {
     },
     setup() {
         const route = useRoute();
+        
+        // 全局图片错误处理
+        const handleImageError = (event) => {
+            console.log('图片加载失败，使用默认图片')
+            event.target.src = '/images/loading-error.png'
+            event.target.onerror = null // 防止无限循环
+        }
+
+        // 初始化图片处理
+        const initImages = () => {
+            // 为所有图片添加错误处理
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.onerror) {
+                    img.onerror = handleImageError
+                }
+            })
+        }
+
         const initZoom = () => {
             // 只有在Markdown中![](path/to/file.jpg){data-zoomable}
             // mediumZoom('[data-zoomable]', { background: 'var(--vp-c-bg)' });
@@ -31,12 +49,18 @@ export default {
             // 全局图片使用
             mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
         };
+        
         onMounted(() => {
+            initImages();
             initZoom();
         });
+
         watch(
             () => route.path,
-            () => nextTick(() => initZoom())
+            () => nextTick(() => {
+                initImages();
+                initZoom();
+            })
         );
     }
 }
