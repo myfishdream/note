@@ -331,4 +331,53 @@ globals: {
 
 ### output.name 
 
+在输出格式为`iife`和`umd`的bundle的时候，如果想要**使用全局变量名来表示bundle时**，该选项是必须的
+
+可以让同一页面上的其他脚本使用这个变量名来访问你的 bundle 输出
+
+> [!NOTE]
+>
+> 它让你的库可以在浏览器环境中通过一个全局变量名访问。
+>
+> - 当你的库需要在不支持模块系统的旧浏览器中使用
+> - 当你想要通过`script`标签直接引入你的库
+> - 当你的库需要和其他使用全局变量的库交互
+
+**命名空间**
+
 ...
+
+### output.plugins
+
+指定输出使用的插件，**从包中引入的插件，使用的时候要<u>调用</u>**
+
+使用压缩插件例子
+
+```js
+import { defineConfig } from 'rollup';
+import terser from '@rollup/plugin-terser';
+export default defineConfig({
+	input: 'src/main.js',
+	output: [{
+		file: 'dist/bundle.js',
+		format: 'iife',
+		name: 'myBundle',
+	}, {
+		file: 'dist/bundle.min.js',
+		format: 'iife',
+		name: 'myBundle',
+		plugins: [terser()],
+	}]
+});
+
+```
+
+### plugins
+
+不错的插件集合 [the Rollup Awesome List](https://github.com/rollup/awesome)
+
+## 进阶功能{#cdvanced}
+
+### cache
+
+cache属性用于提升构建性能，主要用于在监视模式或多次构建时复用前一次构建的结果。

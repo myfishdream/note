@@ -9,7 +9,7 @@ import './style.css'
 import './custom.css'
 
 // 图片处理
-import { useRoute } from 'vitepress';
+import { useRoute, useData } from 'vitepress';
 import { onMounted, watch, nextTick } from 'vue';
 import mediumZoom from 'medium-zoom';
 
@@ -24,11 +24,17 @@ export default {
     },
     setup() {
         const route = useRoute();
+        const { isDark } = useData();  // 使用 useData 获取主题状态
         
+        // 根据主题获取对应的错误图片
+        const getErrorImage = () => {
+            return isDark.value ? '/images/loading-error-dark.png' : '/images/loading-error-light.png';
+        }
+
         // 全局图片错误处理
         const handleImageError = (event) => {
-            console.log('图片加载失败，使用默认图片')
-            event.target.src = '/images/loading-error.png'
+            // console.log('图片加载失败，使用默认图片')
+            event.target.src = getErrorImage()
             event.target.onerror = null // 防止无限循环
         }
 
@@ -49,6 +55,21 @@ export default {
             // 全局图片使用
             mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
         };
+
+        // 在 setup() 函数内添加
+        const updateErrorImages = () => {
+            const errorSrc = getErrorImage()
+            document.querySelectorAll('img').forEach(img => {
+                if (img.src.includes('loading-error')) {
+                    img.src = errorSrc
+                }
+            })
+        }
+
+        // 监听主题变化（可以删除，因为 isDark 是响应式的）
+        watch(isDark, () => {
+            updateErrorImages();
+        });
         
         onMounted(() => {
             initImages();
