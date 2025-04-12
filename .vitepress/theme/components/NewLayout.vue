@@ -8,12 +8,17 @@
         <template #doc-footer-before>
             <!-- <Giscus /> -->
         </template>
+            <div class="page404">
+                <Error />
+            </div>
+        </template>
     </Layout>
     <Copyright />
 </template>
 <script setup>
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
+import Error from './error.vue'
 // import Giscus from './giscus.vue'
 import { withBase } from "vitepress";
 const { Layout } = DefaultTheme
