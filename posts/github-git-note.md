@@ -243,6 +243,172 @@ current iteration 指的是当前迭代的工单状态
 
 围绕项目的论坛，一般discussion是比较大的项目启用的功能，小项目用Issue即可
 
+### 贡献者流程
+
+一般先点击Issue参加讨论，可以把你的想法通过Issue和开发者进行交流
+
+可以提一个Issue，填写标题和描述，描述你的大体的实现思路，实现完成后会提交pull request，请问维护者，大家觉得怎么样，**提交Issue**
+
+如果开发者看到了一个Issue并且觉得不错，会回答你：期待你PR
+
+**贡献**:
+
+#### **第一步：**
+
+先fork复刻项目，把项目复制一份到自己的名下
+
+#### **第二步：**
+
+在`Code`按钮，找到HTTPS复制，回到Desktop，找到`Clone repository...`输入即可
+
+或者使用`git clone URL`
+
+#### **第三步：**
+
+创建分支，在分支上进行功能开发，而不是直接使用main分支
+
+开发完功能后，提交一下，提交信息：实现xxx功能
+
+#### **第四步：**
+
+点击`Publish branch`推送远端
+
+#### **第五步：**
+
+同步一下母项目的代码，防止提交PR的时候不会产生冲突
+
+回到GIthub仓库，点击`Sync fork`，从母项目往子项目同步代码
+
+#### **第六步：**
+
+把子项目的main分支合并到feature分支
+
+因为子项目feature分支是个人分支，可以减少一次merge记录，选择Rebase，出现冲突按照需求解决即可
+
+#### **第七步：**
+
+点击`Force push origin`强制推送
+
+通过了rebase方法同步了母项目代码，防止提交PR的时候不会产生冲突
+
+#### **第八步：**
+
+创建PR
+
+当项目管理者认为代码可以的时候，点击`Merge pull request`
+
+当图标变成**紫色Merged**
+
+完成了对开源代码的贡献
+
+仓库的Contributors就会出现贡献者的名字
+
+贡献者可以回到本地将开发分支删除，保留main分支随时关注母项目的改动，有改动点击`sync fork`同步代码
+
+如果还想进行功能开发，再在Desktop创建分支进行开发就行了
+
+### Github大文件
+
+在Github中单个文件的大小是被严格限制的，如果单个文件大于50M，push的时候回触发警告，如果大于100M会直接拒绝
+
+**Git LFS (Git Large File System )** ->大文件系统
+
+LFS使用一个单独的文件存储服务器专门存储大文件，我们仓库只存了一个大文件的引用
+
+**安装LFS**
+
+```bash
+git lfs install 
+```
+
+**指定哪些文件需要由LFS管理**
+
+```bash
+git lfs track '文件类型'
+```
+
+`*.mp4`表示我系统的所有MP4文件都由大文件系统管理
+
+当一个文件大于100M无法推送，得使用LFS就可以推送
+
+> [!IMPORTANT]
+>
+> 存储空间并不是完全免费的，进人右上角个人账号，点击Setting，找到Biling and plans，有一个plans and usage，往下找，有一个**Git LFS Data**
+
+### Github Action
+
+#### Action脚本
+
+Github 的自动化流水线
+
+可以编写一个action脚本，制定Github完成一系列的自动化操作，最场景的用法就是CI/CD
+
+CI/CD的意思是Continuous lntegration / Continuous Delivery，持续集成 持续交付
+
+比如我们希望每提交一次代码的时候，程序能自动完成单元测试，代码编译，程序构建，推送到服务器并且完成部署，这整一套的自动化过程就是CI/CD
+
+#### Action 市场
+
+由于很多操作在很多项目里面是类似的，完全可以共享
+
+所有允许开发者将每个操作写成独立的脚本文件存放到代码仓库里面
+
+存放官方写好的Action https://github.com/actions
+
+https://github.com/marketplace Github市场，其中也有Action选项卡，可以搜索需要的
+
+每个Action 都是一套自动化的流程，都有相应的代码
+
+#### 引用
+
+引用别人的Action，使用	**uses: 作者名称/Action的名称@版本号**
+
+```yaml
+uses: sayyid5416/pyinstaller@v1
+```
+
+#### 术语
+
+##### workflow
+
+**workflow**（工作流程）：每个workflow对应一个文件，存放在仓库的.github/workflow目录
+
+##### job
+
+**job**（任务）：一个workflow由一个或者多个jobs构成，含义就是一次工作流程，需要完成的多个任务
+
+##### step
+
+**step**（步骤）：每个job由多个step构成，一步一步的完成
+
+可以看到，workflow是有层级关系，第一层是workflow，第二层是job，第三次是step
+
+**为什么要定义出job和step两个层级？区别？**
+
+不同的job默认是**并行运行**，这样可以提高效率。并且每个job运行在独立的**虚拟环境**中，也就是每个job其实都是运行GitHub的不同的服务器里，这样可以避免job之间的相互干扰。
+
+而step是**顺序执行**，而且同一个job之间各个的step是按照从上到下的顺序在同一个虚拟环境里面顺序执行的
+
+##### event
+
+**event**（事件）：也就是触发器，action通常需要某种事件进行触发，这里的事件可以是提交代码，创建分支，提交PR，某个时间点定时等等...
+
+##### runs-on
+
+runs-on:	ubuntu-lastest 申请一个虚拟环境
+
+##### uses
+
+uses:	actions/checkout@v4  检出代码，也就是把项目的代码检出到那个虚拟机里面
+
+#### 计费
+
+对于公共仓库action完全免费
+
+对于私有仓库每个账号都有一定的免费时长，每个月2000分钟，最多只能上传存储500M的内容
+
+**在个人设置可以查看使用额度**
+
 ### Github Desktop
 
 [点击跳转GithubDesktop](https://desktop.github.com/download/)
@@ -409,4 +575,378 @@ git merge main
 
 **Create a merge commit**：创建一个新的commit，合并到一起
 
-...
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.67xndvadov.webp)
+
+##### Squash and merge
+
+```bash
+git merge --squash main
+```
+
+**Squash and merge**：把commit3,4,5压缩成一个提交合并进feature分支
+
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.2yyjh7on6k.webp)
+
+##### Rebase
+
+```bash
+git rebase main
+```
+
+**Rebase**（变基 - 更改地基）：把main分支合并进了feature分支，把feature分支变基到了main分支
+
+变基：我自己的根基不存在了，把自己的分支变更到了main分支上，并且生成一个新的提交
+
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.6pnp2gdx5m.webp)
+
+> [!IMPORTANT]
+>
+> 在Desktop使用**变基**，**提示**必须强制推送到GIthub网站`Git push -f`
+
+| 操作     | rebase                     | merge                                          | squash merge                   |
+| -------- | -------------------------- | ---------------------------------------------- | ------------------------------ |
+| 特点     | 只有线性提交记录           | 会出现所有提交记录，包括merge                  | 只出现一条merge记录            |
+| 优点     | 减少一次merge记录          | 保证分支可溯源                                 | 历史记录更加清爽干净           |
+| 缺点     | 必须使用强送               | 多一次merge记录                                | 历史记录被合并到一起了         |
+| 应用场景 | 在私有分支上可以使用rebase | 多人协作分支必须merge，向主干分支合并必须merge | 多人协作分支，需要保持记录清爽 |
+
+ Github网页中`pull request`也有一样选项
+
+#### 优选提交
+
+**cherry pick**指的是优选提交或者拣选调教
+
+比如说只想把commit3，commit3合并到main分支，保留commit5分支在feature分支
+
+##### 使用命令行操作
+
+切换到接受合并的分支
+
+```bash
+git switch main
+```
+
+选择c3，c4两个commit
+
+```bash
+git cherry-pick c3 c4
+```
+
+![image-20250128214954084](https://raw.githubusercontent.com/fish81/typora-uploads-images/main/image/1744111150_0.png)
+
+##### 使用Desktop操作
+
+按住`shift`键同时选择多个commit，右键选择`Cherry-pick...`，指的是拣选选中的提交
+
+选择要合并的分支，最后点击`Cherry-pick commit to main`即可
+
+> [!important]  小记
+>
+> 在Desktop中`Cherry-pick`时，要将分支切换到输出commit的分支，然后再选择若干个commit，命令行则反之
+
+#### 合并冲突
+
+如果两个分支同时修改了同一个文件的同一行代码，合并的时候就会出现conflict（冲突）只能手动修改文件来解决冲突
+
+**Abort merge**：取消这次的merge，两个分支各自还原回去
+
+**Continue merge**：需要先手动解决冲突，即编辑文件，修改成理想状
+
+进入VSCode手动修改代码后回到Desktop即可点击`Continue merge`
+
+#### 拉取冲突
+
+**场景**：你的同事，她已经写完代码并且推送到远程仓库，但是你本地不知道，你修改了同一个文件的同一行，此时你还没有提交
+
+点击`pull origin`，提示冲突，如果拉取更新会将本地代码覆盖，
+
+点击`Stash changes and continue`，存储更改并继续，此时进入文件修改冲突，
+
+回到Desktop✔表示已经解决了，即可commit提交了再push了
+
+#### 文件冲突
+
+**场景**：两个分支同时改动了同一个文件的名字
+
+选中所有文件右键`Discard 3 selected changes`全部撤销更改
+
+打开目录调整为理想状态回到Desktop
+
+点击`View conflicts`，最后再提交上去即可
+
+## git命令行
+
+### 安装Git
+
+检查是否安装
+
+```bash
+git --version
+```
+
+### 克隆
+
+```bash
+git clone url
+```
+
+### 状态
+
+查看目前的状态，目前分支，是否与远端分支同步，以及文件修改，暂存区...
+
+```bash
+git status
+```
+
+### 添加暂存区
+
+使用**Git add .** 会把所有修改的文件添加到暂存区
+
+```bash
+git add 'filename'
+```
+
+### 取出暂存区
+
+```bash
+git restore --staged 'filename'
+```
+
+### 提交
+
+```bash
+git commit -m 'msg'
+```
+
+### 暂存+提交
+
+```bash
+git commit -am 'mag'
+```
+
+> [!IMPORTANT]
+>
+> `-a`的意思是把所有的文件添加到暂存区，
+>
+> **注意**：只添加修改的文件，新增的文件还是得 `git add .`
+
+### 推送
+
+```bash
+git push
+```
+
+当第一次推送的时候，会有登录提示，选择GIthub或者Token
+
+**Token**：进入GIthub点击Setting，下拉找到Developer settings，有一个Personal access tokens
+
+打开，点击Token(classic)，点击Generate new Token
+
+选择一个过期时间，勾选全部功能，最后选择Generate token 
+
+生成了一个Github token，复制，填写到登录Token处即可完成绑定
+
+### 拉取
+
+```bash
+git pull
+```
+
+::: tip 建议
+
+建议使用`git pull --rebase`，这个命令可以在拉取更新的时候产生线性提交记录
+
+:::
+
+**场景：**
+
+当写完代码push到远端，被决绝了，原因是团队中其他同事也使用了相同的分支
+
+两人都是从A提交开始写代码，两人同时在写代码，但是同事先把代码提交到远端
+
+当你推送的时候，就会拒绝
+
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.wiqt75qmm.webp)
+
+所以，在实践中，推荐每个人都使用一个独立的分支开发代码，避免此类问题
+
+但是，当两个人需要共同解决同一个分支上的问题时，此时，执行git pull 命令即可
+
+先把远端的最新提交拉取到本地
+
+`git pull` = `git fetch` + `git merge`
+
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.4cl2lao2f7.webp)
+
+因为你的提交和你同事的提交有共同的祖先，Git会merge两个分支的提交，并且创建一个额外的merge提交
+
+经常这么干会累计很多无用信息，把搜索commit变得麻烦，
+
+我们的目的仅仅是：**把自己的提交挂在你同事提交之后**，即可保持历史数据线性的干净
+
+可以使用`git pull --rebase`命令，完成操作
+
+**此命令会暂时把你的提交放到一边，然后拉取远端仓库的提交，再把你的提交挂在后面，即可保持提交线性的干净**
+
+![image-20250207220422773](https://raw.githubusercontent.com/fish81/typora-uploads-images/main/image/1744111213_0.gif)
+
+可以修改Git 设置，让Git pull的时候默认使用rebase的方式
+
+```bash
+git config pull.rebase true
+```
+
+同时**Desktop**也会变化
+
+### 删除
+
+当删除了一个文件，使用
+
+```bash
+git rm 'filename'
+```
+
+告诉git 这个文件以后不需要管理了,文件夹内也会删除
+
+### 重命名
+
+```bash
+git mv 'Oldfilename' 'Newfilename'
+```
+
+### 移动
+
+```bash
+git mv 'filename' 'file'	// 文件名称+文件夹路径
+```
+
+### 提交历史
+
+```bash
+git log
+```
+
+### 重置状态
+
+```bash
+git reset --mixed 'ID'
+```
+
+文件修改保留在工作区，之后需要使用强制推送`git push -f`
+
+### 丢弃更改
+
+把指定的文件放弃更改
+
+```bash
+git restore 'filename'
+```
+
+### 提交详细信息
+
+```bash
+git show 'ID'
+```
+
+### 反向操作
+
+会生成一个反向操作**抵消**那一次的的更改
+
+```bash
+git revert 'ID'
+```
+
+填写完提交信息，点击Esc，输入一个冒号，一个wq!，回车
+
+### 修改提交
+
+使用git amend修改提交
+
+当代码提交后，突然后悔了，或者改错了，直接在代码中修正，
+
+现在需要把修改加到上一次提交中，首先`git add .`
+
+修改上一次的提交记录，git commit --amend
+
+还可以修改上一次的提交信息，点击Esc，冒号，wq!，回车
+
+完成了使用amend操作把上一次添加修改了
+
+> [!NOTE]
+>
+> **amend**只能对最后一次提交失效
+>
+> 如果还没有推送，使用`git push`就行，如果推送了，使用`git push -f`，强制推送
+
+### 后悔药
+
+| 操作    | 命令                                                         | 场景                                 | 注意事项                                                     |
+| ------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
+| discard | git restore 'filename' 单个文件<br />git reset --hard 所有文件 | 工作区的修改还没有提交               | 舍弃掉工作区修改的文件                                       |
+| reset   | git reset 'ID'                                               | 还原到某个提交的状态，舍弃之后的提交 | 如果reset已经推送的提交，会造成强制推送，集成分支禁止强制推送 |
+| revert  | git revert 'ID'                                              | 使用一个新的提交抵消到某一次的提交   | 在集成分支推荐使用此命令                                     |
+| amend   | git commit --amend                                           | 只能修改最新一次的提交               | 如果amend已经push的提交，会造成强制推送...                   |
+
+### 分支
+
+`git branch`  查看所有的本地分支
+
+`git branch -a` 查看所有分支（包括远端的分支）
+
+> [!NOTE]
+>
+> 前面是remotes的是远端分支
+
+#### 创建分支
+
+`git checkout -b  分支名称`   创建分支（**基于本地当前分支创建的**）
+
+`git push --set-upstream origin feature2`把本地的feature2分支在远端也叫feature2这个名字，将两端关联起来
+
+#### 删除分支
+
+`git branch -d 分支名称`
+
+> [!IMPORTANT]
+>
+> 如果你的分支还没有合并，使用小写d是不能删除的，git会警告，要使用大写的D强制删除
+
+`git push origin --delete 分支名称` 删除远程分支
+
+#### 切换分支
+
+`git switch 分支名称`
+
+#### 检出远端分支
+
+将远端的分支拉取到本地，先同步一下远端分支`git fetch` 
+
+当在远端有一个分支，本地不会自动同步，需要使用git fetch 同步，本地才会显示
+
+使用`git checkout 分支名称`  将指定分支检出本地，就是让本地当前的分支变成feature3分支(远程分支)，将feature3分支自动和远端的feature3分支关联起来了
+
+#### 合并分支
+
+先切换到接受合并的分支
+
+`git swtich '切换分支名'`
+
+`git merge 'main'`  指的是把main分支合并到当前分支
+
+还可以合并远端的分支 `git merge origin/远端分支`
+
+#### 比较分支
+
+ `git log feature..main` 按照提交比较 ，比较main分支和feature分支之间的提交改动，显示的是main分支上有的，feature分支没有的，可以调换顺序
+
+ `git diff feature..main` 按照文件比较 ，比较文件的不同
+
+`git diff` 比较的是工作区和暂存区的差异
+
+` git diff --staged`比较暂存区和本地分支的情况
+
+`git diff HEAD`比较工作区和本地分支的情况
+
+### 区概念
+
+![image](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/image.969xhget3u.webp)
