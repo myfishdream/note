@@ -8,6 +8,8 @@
         <template #doc-footer-before>
             <!-- <Giscus /> -->
         </template>
+        <template #not-found>
+            <!-- 页面不存在 -->
             <div class="page404">
                 <Error />
             </div>
