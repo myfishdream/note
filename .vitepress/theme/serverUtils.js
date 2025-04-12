@@ -77,6 +77,18 @@ function _convertDate(date = new Date().toString()) {
 }
 
 function _compareDate(obj1, obj2) {
+    // 如果两篇文章都有置顶标记，则按日期降序排序
+    if (obj1.frontMatter.sticky && obj2.frontMatter.sticky) {
+        return obj1.frontMatter.date < obj2.frontMatter.date ? 1 : -1
+    }
+    // 如果只有一篇文章有置顶标记，则置顶的文章排在前面
+    if (obj1.frontMatter.sticky) {
+        return -1
+    }
+    if (obj2.frontMatter.sticky) {
+        return 1
+    }
+    // 如果都没有置顶标记，则按日期降序排序
     return obj1.frontMatter.date < obj2.frontMatter.date ? 1 : -1
 }
 
