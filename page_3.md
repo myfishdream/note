@@ -1,6 +1,6 @@
 ---
 page: true
-title: Home
+title: Page 3
 aside: false
 lastUpdated: false
 comments: false
@@ -9,6 +9,6 @@ comments: false
 import Page from "./.vitepress/theme/components/Page.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
-const posts = theme.value.posts.slice(0,10)
+const posts = theme.value.posts.slice(20,30)
 </script>
-<Page :posts="posts" :pageCurrent="1" :pagesNum="3" />
+<Page :posts="posts" :pageCurrent="3" :pagesNum="3" />
