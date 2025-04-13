@@ -7,6 +7,7 @@ tags:
 description: 学习Rollup的一些笔记
 draft: false
 outline: [2,3]
+done: true
 ---
 
 # rollup.js
@@ -19,7 +20,7 @@ outline: [2,3]
 
 Me: `这些模块别打包，我自有安排`
 
-<span style="font-weight:bold; color:#009900;">通俗理解：</span>
+<span style="font-weight:bold;">通俗理解：</span>
 
 **某些依赖不打包，让它们在运行时从外部获取。**
 
