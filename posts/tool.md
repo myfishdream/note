@@ -14,7 +14,7 @@ sticky: true
 
 > 本文档收集整理了各类实用的网站资源，包括开发工具、设计资源、AI工具等，旨在为开发者提供便捷的资源导航。文档会持续更新，欢迎推荐更多优质资源。
 >
-> ![image](https://fidsh81.github.io/picx-images-hosting/image.67xndvadov.webp)
+> ![logo](https://fish81.github.io/picx-images-hosting/20250413/download20250202110436.23222z2jza.webp)
 
 
 ## 目录
