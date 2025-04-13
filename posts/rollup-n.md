@@ -381,3 +381,34 @@ export default defineConfig({
 ### cache
 
 cache属性用于提升构建性能，主要用于在监视模式或多次构建时复用前一次构建的结果。
+
+#### 演示实例
+
+```js
+const rollup = require('rollup'); //使用 Rollup 的 API 进行打包操作
+let cache; // 用于存储 Rollup 的构建缓存 undefined
+
+async function buildWithCache() {
+	const bundle = await rollup.rollup({
+		cache // 如果值为假，则忽略，不使用缓存，有则使用缓存
+		// ... 其他输入项(配置项)
+	});
+	cache = bundle.cache; // 保存之前构建的缓存对象，bundle.cache是返回的缓存对象，包含模块图和其它信息
+	return bundle;
+}
+
+buildWithCache()
+	.then(bundle => {
+		// ... 操作 bundle
+	})
+	.then(() => buildWithCache()) // 将使用之前构建的缓存
+	.then(bundle => {
+		// ... 操作 bundle
+	});
+```
+
+1. **首次构建**：没有缓存，完整构建
+2. **后续构建**：使用 `bundle.cache` 加速，Rollup 只会重新处理**有变化的文件**
+3. **缓存内容**：包括模块依赖图、AST 等信息，避免重复解析和构建未更改的模块
+
+### logLevel

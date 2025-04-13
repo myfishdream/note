@@ -1,4 +1,5 @@
 <template>
+    <div class="progress-bar" :style="{ width: progress + '%' }"></div>
     <div v-for="(article, index) in posts" :key="index" class="post-list">
         <div class="post-header">
             <div class="post-title">
@@ -28,6 +29,44 @@
 <script setup>
 
 import { withBase } from 'vitepress'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vitepress'
+
+const progress = ref(0)
+const router = useRouter()
+let timer = null
+
+const startProgress = () => {
+    progress.value = 0
+    timer = setInterval(() => {
+        if (progress.value < 90) {
+            progress.value += Math.random() * 10
+        }
+    }, 100)
+}
+
+const completeProgress = () => {
+    progress.value = 100
+    setTimeout(() => {
+        progress.value = 0
+    }, 200)
+}
+
+onMounted(() => {
+    router.onBeforeRouteChange = () => {
+        startProgress()
+    }
+    router.onAfterRouteChanged = () => {
+        completeProgress()
+    }
+})
+
+onBeforeUnmount(() => {
+    if (timer) {
+        clearInterval(timer)
+    }
+})
+
 defineProps({
     posts: {
         type: Array,
@@ -45,6 +84,15 @@ defineProps({
 </script>
 
 <style scoped>
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--vp-c-brand);
+    z-index: 9999;
+    transition: width 0.2s ease-out;
+}
 .post-list {
     /* border-bottom: 1px dashed var(--vp-c-divider); */
     padding: 14px 0 14px 0;
