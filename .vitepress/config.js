@@ -37,7 +37,7 @@ export default defineConfig({
         lastUpdated: {
             text: '最后更新时间',
             formatOptions: {
-                dateStyle: 'short',
+                dateStyle: 'full', // full, long, medium, short
                 timeStyle: 'short'
             }
         },
@@ -58,9 +58,14 @@ export default defineConfig({
         },
         socialLinks: [{ icon: 'github', link: 'https://github.com/yumengjh' }]
     },
-    srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
+    srcExclude: ['README.md'], // 排除README.md文件，不需要编译
 
     vite: {
         server: { port: 5000 }
+    },
+    // 重写路由
+    rewrites: {
+        // 'posts/:article': '/:article',
+        // 'pages/:page': '/:page'
     }
 }) 

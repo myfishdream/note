@@ -3,6 +3,8 @@
         MIT Licensed | Copyright © 2024-2025 <a class="vitepress title" style="font-size: 1rem!important;" :href="website">{{ webTitle }}</a><br />
         Powered by <a class="vitepress" target="_blank" href="//vitepress.vuejs.org/">VitePress - 1.6.3</a>
         Theme by <a class="vitepress" target="_blank" href="//github.com/airene/vitepress-blog-pure">Vitepress-blog</a>
+        <br /> 
+        <a class="vitepress" href="/changelog">UpdateLog</a>
     </div>
 </template>
 <script setup>

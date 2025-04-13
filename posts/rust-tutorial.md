@@ -13,6 +13,9 @@ done: true
 
 # Rust 基础
 
+:book: 本文档是 Rust 基础教程，适合初学者快速上手。
+[Rust 语言圣经（中文）](https://course.rs/about-book.html)
+
 ## 变量声明
 
 ```rust
