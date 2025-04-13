@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "new": "node scripts/newPost.cjs"
   },
   "keywords": [],
   "author": "",

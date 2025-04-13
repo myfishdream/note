@@ -7,6 +7,7 @@ tags:
 description: 学习Rollup的一些笔记
 draft: false
 outline: [2,3]
+# sticky: true
 done: true
 ---
 
