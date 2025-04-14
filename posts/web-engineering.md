@@ -118,3 +118,11 @@ console.log("编译成功！"); // 输出编译后的代码
 
 ...
 
+## 构建工具
+
+**使用文件指纹**
+
+![使用文件指纹](https://github.com/fish81/picx-images-hosting/raw/master/20250414/使用文件指纹.54xy6axukj.webp)**开发服务器**
+![开发服务器](https://fish81.github.io/picx-images-hosting/20250414/开发服务器.8hgo0ll0ub.webp)**不使用文件指纹**
+![不使用文件指纹](https://fish81.github.io/picx-images-hosting/20250414/不使用文件指纹.m9gy4j9c.webp)**webpack**
+![webpack](https://fish81.github.io/picx-images-hosting/20250414/webpack.3k876r791a.webp)

@@ -35,10 +35,10 @@ export default defineConfig({
         // logo: '/logo.png',
         externalLinkIcon: true,
         lastUpdated: {
-            text: '最后更新时间',
+            text: 'Last updated',
             formatOptions: {
-                dateStyle: 'full', // full, long, medium, short
-                timeStyle: 'short'
+                dateStyle: 'short', // full, long, medium, short
+                timeStyle: 'medium'
             }
         },
         posts: await getPosts(pageSize),
