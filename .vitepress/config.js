@@ -16,6 +16,7 @@ export default defineConfig({
     lastUpdated: true,
     cleanUrls: true,
     markdown: {
+        lineNumbers: true,
         config: (md) => {
             // use more markdown-it plugins!
             // md.use(mdItCustomAttrs, 'image', {

@@ -368,7 +368,7 @@ export default defineConfig({
 		file: 'dist/bundle.min.js',
 		format: 'iife',
 		name: 'myBundle',
-		plugins: [terser()],
+		plugins: [terser()],// [!code focus]
 	}]
 });
 
@@ -393,7 +393,7 @@ let cache; // 用于存储 Rollup 的构建缓存 undefined
 async function buildWithCache() {
 	const bundle = await rollup.rollup({
 		cache // 如果值为假，则忽略，不使用缓存，有则使用缓存
-		// ... 其他输入项(配置项)
+		// ... 其他输入项(配置项) 
 	});
 	cache = bundle.cache; // 保存之前构建的缓存对象，bundle.cache是返回的缓存对象，包含模块图和其它信息
 	return bundle;
@@ -417,15 +417,162 @@ buildWithCache()
 
 用于指定哪些日志将被处理，默认为`info`，意味着 info 和 warning 日志将被处理，而 debug 日志将被忽略，
 
+**logLevel的不同级别**：
 
+#### info
+
+（默认级别），适合**开发环境**，获取最**详细的信息**
+
+- 显示所有日志信息
+- 包括普通信息、警告和错误
+- 适合开发环境使用
+
+#### warn
+
+适合**测试环境**，关注**潜在问题**
+
+- 只显示警告和错误
+
+- 忽略普通信息日志
+
+- 适合想要关注潜在问题的场景
+
+#### error
+
+适合**生产环境**，只关注**严重问题**
+
+- 只显示错误信息
+
+- 忽略警告和普通信息
+
+- 适合只想看到严重问题的场景
+
+#### silent
+
+适合**CI/CD环境**，减少日志输出
+
+- 不显示任何日志信息
+
+- 完全安静模式
+
+- 适合在自动化脚本中使用
+
+- 除了构建结果外不显示任何信息
+
+#### 示例
+
+创建一个测试插件来生成不同级别的日志
+
+```js
+function createTestPlugin(level) {
+	return {
+		name: 'test-plugin',
+		buildStart() {
+			console.log(`[${level}] 开始构建...`);
+			if (level !== 'silent') {
+				console.log(`[${level}] 这是一条普通日志消息`);
+				if (level !== 'error') {
+					this.warn(`[${level}] 这是一条警告消息`);
+					if (level === 'info') {
+						console.debug(`[${level}] 这是一条调试消息`);
+					}
+				}
+			}
+		}
+	};
+}
+```
+
+导出多个配置，每个使用不同的日志级别
+
+::: code-group
+
+```js [info]
+// 默认日志级别（info）
+	defineConfig({
+		input: 'src/main.js',
+		output: {
+			file: 'dist/bundle.info.js',
+			format: 'iife',
+			name: 'myBundle',
+		},
+		plugins: [createTestPlugin('INFO')],
+		logLevel: 'info',  // 显示所有日志（默认值） [!code highlight]
+	}),
+```
+
+```js [warn]
+// 仅显示警告和错误
+	defineConfig({
+		input: 'src/main.js',
+		output: {
+			file: 'dist/bundle.warn.js',
+			format: 'iife',
+			name: 'myBundle',
+		},
+		plugins: [createTestPlugin('WARN')],
+		logLevel: 'warn',  // 只显示警告和错误[!code highlight]
+	}),
+```
+
+```js [error]
+// 仅显示错误
+	defineConfig({
+		input: 'src/main.js',
+		output: {
+			file: 'dist/bundle.error.js',
+			format: 'iife',
+			name: 'myBundle',
+		},
+		plugins: [createTestPlugin('ERROR')],
+		logLevel: 'error',  // 只显示错误[!code highlight]
+	}),
+```
+
+```js [silent]
+// 静默模式
+	defineConfig({
+		input: 'src/main.js',
+		output: {
+			file: 'dist/bundle.silent.js',
+			format: 'iife',
+			name: 'myBundle',
+		},
+		plugins: [createTestPlugin('SILENT')],
+		logLevel: 'silent',  // 不显示任何日志[!code highlight]
+	})
+```
+
+:::
+
+### makeAbsoluteExternalsRelative
+
+...
+
+### maxParallelFileOps
+
+...
 
 ### onLog
 
-一个用于截取日志信息的函数，不提供，日志将打印到控制台
+拦截和处理 Rollup 的内部日志消息，不提供，日志将打印到控制台
+
+**常见日志代码**
+
+| 代码                | 描述           |
+| :------------------ | :------------- |
+| CIRCULAR_DEPENDENCY | 循环依赖       |
+| UNRESOLVED_IMPORT   | 无法解析的导入 |
+| MISSING_EXPORT      | 缺少导出       |
+| EMPTY_BUNDLE        | 生成的包为空   |
+| EVAL                | 使用了 eval    |
+| PLUGIN_WARNING      | 插件产生的警告 |
 
 ### onwarn
 
 一个函数，用于拦截警告信息。它与 [`onLog`](#onlog) 非常相似，但只接收警告。
+
+
 
 ### output.assetFileNames
 
