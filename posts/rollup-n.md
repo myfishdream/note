@@ -15,6 +15,12 @@ done: true
 
 ## 核心功能{#core}
 
+::: details 现状😂
+
+![bukanwendang](https://fish81.github.io/picx-images-hosting/20250414/bukanwendang.77dqud641r.png)
+
+:::
+
 ### external
 
 `external`配置项用于告诉`Rollup`，这些模块不要打包到最终的`bundle`中，让它们保持外部引用。

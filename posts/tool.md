@@ -14,7 +14,7 @@ sticky: true
 
 > 本文档收集整理了各类实用的网站资源，包括开发工具、设计资源、AI工具等，旨在为开发者提供便捷的资源导航。文档会持续更新，欢迎推荐更多优质资源。
 >
-> ![logo](https://s21.ax1x.com/2025/02/07/pEmCL90.png)
+> ![logo](https://fish81.github.io/picx-images-hosting/20250414/logo-web.9nzz9aczy9.png)
 
 
 ## 目录
