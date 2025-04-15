@@ -27,6 +27,7 @@ comments: false
   <img src="https://img.shields.io/badge/-Node.js-D3D3D3?logo=Node.js&logoColor=339933" alt="Node.js" style="display: inline-block;" />&nbsp;
   <img src="https://img.shields.io/badge/-Python-A9A9A9?logo=Python&logoColor=3776AB" alt="Python" style="display: inline-block;" />&nbsp;
   <img src="https://img.shields.io/badge/-Microsoft%20SQL%20Server-D3D3D3?logo=Microsoft-SQL-Server&logoColor=CC2927" alt="Microsoft SQL Server" style="display: inline-block;" />&nbsp;
+  <img src="https://img.shields.io/badge/-Rust-ea4f19?logo=Rust&logoColor=white" alt="Rust" style="display: inline-block;" />&nbsp;
 </p>
 
 ### 前端
