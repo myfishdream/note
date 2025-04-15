@@ -553,15 +553,135 @@ function createTestPlugin(level) {
 
 ### makeAbsoluteExternalsRelative
 
-...
+用于控制如何处理绝对路径的外部依赖
+
+当设置为 `true` 时，会将绝对路径的**外部依赖**转换为相对路径，转换后的相对路径是相对于输出文件的位置计算的
+
+**适用场景**：
+
+- 当你使用绝对路径指定外部依赖时
+- 希望输出文件在不同目录结构下都能正常工作
+- 构建可移植的库或应用
 
 ### maxParallelFileOps
 
-...
+`maxParallelFileOps` 是 Rollup 的一个性能优化配置项，用于控制文件操作的并发数量。
+
+可以在构建速度和系统资源消耗之间取得平衡，特别是在大型项目或资源受限的环境中尤为有用。
 
 ### onLog
 
-拦截和处理 Rollup 的内部日志消息，不提供，日志将打印到控制台
+`onLog` 是 Rollup 提供的一个强大的日志拦截和自定义处理机制，允许开发者完全控制 Rollup 的日志输出行为，如果不提供，日志将统一打印到控制台
+
+```js
+ onLog: (level, log, handler) => {}
+```
+
+- **level**: 'info' | 'warn' | 'error' | 'debug'
+- **log**: 日志对象
+-  **handler**: 默认日志处理器
+
+**日志对象包含**：
+
+```js
+{
+  code: 'UNRESOLVED_IMPORT',  // 日志代码
+  message: 'Could not resolve...', // 原始消息
+  frame: '\n  > 1 | import...',   // 代码帧
+  loc: { file: 'src/main.js', line: 1, column: 8 }, // 位置
+  plugin: 'typescript',       // 来源插件
+  meta: { /* 附加元数据 */ }
+}
+```
+
+::: details 完整配置示例
+
+```js
+// rollup.config.js
+export default {
+  input: 'src/main.js',
+  output: { file: 'dist/bundle.js', format: 'es' },
+  onLog: (level, log, handler) => {
+    // 1. 过滤特定日志
+    if (log.code === 'CIRCULAR_DEPENDENCY') {
+      console.warn(`🔄 发现循环依赖: ${log.ids.join(' → ')}`);
+      return; // 阻止默认输出
+    }
+
+    // 2. 重写日志消息
+    if (log.code === 'UNRESOLVED_IMPORT') {
+      log.message = `无法解析模块: ${log.source}`;
+    }
+
+    // 3. 日志级别转换
+    if (log.code === 'MISSING_NAME_OPTION') {
+      handler('warn', log); // 将error降级为warn
+      return;
+    }
+
+    // 4. 添加额外信息
+    if (level === 'error') {
+      log.message = `[构建错误] ${log.message}`;
+    }
+
+    // 5. 默认处理
+    handler(level, log);
+  }
+};
+```
+
+:::
+
+::: details 高级用法 - 日志收集
+
+```js
+// 收集所有日志用于分析
+const buildLogs = [];
+
+export default {
+  // ...
+  onLog: (level, log, handler) => {
+    // 记录日志
+    buildLogs.push({
+      timestamp: new Date(),
+      level,
+      ...log
+    });
+    
+    // 只显示错误
+    if (level === 'error') {
+      handler(level, log);
+    }
+  },
+  
+  // 插件形式获取最终日志
+  plugins: [{
+    name: 'log-collector',
+    buildEnd() {
+      fs.writeFileSync(
+        'build-logs.json', 
+        JSON.stringify(buildLogs, null, 2)
+      );
+    }
+  }]
+};
+```
+
+:::
+
+::: details **日志聚合分析**
+
+```js
+const stats = { warnings: 0, errors: 0 };
+
+onLog: (level) => {
+  if (level === 'warn') stats.warnings++;
+  if (level === 'error') stats.errors++;
+  handler(level, log);
+}
+```
+
+:::
 
 **常见日志代码**
 
@@ -576,11 +696,79 @@ function createTestPlugin(level) {
 
 ### onwarn
 
-一个函数，用于拦截警告信息。它与 [`onLog`](#onlog) 非常相似，但只接收警告。
+一个函数，用于拦截警告信息。它与 [`onLog`](#onlog) 非常相似，但只接收警告。如果调用默认处理程序，日志将被处理为警告。如果提供了 `onLog` 和 `onwarn` 处理程序，只有当 `onLog` 调用其默认处理程序时，`onwarn` 处理程序才会被调用，且 `level` 为 `warn`。
 
-
+> https://cn.rollupjs.org/configuration-options/#onwarn
 
 ### output.assetFileNames
 
-用于自定义构建结果中的静态资源名称
+用于控制生成的资源文件（如图片、字体、CSS等）命名规则的配置项。
 
+```js
+export default {
+  input: 'src/main.js',
+  output: {
+    dir: 'dist',
+    format: 'es',
+    assetFileNames: '[name].[hash][extname]'
+  }
+}
+```
+
+#### 可用占位符
+
+| 占位符      | 说明                              | 示例               |
+| :---------- | :-------------------------------- | :----------------- |
+| `[name]`    | 资源文件原名（不含扩展名）        | `logo`             |
+| `[extname]` | 包含点的扩展名                    | `.png`             |
+| `[ext]`     | 不包含点的扩展名                  | `png`              |
+| `[hash]`    | 基于文件内容的哈希值（默认8字符） | `e4ca327f`         |
+| `[hash:16]` | 指定哈希长度                      | `e4ca327f5b6a8d9c` |
+
+::: code-group
+```js [基本哈希命名]
+assetFileNames: '[name].[hash][extname]'
+// logo.e4ca327f.png
+```
+
+```ts [按类型分类]
+assetFileNames: 'assets/[ext]/[name]-[hash:8][extname]'
+//assets/images/logo-e4ca327f.png
+//assets/fonts/inter-3b2a7c.woff2
+```
+:::
+
+::: details 完整示例
+
+```js
+// rollup.config.js
+import image from '@rollup/plugin-image';
+import postcss from 'rollup-plugin-postcss';
+
+export default {
+  input: 'src/main.js',
+  output: {
+    dir: 'dist',
+    format: 'es',
+    assetFileNames: ({name}) => {
+      // 自定义命名函数
+      if (name && name.endsWith('.css')) {
+        return 'css/[name].[hash][extname]';
+      }
+      return 'assets/[hash][extname]';
+    }
+  },
+  plugins: [
+    image(),
+    postcss({
+      extract: true // 提取CSS为单独文件
+    })
+  ]
+};
+```
+
+:::
+
+### 	output.compact
+
+...
