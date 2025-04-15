@@ -9,11 +9,15 @@ comments: false
 
 ## About me
 
+<img src="../public/logo.png" alt="logo" style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 10px auto;">
 
-
--   👋 Hi, I'm [ 鱼梦江湖 ]
-
--   📮️ How to reach me: <a style="border-bottom:2px solid var(--vp-c-brand-1);">yumengjh@outlook.com</a>
+<div style="text-align: center;">
+    <p>👋 Hi, I'm [ 鱼梦江湖 ]</p>
+    <p>📮️ My Email: <a style="color: var(--vp-c-brand-1); text-decoration: underline;">yumengjh@outlook.com</a></p>
+    <p>📈 My State: 
+    <span style="font-weight: bold;">沉淀中</span>
+    </p>
+</div>
 
 
 ---

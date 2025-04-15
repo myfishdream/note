@@ -3,8 +3,8 @@
         <h1 class="error-code">404</h1>
         <p class="error-text">PAGE NOT FOUND</p>
         <div class="error-image">
-            <a href="/">
-                <img src="/images/404.png" alt="无法访问" class="plug-image">
+            <a href="/" title="点击返回首页">
+                <img src="/images/logo-web.png" alt="无法访问" class="plug-image">
             </a>
         </div>
     </div>
@@ -30,7 +30,7 @@
 }
 
 .error-text {
-    font-size: 20px;
+    font-size: 25px;
     color: var(--vp-c-text-2);
     margin-top: 20px;
 }
