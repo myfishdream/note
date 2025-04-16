@@ -28,10 +28,10 @@ const cdnSources = [
 ];
 
 // 图片加载超时设置（毫秒）
-const IMAGE_TIMEOUT = 1000;
+const IMAGE_TIMEOUT = 500;
 
 // 是否开启调试
-const debug = true;
+const debug = false;
 
 // 初始化图片自动切换功能
 export function setupImgFallback() {

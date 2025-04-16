@@ -86,3 +86,6 @@ export default {
         );
     }
 }
+
+// 如果需要去除图片自动切换功能，请将setupImgFallback();注释掉
+// initImages();还原
