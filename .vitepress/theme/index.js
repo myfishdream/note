@@ -12,6 +12,7 @@ import './custom.css'
 import { useRoute, useData } from 'vitepress';
 import { onMounted, watch, nextTick } from 'vue';
 import mediumZoom from 'medium-zoom';
+import { setupImgFallback } from './utils/imgFallback';     // 图片自动切换源
 
 export default {
     ...DefaultTheme,
@@ -31,21 +32,16 @@ export default {
             return isDark.value ? '/images/loading-error-dark.png' : '/images/loading-error-light.png';
         }
 
-        // 全局图片错误处理
-        const handleImageError = (event) => {
-            // console.log('图片加载失败，使用默认图片')
-            event.target.src = getErrorImage()
-            event.target.onerror = null // 防止无限循环
-        }
-
         // 初始化图片处理
         const initImages = () => {
             // 为所有图片添加错误处理
             document.querySelectorAll('img').forEach(img => {
                 if (!img.onerror) {
-                    img.onerror = handleImageError
+                    img.onerror = (event) => {
+                        event.target.src = getErrorImage();
+                    };
                 }
-            })
+            });
         }
 
         const initZoom = () => {
@@ -56,30 +52,35 @@ export default {
             mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
         };
 
-        // 在 setup() 函数内添加
+        // 更新错误图片
         const updateErrorImages = () => {
-            const errorSrc = getErrorImage()
+            const errorSrc = getErrorImage();
             document.querySelectorAll('img').forEach(img => {
                 if (img.src.includes('loading-error')) {
-                    img.src = errorSrc
+                    img.src = errorSrc;
                 }
-            })
+            });
         }
 
-        // 监听主题变化（可以删除，因为 isDark 是响应式的）
         watch(isDark, () => {
             updateErrorImages();
         });
         
         onMounted(() => {
-            initImages();
+            // 初始化原有的图片功能
+            // initImages();
+
+            // 设置图片自动切换功能
+            setupImgFallback();
+            
+            // 初始化原有的图片功能
             initZoom();
         });
 
         watch(
             () => route.path,
             () => nextTick(() => {
-                initImages();
+                setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
                 initZoom();
             })
         );
