@@ -68,10 +68,10 @@ export default {
         
         onMounted(() => {
             // 初始化原有的图片功能
-            // initImages();
+            initImages();
 
             // 设置图片自动切换功能
-            setupImgFallback();
+            // setupImgFallback();
             
             // 初始化原有的图片功能
             initZoom();
@@ -80,7 +80,8 @@ export default {
         watch(
             () => route.path,
             () => nextTick(() => {
-                setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
+                // setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
+                initImages();
                 initZoom();
             })
         );
