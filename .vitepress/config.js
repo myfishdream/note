@@ -43,7 +43,6 @@ export default defineConfig({
             }
         },
         posts: await getPosts(pageSize),
-        website: '/pages/about', //copyright link
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Category', link: '/pages/category' },
@@ -61,6 +60,7 @@ export default defineConfig({
         socialLinks: [{ icon: 'github', link: 'https://github.com/yumengjh' }]
         ,
         website: {
+            copyrightLink:'/pages/about',
             showLantern: false,
             lanternText: ['康'],
         }

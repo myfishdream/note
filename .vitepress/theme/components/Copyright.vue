@@ -10,7 +10,7 @@
 import { useData } from 'vitepress'
 
 const { site, theme } = useData()
-const website = theme.value.website
+const website = theme.value.website.copyrightLink
 const webTitle = site.value.title
 </script>
 

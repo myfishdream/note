@@ -5,6 +5,11 @@ import Category from './components/Category.vue'
 import Tags from './components/Tags.vue'
 import Page from './components/Page.vue'
 
+// 代码块折叠
+// https://github.com/T-miracle/vitepress-plugin-codeblocks-fold/blob/main/README_zh.md
+import codeblocksFold from 'vitepress-plugin-codeblocks-fold'; // 导入方法
+import 'vitepress-plugin-codeblocks-fold/style/index.css'; // 导入样式
+
 import './style.css'
 import './custom.css'
 
@@ -25,8 +30,8 @@ export default {
     },
     setup() {
         const route = useRoute();
-        const { isDark } = useData();  // 使用 useData 获取主题状态
-        
+        const { isDark, frontmatter } = useData();  // 使用 useData 获取主题状态
+        codeblocksFold({ route, frontmatter }, true, 200);
         // 根据主题获取对应的错误图片
         const getErrorImage = () => {
             return isDark.value ? '/images/loading-error-dark.png' : '/images/loading-error-light.png';
@@ -65,14 +70,14 @@ export default {
         watch(isDark, () => {
             updateErrorImages();
         });
-        
+
         onMounted(() => {
             // 初始化原有的图片功能
             initImages();
 
             // 设置图片自动切换功能
             // setupImgFallback();
-            
+
             // 初始化原有的图片功能
             initZoom();
         });
