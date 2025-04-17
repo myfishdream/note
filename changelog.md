@@ -50,3 +50,6 @@ cbf 还有两个参数：true 和 false
 true 表示当前页面所有代码块开启折叠
 false 表示当前页面所有代码块不开启折叠
 
+## 2025-04-16 进度条
+
+https://github.com/ZhongxuYang/vitepress-plugin-nprogress/

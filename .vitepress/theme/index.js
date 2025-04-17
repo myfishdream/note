@@ -10,6 +10,11 @@ import Page from './components/Page.vue'
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold'; // 导入方法
 import 'vitepress-plugin-codeblocks-fold/style/index.css'; // 导入样式
 
+// 进度条
+import vitepressNprogress from 'vitepress-plugin-nprogress'
+import 'vitepress-plugin-nprogress/lib/css/index.css'
+
+
 import './style.css'
 import './custom.css'
 
@@ -22,11 +27,12 @@ import mediumZoom from 'medium-zoom';
 export default {
     ...DefaultTheme,
     Layout: NewLayout,
-    enhanceApp({ app }) {
-        app.component('Tags', Tags)
-        app.component('Category', Category)
-        app.component('Archives', Archives)
-        app.component('Page', Page)
+    enhanceApp(ctx) {
+        vitepressNprogress(ctx)
+        ctx.app.component('Tags', Tags)
+        ctx.app.component('Category', Category)
+        ctx.app.component('Archives', Archives)
+        ctx.app.component('Page', Page)
     },
     setup() {
         const route = useRoute();
