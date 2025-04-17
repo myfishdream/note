@@ -14,6 +14,8 @@ import 'vitepress-plugin-codeblocks-fold/style/index.css'; // 导入样式
 import vitepressNprogress from 'vitepress-plugin-nprogress'
 import 'vitepress-plugin-nprogress/lib/css/index.css'
 
+// 时间轴
+import "vitepress-markdown-timeline/dist/theme/index.css";
 
 import './style.css'
 import './custom.css'

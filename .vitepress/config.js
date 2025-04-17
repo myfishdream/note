@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
+import timeline from "vitepress-markdown-timeline";
 //     "markdown-it-custom-attrs": "^1.0.2",
 // import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
@@ -22,6 +23,7 @@ export default defineConfig({
             // md.use(mdItCustomAttrs, 'image', {
             //     'data-fancybox': "gallery"
             // })
+            md.use(timeline);
         },
         image: {
             lazyLoading: true,

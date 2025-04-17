@@ -254,3 +254,8 @@ img[data-fancybox="gallery"] {
 .medium-zoom-image {
   z-index: 21;
 }
+
+/* 时间轴 */
+.timeline-dot::before {
+    border: solid 2px #0571c4;
+}
