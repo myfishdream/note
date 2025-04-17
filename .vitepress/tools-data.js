@@ -1,3 +1,5 @@
+
+
 const badge = {
   new: 'NEW',
   hot: 'HOT',
@@ -52,6 +54,12 @@ export const toolsdata = [
   {
     title: '设计',
     items: [
+      {
+        title:'iconarchive',
+        desc:'提供多种图标ico，包括ico格式',
+        link:'https://www.iconarchive.com/',
+        linktxt:'iconarchive.com'
+      },
       {
         title: "iconfont",
         desc: "阿里巴巴矢量图标库",
@@ -206,7 +214,12 @@ export const toolsdata = [
   {
     title: '开发',
     items: [
-
+      {
+        title: 'Rust 语言圣经',
+        desc: '如果你想成为更优秀的程序员或者是玩转开源，那 Rust 还真是不错的选择',
+        link: 'https://course.rs/about-book.html',
+        linktxt: 'course.rs',
+      },
       {
         title: 'MDN Web Docs',
         desc: '由 Mozilla 维护的开发者文档平台',

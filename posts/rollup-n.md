@@ -4,10 +4,10 @@ date: 2025-04-07
 category: Note
 tags:
     - Rollup
-description: 学习Rollup的一些笔记
+description: 学习Rollup的一些笔记，通俗易懂的解释其用法，场景等，适合初学者，大佬勿喷。
 draft: false
 outline: [2,3]
-# sticky: true
+sticky: true
 done: true
 ---
 
@@ -771,4 +771,423 @@ export default {
 
 ### 	output.compact
 
+用于控制生成的 bundle 代码的紧凑程度。
+
+```js
+export default {
+  input: 'src/main.js',
+  output: {
+    file: 'dist/bundle.js',
+    format: 'iife',
+    compact: true  // 启用紧凑模式
+  }
+}
+```
+
+启用后的效果：
+
+1. **移除空白字符**：
+   - 删除不必要的空格
+   - 删除换行符
+   - 删除缩进
+2. **缩短标识符**：
+   - 局部变量重命名为短名称
+   - 保持导出名称不变
+3. **简化表达式**：
+
+```js
+// 转换前
+if (condition) {
+  return true;
+} else {
+  return false;
+}
+
+// 转换后
+return condition?true:false
+```
+
+通常与其它**压缩工具**配合，比如**terser()**，`import { terser } from 'rollup-plugin-terser';`
+
+### output.dynamicImportInCjs
+
+用于控制 CommonJS 输出格式中动态导入(`import()`)行为的配置项。
+
+决定在 CommonJS 输出格式中如何处理动态 `import()` 表达式。
+
+**适用场景**：
+
+- 当输出格式为 `cjs` (CommonJS) 时
+- 代码中包含动态 `import()` 表达式
+- 需要控制动态导入的转换方式
+
+| 值             | 行为                                            |
+| :------------- | :---------------------------------------------- |
+| `false` (默认) | 将动态导入转换为 `Promise.resolve(require(id))` |
+| `true`         | 保留原生的 `import()` 表达式                    |
+
+```js
+// src/main.js
+async function loadModule() {
+  const module = await import('./module.js');
+  console.log(module);
+}
+```
+
+输出：
+
+::: code-group
+```js [false]
+// dist/bundle.cjs.js
+async function loadModule() {
+  const module = await Promise.resolve(require('./module.js'));
+  console.log(module);
+}
+```
+
+```ts [true]
+// dist/bundle.cjs.js
+async function loadModule() {
+  const module = await import('./module.js');
+  console.log(module);
+}
+```
+:::
+
+使用场景：
+
+#### 使用 `true` 的情况
+
+1. 运行环境支持原生动态导入 (Node.js 12+)
+2. 需要真正的 ESM 动态导入行为
+3. 依赖的模块是 ESM 格式
+
+#### 使用 `false` (默认) 的情况
+
+1. 需要兼容旧版 Node.js
+2. 目标环境不支持原生 `import()`
+3. 依赖的模块是 CommonJS 格式
+
+::: details Node.js 双模式包
+
+```js
+// package.json
+{
+  "type": "module",
+  "exports": {
+    "require": "./dist/bundle.cjs",
+    "import": "./dist/bundle.mjs"
+  }
+}
+
+// rollup.config.js
+export default {
+  output: [
+    {
+      file: 'dist/bundle.cjs',
+      format: 'cjs',
+      dynamicImportInCjs: true // Node.js 12+
+    },
+    {
+      file: 'dist/bundle.mjs',
+      format: 'es'
+    }
+  ]
+}
+```
+
+:::
+
+### output.entryFileNames
+
+用于控制入口 chunk 文件命名规则的配置项，特别适用于多入口项目或代码拆分场景。
+
+```js
+export default {
+  input: ['src/main.js', 'src/other.js'],
+  output: {
+    dir: 'dist',
+    format: 'es',
+    entryFileNames: '[name]-[hash].js' // 入口文件命名规则
+  }
+}
+```
+
+#### 可用占位符
+
+| 占位符      | 说明                              | 示例               |
+| :---------- | :-------------------------------- | :----------------- |
+| `[name]`    | 入口名称（基于输入配置）          | `main` `other`     |
+| `[hash]`    | 基于文件内容的哈希值（默认8字符） | `e4ca327f`         |
+| `[hash:16]` | 指定哈希长度                      | `e4ca327f5b6a8d9c` |
+| `[format]`  | 输出格式（如 `es`、`cjs`）        | `es` `cjs`         |
+
+::: code-group
+```js [基础命名模式]
+entryFileNames: 'entries/[name].js'
+```
+
+```js [输出]
+dist/entries/main.js
+dist/entries/other.js
+```
+:::
+
+::: code-group
+```js [带哈希版本控制]
+entryFileNames: '[name]-[hash:8].js'
+```
+
+```js [输出]
+dist/main-e4ca327f.js
+dist/other-3b2a7c9d.js
+```
+:::
+
+::: code-group
+```js [按格式分类]
+entryFileNames: '[format]/[name].js'
+```
+
+```ts [输出]
+dist/es/main.js
+dist/es/other.js
+```
+:::
+
+::: code-group
+```js [多页面应用]
+input: {
+  home: 'src/pages/home.js',
+  about: 'src/pages/about.js',
+  contact: 'src/pages/contact.js'
+},
+output: {
+  dir: 'dist',
+  entryFileNames: 'pages/[name]/bundle.js'
+}
+```
+
+```ts 输出]
+dist/
+  pages/
+    home/
+      bundle.js
+    about/
+      bundle.js
+    contact/
+      bundle.js
+```
+:::
+
+### output.extend
+
+用于控制 **UMD/IIFE** 格式输出的全局变量扩展行为的配置项
+
+**作用**：当设置为 `true` 时，如果全局变量已存在，Rollup 会将输出**扩展**到现有变量而**不是替换**它。
+
+**注意：**适用于**umd**和**iife**
+
+- 主要用于向现有的全局命名空间**添加功能**
+- 开发可扩展的库
+- 避免覆盖现有的全局变量
+
+```js
+export default {
+  input: 'src/main.js',
+  output: {
+    file: 'dist/bundle.js',
+    format: 'umd',
+    name: 'MyLibrary', // 必须指定全局变量名
+    extend: true       // 启用扩展模式
+  }
+}
+```
+
+::: code-group
+```js [输入代码]
+// src/main.js
+export const version = '1.0.0';
+export function greet() {
+  console.log('Hello!');
+}
+```
+
+```js [false(默认)]
+// 输出 (会完全替换 MyLibrary)
+var MyLibrary = (function() {
+  const version = '1.0.0';
+  function greet() {
+    console.log('Hello!');
+  }
+  return {
+    version: version,
+    greet: greet
+  };
+})();
+```
+```js [true]
+// 输出 (会扩展 MyLibrary)
+var MyLibrary = MyLibrary || {};
+MyLibrary.version = '1.0.0';
+MyLibrary.greet = function() {
+  console.log('Hello!');
+};
+```
+
+:::
+
+**渐进增强**
+
+```js
+// 主库
+var MyLib = { plugins: {} };
+
+// 插件1 
+var MyLib = MyLib || {};
+MyLib.plugins.analytics = function() { /*...*/ };
+
+// 插件2 
+var MyLib = MyLib || {};
+MyLib.plugins.charts = function() { /*...*/ };
+```
+
+### output.externalImportAttributes
+
+用于控制如何处理导入声明中的导入属性
+
 ...
+
+### output.generatedCode
+
+用于精细控制生成代码风格的配置选项，可以精确控制 Rollup 如何生成输出代码的各种语法特性
+
+```js
+export default {
+  output: {
+    generatedCode: {
+      // 可配置选项将在这里
+    }
+  }
+}
+```
+
+其参数可以是一个预设，也可以是一对象https://cn.rollupjs.org/configuration-options/#output-generatedcode
+
+### output.hashCharacters
+
+用于控制生成哈希值所用字符集的配置选项，它影响所有使用哈希的地方（如 `[hash]` 占位符）
+
+```js
+export default {
+  input: 'src/main.js',
+  output: {
+    dir: 'dist',
+    format: 'es',
+    assetFileNames: '[name]-[hash][extname]',
+    hashCharacters: 'base36' // 指定哈希字符集
+  }
+}
+```
+
+| 选项值     | 字符集              | 示例哈希          |
+| :--------- | :------------------ | :---------------- |
+| `'base64'` | A-Z, a-z, 0-9, +, / | `Fj8+3Dp/`        |
+| `'base36'` | 0-9, a-z            | `4f9k2z`          |
+| `'hex'`    | 0-9, a-f            | `e4ca327f` (默认) |
+
+### output.hoistTransitiveImports
+
+用于控制是否**提升**(hoist)**传递性导入**(transitive imports)的配置选项，主要影响代码拆分时的导入组织方式。
+
+#### 基本概念
+
+**传递性导入**：指模块A导入模块B，模块B又导入模块C，那么模块C就是模块A的传递性导入。
+
+**提升(Hoisting)**：将传递性导入从原始位置移动到更高层级，通常是入口文件或共享chunk中。
+
+| 值            | 行为                      |
+| :------------ | :------------------------ |
+| `true` (默认) | 提升传递性导入到共享chunk |
+| `false`       | 保持传递性导入在原始位置  |
+
+::: code-group
+```js [结构]
+src/
+├── main.js (入口)
+├── moduleA.js
+└── moduleB.js
+```
+
+```js [代码]
+// src/main.js
+import { a } from './moduleA';
+
+// src/moduleA.js
+import { b } from './moduleB';
+export const a = b + 1;
+
+// src/moduleB.js
+export const b = 42;
+```
+```js [true]
+dist/
+├── main.js (包含moduleB的代码)
+└── moduleA.js
+```
+
+```js [false]
+dist/
+├── main.js
+├── moduleA.js (包含moduleB的代码)
+└── moduleB.js
+```
+
+:::
+
+**使用场景**：
+
+使用 `false` 的情况
+
+1. 需要保持严格的模块依赖关系
+2. 调试时希望看到原始导入结构
+3. 某些特殊代码拆分需求
+
+使用 `true` (默认) 的情况
+
+1. 希望减少重复代码
+2. 优化加载性能
+3. 大多数常规应用场景
+
+### output.importAttributesKey
+
+用于控制导入属性(Import Attributes)语法中使用的关键字。这个配置主要影响代码中如何处理模块导入的类型断言。
+
+...
+
+### output.inlineDynamicImports
+
+用于控制动态导入（`import()`）行为的配置选项，它决定是否将动态导入的模块内联到主 bundle 中。
+
+**动态导入**：使用 `import()` 语法在运行时按需加载模块。
+
+**内联（Inlining）**：将动态导入的模块直接包含在主 bundle 中，而不是生成单独的 chunk。
+
+| 值             | 行为                               |
+| :------------- | :--------------------------------- |
+| `false` (默认) | 为动态导入创建单独的 chunk         |
+| `true`         | 将动态导入的模块内联到主 bundle 中 |
+
+使用 `true` 的情况
+
+1. 构建单文件库时
+2. 动态导入的模块很小，不值得拆分
+3. 需要减少HTTP请求数量
+4. 目标环境不支持代码拆分
+
+使用 `false` (默认) 的情况
+
+1. 需要利用代码拆分优化加载性能
+2. 动态导入的模块较大
+3. 构建多页面应用
+4. 需要按需加载功能
