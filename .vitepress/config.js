@@ -34,7 +34,7 @@ export default defineConfig({
     ],
     themeConfig: {
         // logo: '/logo.png',
-        externalLinkIcon: true,
+        externalLinkIcon: false,
         lastUpdated: {
             text: 'Last updated',
             formatOptions: {
@@ -49,6 +49,11 @@ export default defineConfig({
             { text: 'Category', link: '/pages/category' },
             { text: 'Tags', link: '/pages/tags' },
             { text: 'Archives', link: '/pages/archives' },
+            { text: 'Tool', items: [
+                { text: 'Site', link: '/pages/site' },
+                // { text: 'Tool2', link: '/pages/tool2' },
+                // { text: 'Tool3', link: '/pages/tool3' },
+            ] },
             { text: 'About', link: '/pages/about' },
         ],
         search: {

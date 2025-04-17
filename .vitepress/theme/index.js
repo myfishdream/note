@@ -12,7 +12,7 @@ import './custom.css'
 import { useRoute, useData } from 'vitepress';
 import { onMounted, watch, nextTick } from 'vue';
 import mediumZoom from 'medium-zoom';
-import { setupImgFallback } from './utils/imgFallback';     // 图片自动切换源
+// import { setupImgFallback } from './utils/imgFallback';     // 图片自动切换源
 
 export default {
     ...DefaultTheme,
@@ -68,10 +68,10 @@ export default {
         
         onMounted(() => {
             // 初始化原有的图片功能
-            // initImages();
+            initImages();
 
             // 设置图片自动切换功能
-            setupImgFallback();
+            // setupImgFallback();
             
             // 初始化原有的图片功能
             initZoom();
@@ -80,8 +80,8 @@ export default {
         watch(
             () => route.path,
             () => nextTick(() => {
-                setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
-                // initImages();
+                // setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
+                initImages();
                 initZoom();
             })
         );
