@@ -49,11 +49,7 @@ export default defineConfig({
             { text: 'Category', link: '/pages/category' },
             { text: 'Tags', link: '/pages/tags' },
             { text: 'Archives', link: '/pages/archives' },
-            { text: 'Tool', items: [
-                { text: 'Site', link: '/pages/site' },
-                // { text: 'Tool2', link: '/pages/tool2' },
-                // { text: 'Tool3', link: '/pages/tool3' },
-            ] },
+            { text: 'Tool', link: '/pages/site' },
             { text: 'About', link: '/pages/about' },
         ],
         search: {
@@ -63,6 +59,11 @@ export default defineConfig({
             label: '文章摘要'
         },
         socialLinks: [{ icon: 'github', link: 'https://github.com/yumengjh' }]
+        ,
+        website: {
+            showLantern: false,
+            lanternText: ['康'],
+        }
     },
     srcExclude: ['README.md'], // 排除README.md文件，不需要编译
 
