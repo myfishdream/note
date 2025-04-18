@@ -12,7 +12,7 @@ export default defineConfig({
     titleTemplate: ':title - YuMeng',
     base: '/',
     cacheDir: './node_modules/vitepress_cache',
-    description: 'vitepress,blog,blog-theme',
+    description: '鱼梦江湖的个人博客，记录生活，分享技术。',
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: true,
