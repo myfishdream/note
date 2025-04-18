@@ -1,9 +1,9 @@
 :root {
     --vp-c-indigo-1: #007e58;
-    --vp-c-indigo-2:#1b8e71;
+    --vp-c-indigo-2: #1b8e71;
     --vp-c-brand: #00989d;
-    --vp-code-color:#3451b2;
-    --vp-c-brand-light: var(--vp-c-brand);  
+    --vp-code-color: #3451b2;
+    --vp-c-brand-light: var(--vp-c-brand);
     --vp-c-brand-lighter: var(--vp-c-brand);
     --vp-c-brand-dark: var(--vp-c-brand);
     --vp-c-brand-darker: var(--vp-c-brand);
@@ -19,9 +19,9 @@
 
 .dark {
     --vp-c-indigo-1: #009b6d;
-    --vp-c-indigo-2:#1b8e71;
+    --vp-c-indigo-2: #1b8e71;
     --vp-c-brand: #00989d;
-    --vp-code-color:#a8b1ff;
+    --vp-code-color: #a8b1ff;
     --bt-theme-title: #fff;
 }
 
@@ -248,14 +248,27 @@ img[data-fancybox="gallery"] {
 
 /* 图片缩放 */
 .medium-zoom-overlay {
-  z-index: 20;
+    z-index: 20;
 }
 
 .medium-zoom-image {
-  z-index: 21;
+    z-index: 21;
 }
 
 /* 时间轴 */
 .timeline-dot::before {
     border: solid 2px #0571c4;
+}
+
+/* 进度条*/
+
+/* Make clicks pass-through */
+#nprogress {
+    pointer-events: none;
+}
+
+#nprogress .bar {
+    background: linear-gradient(120deg, #2d60ec, #3ccfda) !important;
+    /* -webkit-background-clip: text !important; */
+    animation: animate 2s linear infinite;
 }

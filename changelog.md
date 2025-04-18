@@ -69,3 +69,16 @@ do some thing3
 do some thing4
 :::
 ```
+
+## 2025-04-18 RSS
+
+https://github.com/ATQQ/sugar-blog/blob/master/packages/vitepress-plugin-rss/README-zh.md
+
+包含 publish: false 的文章将不会出现在最终的 rss 文件中，可以用来忽略目标文章
+
+```md
+---
+publish: false
+---
+
+```
