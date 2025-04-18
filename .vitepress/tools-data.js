@@ -416,7 +416,7 @@ export const toolsdata = [
       {
         title: 'TailwindCSS',
         desc: '功能类优先的 CSS 框架',
-        link: 'https://tailwindcss.com/',
+        link: 'https://tailwind.nodejs.cn/',
         linktxt: 'tailwindcss.com',
         badge: badge.hot,
         badgeType: badgeType.hot
