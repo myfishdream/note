@@ -1,84 +1,55 @@
 # 更新历史
-## 2025-04-07 美化URL地址
-生成html页面的时候不带有后缀，添加Vitepress配置`cleanUrls: true`，用于生成干净的URL，不带有 .html 后缀。
-
-## 2025-04-11 增强标签选中交互
-
-## 2025-04-12 添加置顶功能 + 全局图片错误处理
-
-## 2025-04-12 自定义404页面
-
-## 2025-04-13 添加自动生成新文章脚本  
-
-## ~~2025-04-13 添加重写路由~~
-```js
-  rewrites: {
-        'posts/:article': '/:article',
-        'pages/:page': '/:page'
-    }
-```
-访问的URL将自动重写为：
-```
-/posts/my-post -> /my-post
-/pages/about -> /about
-```
-更简洁的URL
-
-只是在页面内的URL美化，但是复制链接在页面外访问时，没有具体路径还是无法找到页面
-
-## 2025-04-14 图片自动切换源
-
-## 2025-04-15 氛围组
-
-## 2025-04-15 代码块折叠
-```md
 
 ---
-cbf: [1,2,3]
----
 
-```
-
-该数组含义为：
-
-当 defaultAllFold 设置为 true （即默认全部页面开启折叠）时，当前页面第 1、2、3 个代码块强制不开启折叠
-当 defaultAllFold 设置为 false （即默认全部页面不开启折叠）时，当前页面第 1、2、3 个代码块强制开启折叠
-
-
-cbf 还有两个参数：true 和 false
-
-true 表示当前页面所有代码块开启折叠
-false 表示当前页面所有代码块不开启折叠
-
-## 2025-04-16 进度条
-
-https://github.com/ZhongxuYang/vitepress-plugin-nprogress/
-
-## 2025-04-17 时间轴
-
-https://github.com/HanochMa/vitepress-markdown-timeline
-
-```md
-::: timeline 2023-05-24
-- **do some thing1**
-- do some thing2
+::: timeline 2025-04-18
+- **RSS**
+- 添加 RSS 功能支持
+- 通过 `publish: false` 可以在 frontmatter 中设置文章不出现在 RSS 中
 :::
 
-::: timeline 2023-05-23
-do some thing3
-do some thing4
+::: timeline 2025-04-17
+- **时间轴**
+- 添加 vitepress-markdown-timeline 插件支持
+- 支持 Markdown 时间轴语法
 :::
-```
 
-## 2025-04-18 RSS
+::: timeline 2025-04-16
+- **进度条**
+- 添加 vitepress-plugin-nprogress 插件
+- 页面跳转时显示顶部进度条
+:::
 
-https://github.com/ATQQ/sugar-blog/blob/master/packages/vitepress-plugin-rss/README-zh.md
+::: timeline 2025-04-15
+- **代码块折叠**
+- 支持通过 frontmatter 中的 `cbf` 控制代码块折叠 （cbf: [1,2,3]当前页面的第1、2、3个代码块不开启折叠，true/false表示当前页面的所有代码块是否开启折叠）
+- **氛围组**
+- 添加氛围组组件
+:::
 
-包含 publish: false 的文章将不会出现在最终的 rss 文件中，可以用来忽略目标文章
+::: timeline 2025-04-14
+- **图片自动切换源**
+- 优化图片加载体验
+:::
 
-```md
----
-publish: false
----
+::: timeline 2025-04-13
+- **添加自动生成新文章脚本**
+- ~~添加重写路由~~（已废弃：外部访问时无法找到具体路径）
+:::
 
-```
+::: timeline 2025-04-12
+- **添加置顶功能**
+- **全局图片错误处理**
+- **自定义404页面**
+:::
+
+::: timeline 2025-04-11
+- **增强标签选中交互**
+- 优化标签选择的用户体验
+:::
+
+::: timeline 2025-04-07
+- **美化URL地址**
+- 添加 `cleanUrls: true` 配置
+- 生成的 HTML 页面不带有 .html 后缀
+:::
