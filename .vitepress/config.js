@@ -107,8 +107,8 @@ export default defineConfig({
         }
     },
     // 重写路由
-    rewrites: {
-        'posts/:article': '/:article',
-        'pages/:page': '/:page'
-    }
+    // rewrites: {
+    //     'posts/:article': '/:article',
+    //     'pages/:page': '/:page'
+    // }
 }) 
