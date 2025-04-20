@@ -28,7 +28,7 @@ const cdnSources = [
 ];
 
 // 图片加载超时设置（毫秒）
-const IMAGE_TIMEOUT = 3000;
+const IMAGE_TIMEOUT = 10000;
 
 // 是否开启调试
 const debug = false;

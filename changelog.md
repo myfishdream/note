@@ -1,6 +1,37 @@
+---
+title: 更新历史
+---
+
 # 更新历史
 
 ---
+
+::: timeline 2025-04-20
+- **格子纸背景**
+- 添加格子纸背景效果
+- 在 Markdown 文件的 frontmatter 中添加 `gridPaper: true` 即可启用格子纸背景效果
+- 适用于笔记页面，手绘效果页面，学术或教育内容，创意设计展示，个人日记风格的博客
+
+调整格子纸的样式，可以修改 `.vitepress/theme/custom.css` 文件中的以下部分：
+
+```css
+.grid-paper-bg {
+    background-image: 
+        linear-gradient(rgba(var(--grid-color-rgb), 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--grid-color-rgb), 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: -1px -1px;
+}
+```
+
+你可以调整以下参数：
+- 网格线颜色透明度：`rgba(var(--grid-color-rgb), 0.15)` 中的 0.15
+- 网格大小：`background-size: 20px 20px`
+
+::: tip
+格子纸背景会根据当前主题自动调整颜色，在浅色模式下使用深色网格线，在深色模式下使用浅色网格线。
+:::
+
 
 ::: timeline 2025-04-19
 - **彩带效果**

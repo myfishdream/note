@@ -1,10 +1,10 @@
 ---
-title: Vue的不同实现动画效果的方案
+title: Vue的不同实现动画效果的方案，过渡动画，逐帧动画，JS动画，分组动画
 date: 2025-04-20
 category: Note
 tags: 
     - Vue
-description: 过渡动画，逐帧动画，JS动画，分组动画
+description: Vue中实现动画效果的多种方案详解，包括基于CSS的过渡动画、逐帧动画，基于JavaScript的动画实现。
 draft: false
 outline: [2,3]
 # sticky: true

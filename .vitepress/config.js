@@ -54,8 +54,8 @@ export default defineConfig({
         // ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互
     ],
     themeConfig: {
-        // logo: '/logo.png',
-        externalLinkIcon: false,
+        logo: '/logo.png',
+        externalLinkIcon: true,
         lastUpdated: {
             text: 'Last updated',
             formatOptions: {
@@ -66,9 +66,11 @@ export default defineConfig({
         posts: await getPosts(pageSize),
         nav: [
             { text: 'Home', link: '/' },
-            { text: 'Category', link: '/pages/category' },
-            { text: 'Tags', link: '/pages/tags' },
-            { text: 'Archives', link: '/pages/archives' },
+            {text:'Filter',items:[
+                { text: 'Category', link: '/pages/category' },
+                { text: 'Tags', link: '/pages/tags' },
+                { text: 'Archives', link: '/pages/archives' },
+            ]},
             { text: 'Tool', link: '/pages/site' },
             { text: 'About', link: '/pages/about' },
         ],

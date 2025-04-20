@@ -28,4 +28,4 @@ cover: https://fish81.github.io/picx-images-hosting/20250414/avatar.9kgdbkjx8d.j
 
 类似于`span`
 
-2.2
+2.3

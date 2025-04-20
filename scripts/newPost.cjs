@@ -22,6 +22,7 @@ draft: false
 outline: [2,3]
 # sticky: true
 done: true
+gridPaper: false
 ---
 
 `

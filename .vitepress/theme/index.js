@@ -42,7 +42,7 @@ export default {
     },
     setup() {
         const route = useRoute();
-        const { isDark, frontmatter } = useData();  // 使用 useData 获取主题状态
+        const { isDark, frontmatter } = useData();  // 使用 useData 获取主题状态和frontmatter
         codeblocksFold({ route, frontmatter }, true, 200);
         // 根据主题获取对应的错误图片
         const getErrorImage = () => {
@@ -83,6 +83,25 @@ export default {
             updateErrorImages();
         });
 
+        // 处理格子纸背景
+        const setupGridPaperBg = () => {
+            nextTick(() => {
+                const mainElement = document.querySelector('.VPContent');
+                if (!mainElement) return;
+                
+                // 检查frontmatter中是否启用格子纸背景
+                const gridPaperEnabled = frontmatter.value.gridPaper === true;
+                
+                if (gridPaperEnabled) {
+                    mainElement.classList.add('grid-paper-bg');
+                } else {
+                    mainElement.classList.remove('grid-paper-bg');
+                }
+                
+                // console.log(`[Theme] Grid paper background ${gridPaperEnabled ? 'enabled' : 'disabled'}`);
+            });
+        };
+
         onMounted(() => {
             // 初始化原有的图片功能
             initImages();
@@ -92,6 +111,9 @@ export default {
 
             // 初始化原有的图片功能
             initZoom();
+            
+            // 设置格子纸背景
+            setupGridPaperBg();
         });
 
         watch(
@@ -100,7 +122,16 @@ export default {
                 // setupImgFallback(); // 在路由变化时重新初始化图片自动切换功能
                 initImages();
                 initZoom();
+                setupGridPaperBg(); // 路由变化时重新检查格子纸背景设置
             })
+        );
+        
+        // 监听frontmatter变化
+        watch(
+            () => frontmatter.value,
+            () => {
+                setupGridPaperBg();
+            }
         );
     }
 }
