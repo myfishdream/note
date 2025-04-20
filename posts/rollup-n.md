@@ -7,8 +7,8 @@ tags:
 description: 学习Rollup的一些笔记，通俗易懂的解释其用法，场景等，适合初学者，大佬勿喷。
 draft: false
 outline: [2,3]
-sticky: true
-done: true
+sticky: false
+done: false
 ---
 
 <Finish />
@@ -1193,3 +1193,31 @@ dist/
 2. 动态导入的模块较大
 3. 构建多页面应用
 4. 需要按需加载功能
+
+
+
+### output.interop
+
+用于控制不同模块格式之间**互操作行为**的配置选项，主要影响如何对待从 CommonJS 模块导入的内容。
+
+**模块互操作(Interop)**：指不同模块系统（如 CommonJS 和 ES 模块）之间的交互方式。
+
+**主要场景**：
+
+- 从 CommonJS 模块导入默认导出
+- 处理混合模块系统中的 `default` 导出
+
+#### 配置选项
+
+| 值                                              | 行为描述                     | 适用场景       |
+| :---------------------------------------------- | :--------------------------- | :------------- |
+| `'auto'` (默认)                                 | 根据情况自动选择最佳方式     | 大多数情况     |
+| `'esModule'`                                    | 假设所有外部依赖都是 ES 模块 | 纯ES模块环境   |
+| `'default'`                                     | 传统CommonJS兼容方式         | 需要兼容旧环境 |
+| `'defaultOnly'`                                 | 更严格的CommonJS处理         | 特定兼容需求   |
+| `false`                                         | 禁用特殊处理                 | 高级使用场景   |
+| `function(id: string, defaultInterop: boolean)` | 自定义处理逻辑               | 精细控制       |
+
+## 观察选项
+
+https://cn.rollupjs.org/configuration-options/#watch

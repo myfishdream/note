@@ -9,7 +9,7 @@
                 </span>
                 <span v-if="article.frontMatter.done" class="sticky-tag">
                     <!-- 未完成图标 -->
-                    🔨
+                    <!-- <svg t="1745112021376" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17279" width="17" ><path d="M512 19.692308C240.246154 19.692308 19.692308 240.246154 19.692308 512S240.246154 1004.307692 512 1004.307692 1004.307692 783.753846 1004.307692 512 783.753846 19.692308 512 19.692308z m0 35.446154c252.061538 0 456.861538 204.8 456.861538 456.861538S764.061538 968.861538 512 968.861538 55.138462 764.061538 55.138462 512 259.938462 55.138462 512 55.138462z" p-id="17280"></path></svg> -->
                 </span>
             </div>
         </div>
@@ -105,7 +105,7 @@ defineProps({
     display: inline-block;
     margin-left: 8px;
     fill: var(--vp-c-brand);
-    /* transform: translateY(2px); */
+    transform: translateY(2px);
 }
 
 @media screen and (max-width: 768px) {
