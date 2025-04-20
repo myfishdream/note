@@ -15,6 +15,16 @@
     --date-color: var(--vp-c-text-2);
     --date-font-family: Georgia, sans-serif;
     --bt-theme-title: #000;
+
+    /* 加深颜色变量 */
+    --vp-custom-block-tip-border: #747bff;
+    --vp-custom-block-warning-border: #b36b00;
+    --vp-custom-block-danger-border: #a80000;
+    --vp-custom-block-info-border: #004080;
+    --vp-custom-block-details-border:#383838;
+    --vp-custom-block-important-border: #a100a1;
+    --vp-c-blue-dimm-2: #003366;
+    --vp-custom-block-caution-border: var(--vp-custom-block-danger-border);
 }
 
 .dark {
@@ -23,8 +33,80 @@
     --vp-c-brand: #00989d;
     --vp-code-color: #a8b1ff;
     --bt-theme-title: #fff;
+
+    /* 加深颜色变量 */
+    --vp-custom-block-tip-border: #747bff;
+    --vp-custom-block-warning-border: #cc8400;
+    --vp-custom-block-danger-border: #cc0000;
+    --vp-custom-block-info-border: #0059b3;
+    --vp-custom-block-details-border: #868686;
+    --vp-custom-block-important-border: #c00cc0;
+    --vp-c-blue-dimm-2: #004080;
+    --vp-custom-block-caution-border: var(--vp-custom-block-danger-border);
 }
 
+/* 自定义容器样式 */
+.custom-block {
+    /* background: transparent !important; */
+    border-width: 1px !important;
+    border-style: solid !important;
+    margin: 20px 0;
+}
+
+.custom-block p {
+    color: inherit !important;
+}
+
+.custom-block.tip {
+    border-color: var(--vp-custom-block-tip-border) !important;
+    color: var(--vp-custom-block-tip-border) !important;
+}
+
+.custom-block.warning {
+    border-color: var(--vp-custom-block-warning-border) !important;
+    color: var(--vp-custom-block-warning-border) !important;
+}
+
+.custom-block.danger {
+    border-color: var(--vp-custom-block-danger-border) !important;
+    color: var(--vp-custom-block-danger-border) !important;
+}
+
+.custom-block.info {
+    border-color: var(--vp-custom-block-info-border) !important;
+    color: var(--vp-custom-block-info-border) !important;
+}
+
+.custom-block.details {
+    border-color: var(--vp-custom-block-details-border) !important;
+    color: var(--vp-custom-block-details-border) !important;
+}
+
+.custom-block.important {
+    border-color: var(--vp-custom-block-important-border) !important;
+    color: var(--vp-custom-block-important-border) !important;
+}
+
+.custom-block.note {
+    border-color: var(--vp-c-blue-dimm-2) !important;
+    color: var(--vp-c-blue-dimm-2) !important;
+}
+
+/* 标题样式 */
+.custom-block .custom-block-title {
+    color: inherit !important;
+    font-weight: bold !important;
+}
+/* 背景 */
+.custom-block {
+    /* background-color: inherit !important; */
+}
+
+
+/* 代码块样式保持原色 */
+.custom-block :not(pre) > code {
+    color: var(--vp-code-color) !important;
+}
 
 /* 匹配target="_blank" */
 .vp-doc a[target="_blank"]:hover {
@@ -272,3 +354,5 @@ img[data-fancybox="gallery"] {
     /* -webkit-background-clip: text !important; */
     animation: animate 2s linear infinite;
 }
+
+
