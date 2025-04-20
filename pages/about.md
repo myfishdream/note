@@ -7,6 +7,8 @@ lastUpdated: false
 comments: false
 ---
 
+<Finish/>
+
 ## About me
 
 <img src="/logo.png" alt="logo" style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 10px auto;">

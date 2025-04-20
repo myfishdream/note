@@ -1,10 +1,11 @@
 ---
-title: 我的一天
+title: 程序员的一天：从起床到加班
 date: 2025-04-20
 category: Diary
 tags: 
     - Other
-description: 我的一天
+    - Work
+description: 记录一个普通程序员的一天，从睡过头到加班，从泡面到代码，从PR到数据库，充满惊喜与挑战的日常。
 draft: false
 outline: [2,3]
 # sticky: true
