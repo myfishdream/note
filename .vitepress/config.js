@@ -90,6 +90,7 @@ export default defineConfig({
             copyrightLink: '/pages/about',
             showLantern: false,
             lanternText: ['康'],
+            showJumpBtn: false,  // 是否开启跳页按钮
         }
     },
     srcExclude: ['README.md'], // 排除README.md文件，不需要编译
