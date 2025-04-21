@@ -91,6 +91,7 @@ export default defineConfig({
             showLantern: false,
             lanternText: ['康'],
             showJumpBtn: false,  // 是否开启跳页按钮
+            showPrevNextBtn: false,     // 上一頁/下一页按钮是否显示
         }
     },
     srcExclude: ['README.md'], // 排除README.md文件，不需要编译

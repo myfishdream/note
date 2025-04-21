@@ -21,7 +21,7 @@
 
     <div class="pagination">
         <!-- 上一页按钮 -->
-        <a 
+        <a v-if="theme.website.showPrevNextBtn"
             class="page-btn prev-btn" 
             :class="{ disabled: pageCurrent <= 1 }"
             :href="pageCurrent > 1 ? withBase(pageCurrent === 2 ? '/index.html' : `/page_${pageCurrent - 1}.html`) : 'javascript:void(0)'"
@@ -85,6 +85,7 @@
         
         <!-- 下一页按钮 -->
         <a 
+            v-if="theme.website.showPrevNextBtn"
             class="page-btn next-btn" 
             :class="{ disabled: pageCurrent >= pagesNum }"
             :href="pageCurrent < pagesNum ? withBase(`/page_${pageCurrent + 1}.html`) : 'javascript:void(0)'"
