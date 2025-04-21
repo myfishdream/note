@@ -85,12 +85,12 @@ onMounted(() => {
 }
 
 .tag-active {
-    background-color: var(--vp-c-brand);
-    color: white;
+    /* background-color: var(--vp-c-brand); */
+    /* color: white; */
 }
 
 .tag-active sup {
-    color: white !important;
+    /* color: white !important; */
 }
 
 .tag sup {
