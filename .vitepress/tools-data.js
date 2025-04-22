@@ -84,6 +84,12 @@ export const toolsdata = [
     title: '设计',
     items: [
       {
+        title:'favicon',
+        desc:'favicon生成器',
+        link:'https://favicon.io/',
+        linktxt:'favicon.io'
+      },
+      {
         title:'iconarchive',
         desc:'提供多种图标ico，包括ico格式',
         link:'https://www.iconarchive.com/',

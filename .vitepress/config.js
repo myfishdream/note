@@ -48,7 +48,7 @@ export default defineConfig({
         }
     },
     head: [
-        ["link", { rel: "icon", href: "/logo.png" }],
+        // ["link", { rel: "icon", href: "/logo.png" }],
         ["link", { rel: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/feed.xml" }],  // 使浏览器能够自动发现 RSS 源
         // ["link", { rel: "stylesheet", href: "https://blog.yumeng.icu/static/css/fancybox.css" },],// //全局控制图片放大样式
         // ["script", { src: "https://blog.yumeng.icu/static/js/fancybox.umd.js" }],  //全局控制图片放大交互

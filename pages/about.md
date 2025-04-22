@@ -11,7 +11,7 @@ comments: false
 
 ## About me
 
-<img src="/logo.png" alt="logo" style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 10px auto;">
+<img src="https://s21.ax1x.com/2025/02/07/pEm9bQO.jpg" alt="logo" style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 10px auto;">
 
 <div style="text-align: center;">
     <p>👋 Hi, I'm [ 鱼梦江湖 ]</p>
