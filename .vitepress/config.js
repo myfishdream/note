@@ -101,7 +101,7 @@ export default defineConfig({
 
     vite: {
         server: { port: 5000 },
-        // plugins: [RssPlugin(RSS)],
+        plugins: [RssPlugin(RSS)],
         optimizeDeps: {
             exclude: [
                 'vitepress-plugin-rss'
