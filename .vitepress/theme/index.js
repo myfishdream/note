@@ -66,7 +66,9 @@ export default {
             // mediumZoom('[data-zoomable]', { background: 'var(--vp-c-bg)' });
 
             // 全局图片使用
-            mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
+            if (frontmatter.value.zoomable !== false) {
+                mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
+            }
         };
 
         // 更新错误图片

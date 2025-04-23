@@ -6,6 +6,12 @@ title: 更新历史
 
 ---
 
+::: timeline 2025-04-23
+- **图片缩放**
+- 添加图片缩放功能
+- 在 Markdown 文件的 frontmatter 中添加 `zoomable: false` 即可禁用图片缩放功能
+:::
+
 ::: timeline 2025-04-21
 - **跳页按钮**
 - 添加跳页按钮

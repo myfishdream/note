@@ -104,33 +104,14 @@
     font-weight: bold !important;
 }
 
-/* 背景 */
-.custom-block {
-    /* background-color: inherit !important; */
-}
-
-
 /* 代码块样式保持原色 */
 .custom-block :not(pre)>code {
     color: var(--vp-code-color) !important;
 }
 
-/* 匹配target="_blank" */
-.vp-doc a[target="_blank"]:hover {
-    border-bottom: 2px solid var(--vp-c-brand);
-}
-
-/* theme reset start */
-
 .Layout {
     min-height: calc(100vh - 78px) !important;
     /* reduce copyright */
-}
-
-.vp-doc a {
-    color: var(--vp-c-text-1);
-    font-weight: 500;
-    text-decoration: none;
 }
 
 .vp-doc p {
@@ -149,17 +130,6 @@
     font-family: "Yuu", Optima, sans-serif !important;
     color: var(--bt-theme-title) !important;
     font-size: 1.5rem !important;
-}
-
-.content a[rel~='noreferrer']:link,
-a[rel~='noreferrer']:visited {
-    color: var(--vp-c-brand);
-    font-weight: 500 !important;
-    /* border-bottom: 2px solid var(--vp-c-brand-1); */
-}
-
-.content a[rel~='noreferrer']:hover {
-    color: var(--vp-c-brand);
 }
 
 h1 {
@@ -326,13 +296,14 @@ h3 {
 
 
 /* 匹配data-fancybox="gallery"的图片 */
-img[data-fancybox="gallery"] {
+img[class="medium-zoom-image"] {
     border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 
 .VPNavBarMenuLink {
-    /* font-weight: bold !important; */
+    font-weight: bold !important;
 }
 
 /* 图片缩放 */

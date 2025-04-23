@@ -1,7 +1,7 @@
 ---
 page: true
-title: Category
-description: Category
+title: 分类
+description: 分类
 aside: false
 lastUpdated: false
 comments: false

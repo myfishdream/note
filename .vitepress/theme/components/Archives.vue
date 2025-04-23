@@ -30,4 +30,7 @@ const data = computed(() => useYearSort(theme.value.posts))
     color: var(--bt-theme-title);
     font-family: var(--date-font-family),serif;
 }
+.posts{
+    text-decoration: none;
+}
 </style>

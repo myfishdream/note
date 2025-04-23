@@ -65,6 +65,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.posts {
+    text-decoration: none;
+}
 .tags {
     margin-top: 14px;
     display: flex;

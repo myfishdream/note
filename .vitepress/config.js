@@ -26,8 +26,8 @@ const RSS = {
 }
 
 export default defineConfig({
-    title: 'YuMeng',
-    titleTemplate: ':title - YuMeng',
+    title: '鱼梦江湖',
+    titleTemplate: ':title | 鱼梦江湖',
     base: '/',
     cacheDir: './node_modules/vitepress_cache',
     description: '鱼梦江湖的个人博客，记录生活，分享技术。',
@@ -55,9 +55,13 @@ export default defineConfig({
     ],
     themeConfig: {
         // logo: '/logo.png',
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '浅色模式',
+        darkModeSwitchTitle: '深色模式',
+        returnToTopLabel: '返回顶部',
         externalLinkIcon: true,
         lastUpdated: {
-            text: 'Last updated',
+            text: '最后更新时间',
             formatOptions: {
                 dateStyle: 'short', // full, long, medium, short
                 timeStyle: 'medium'
@@ -65,20 +69,37 @@ export default defineConfig({
         },
         posts: await getPosts(pageSize),
         nav: [
-            { text: 'Home', link: '/' },
+            { text: '首页', link: '/' },
             // {text:'Filter',items:[
             //     { text: 'Category', link: '/pages/category' },
             //     { text: 'Tags', link: '/pages/tags' },
             //     { text: 'Archives', link: '/pages/archives' },
             // ]},
-            { text: 'Category', link: '/pages/category' },
-            { text: 'Tags', link: '/pages/tags' },
-            { text: 'Archives', link: '/pages/archives' },
-            { text: 'Tool', link: '/pages/site' },
-            { text: 'About', link: '/pages/about' },
+            { text: '分类', link: '/pages/category' },
+            { text: '标签', link: '/pages/tags' },
+            { text: '归档', link: '/pages/archives' },
+            { text: '工具', link: '/pages/site' },
+            { text: '关于', link: '/pages/about' },
         ],
         search: {
             provider: 'local',
+            options: {
+                translations: {
+                    button: {
+                        buttonText: '搜索',
+                        buttonAriaLabel: '搜索'
+                    },
+                    modal: {
+                        noResultsText: '无法找到相关结果',
+                        resetButtonTitle: '清除查询条件',
+                        footer: {
+                            selectText: '选择',
+                            navigateText: '切换',
+                            closeText: '关闭'
+                        }
+                    }
+                }
+            }
         },
         outline: {
             label: '文章摘要'

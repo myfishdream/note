@@ -1,6 +1,6 @@
 ---
 page: true
-title: Home
+title: 首页
 aside: false
 lastUpdated: false
 comments: false

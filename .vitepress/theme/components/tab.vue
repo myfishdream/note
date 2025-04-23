@@ -70,10 +70,9 @@ const handleImageError = (event, cell) => {
 </script>
 
 <style scoped>
-a:hover {
-    border-bottom: none !important;
+a {
+    text-decoration: none;
 }
-
 .tools {
     margin-bottom: 1rem;
 

@@ -2,7 +2,7 @@
     <div v-for="(article, index) in posts" :key="index" class="post-list">
         <div class="post-header">
             <div class="post-title">
-                <a :href="withBase(article.regularPath)"> {{ article.frontMatter.title }}</a>
+                <a class="post-title-link" :href="withBase(article.regularPath)"> {{ article.frontMatter.title }}</a>
                 <span v-if="article.frontMatter.sticky" class="sticky-tag">
                     <!-- 此处可以添加置顶图标 -->
                     <!-- 💡 -->
@@ -15,7 +15,7 @@
         </div>
         <p class="describe" v-html="article.frontMatter.description"></p>
         <div class='post-info'>
-            {{ article.frontMatter.date }} <span v-for="item in article.frontMatter.tags"><a :href="withBase(`/pages/tags.html?tag=${item}`)"> {{ item }}</a></span>
+            {{ article.frontMatter.date }} <span v-for="item in article.frontMatter.tags"><a class="post-tag-link" :href="withBase(`/pages/tags.html?tag=${item}`)"> {{ item }}</a></span>
         </div>
     </div>
 
@@ -157,9 +157,19 @@ const jumpToPage = () => {
     font-weight: 500;
     color: var(--bt-theme-title)!important;
     margin: 0.1rem 0;
+    
 }
-.post-title a{
+.post-title-link{
     color: var(--bt-theme-title)!important;
+    text-decoration: none;
+}
+.post-tag-link{
+    color: var(--vp-c-text-1)!important;
+    text-decoration: none;
+}
+.post-tag-link:hover{
+    color: var(--vp-c-text-3)!important;
+    text-decoration: none;
 }
 
 .describe {
@@ -192,6 +202,8 @@ const jumpToPage = () => {
     font-weight: 400;
     border-radius: 50%;
     transition: all 0.2s;
+    text-decoration: none;
+    color: var(--vp-c-text-1);
 }
 .link:hover {
     /* border-color: var(--vp-c-text-1); */
@@ -213,6 +225,7 @@ const jumpToPage = () => {
     border: 1px var(--vp-c-divider) solid;
     border-radius: 4px;
     transition: all 0.2s;
+    text-decoration: none;
 }
 
 .page-btn:hover:not(.disabled) {
