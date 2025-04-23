@@ -7,7 +7,7 @@
     --vp-c-brand-lighter: var(--vp-c-brand);
     --vp-c-brand-dark: var(--vp-c-brand);
     --vp-c-brand-darker: var(--vp-c-brand);
-
+    --vp-code-tab-divider: var(--vp-c-divider);
     --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif;
 
     /* theme color */
