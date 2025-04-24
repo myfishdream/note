@@ -303,7 +303,14 @@ img[class="medium-zoom-image"] {
 
 
 .VPNavBarMenuLink {
+    /* font-weight: bold !important; */
+}
+.VPNavBarMenuLink.active {
     font-weight: bold !important;
+    color: inherit !important;
+}
+.VPNavBarMenuLink:hover {
+    color: inherit !important;
 }
 
 /* 图片缩放 */

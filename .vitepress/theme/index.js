@@ -67,7 +67,7 @@ export default {
 
             // 全局图片使用
             if (frontmatter.value.zoomable !== false) {
-                mediumZoom('.main img', { background: 'rgba(0,0,0,0.2)' });
+                mediumZoom('.main img:not([no-zoomable])', { background: 'rgba(0,0,0,0.2)' });
             }
         };
 
