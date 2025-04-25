@@ -296,7 +296,7 @@ h3 {
 
 
 /* 匹配data-fancybox="gallery"的图片 */
-img[class="medium-zoom-image"]:not([no-style]) {
+img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }

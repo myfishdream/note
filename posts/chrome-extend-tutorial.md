@@ -133,6 +133,8 @@ https://github.com/sxei/chrome-plugin-demo
 
 ## 转载
 
+> **Chrome插件开发全攻略** https://github.com/sxei/chrome-plugin-demo
+
 我花了将近一个多月的时间断断续续写下这篇博文，并精心写下完整demo，所以转载务必保留 http://blog.haoji.me/chrome-plugin-develop.html 。本文所有涉及到的大部分代码均在这个demo里面：https://github.com/sxei/chrome-plugin-demo ，大家可以直接下载下来运行。
 
 另外，本文图片较多，请耐心等待加载完毕。
@@ -165,7 +167,7 @@ Chrome插件是一个用Web技术开发、用来增强浏览器功能的软件�
 
 个人猜测`crx`可能是`Chrome Extension`如下3个字母的简写：
 
-![](http://image.liuxianan.com/201706/20170619_114836_364_3616.png)
+![](http://image.liuxianan.com/201706/20170619_114836_364_3616.png){no-zoomable}
 
 另外，其实不只是前端技术，Chrome插件还可以配合C++编写的dll动态链接库实现一些更底层的功能(NPAPI)，比如全屏幕截图。
 
@@ -1495,5 +1497,5 @@ Refused to execute JavaScript URL because it violates the following Content Secu
 
 附图：Chrome高清png格式logo：
 
-![](http://image.liuxianan.com/201706/20170619_113331_710_1132.png)
+![](http://image.liuxianan.com/201706/20170619_113331_710_1132.png){no-style}
 

@@ -55,6 +55,7 @@ export default {
             document.querySelectorAll('img').forEach(img => {
                 if (!img.onerror) {
                     img.onerror = (event) => {
+                        event.target.setAttribute('loading-error', '');
                         event.target.src = getErrorImage();
                     };
                 }

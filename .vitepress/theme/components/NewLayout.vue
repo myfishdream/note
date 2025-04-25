@@ -13,12 +13,6 @@
         <template #doc-footer-before>
             <!-- <Giscus /> -->
         </template>
-        <template #not-found>
-            <!-- 页面不存在 -->
-            <div class="page404">
-                <Error />
-            </div>
-        </template>
     </Layout>
     <Copyright />
 </template>
@@ -26,7 +20,6 @@
 import Lantern from './Lantern.vue'
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
-import Error from './error.vue'
 // import Giscus from './giscus.vue'
 import { withBase } from "vitepress";
 const { Layout } = DefaultTheme
