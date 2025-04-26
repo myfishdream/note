@@ -27,8 +27,8 @@ const RSS = {
 }
 
 export default defineConfig({
-    title: '鱼梦江湖',
-    titleTemplate: ':title | 鱼梦江湖',
+    title: 'YuMeng',
+    titleTemplate: ':title | YuMeng',
     base: '/',
     cacheDir: './node_modules/vitepress_cache',
     description: '鱼梦江湖的个人博客，记录生活，分享技术。',
