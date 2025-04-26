@@ -1,7 +1,7 @@
 ---
 page: true
-title: 关于
-description: 关于我的故事
+title: About
+description: About my story
 aside: false
 lastUpdated: false
 comments: false

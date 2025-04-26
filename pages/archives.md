@@ -1,7 +1,7 @@
 ---
 page: true
-title: 归档
-description: 归档
+title: Archives
+description: Archives
 aside: false
 lastUpdated: false
 comments: false

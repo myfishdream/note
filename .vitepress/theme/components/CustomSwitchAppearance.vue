@@ -50,7 +50,7 @@ function toggle(e) {
 }
 
 .VPSwitchAppearance:hover {
-  background-color: var(--vp-c-gray-soft);
+  /* background-color: var(--vp-c-gray-soft); */
 }
 
 .VPSwitchAppearance .sun, 
