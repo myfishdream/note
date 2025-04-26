@@ -50,7 +50,7 @@ async function generatePaginationPages(total, pageSize) {
             const page = `
 ---
 page: true
-title: ${i === 1 ? 'Home' : 'Page ' + i}
+title: ${'Page ' + i}
 aside: false
 lastUpdated: false
 comments: false

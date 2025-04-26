@@ -1,16 +1,16 @@
 <template>
-    <h1 class="title" v-slide-up="{ delay: 100 }">YuMeng's Blog</h1>
-    <p v-slide-up="{ delay: 300 }">
+    <h1 class="title" v-slide-up="{ delay: 0 }">YuMeng's Blog</h1>
+    <p v-slide-up="{ delay: 100 }">
         Articles, Tutorials & Understand from the author of YuMeng.
     </p>
-    <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 500 }">
+    <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 200 }">
       Read More
   </button>
   &nbsp;
-  <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 500 }">
+  <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 200 }">
      Change log
   </button>
-  <img no-zoomable style="width: 300px; margin-top: 20px;" src="https://s21.ax1x.com/2025/04/26/pETFnbj.webp" alt="" v-slide-up="{ delay: 700 }">
+  <img no-zoomable style="width: 300px; margin-top: 20px;" src="https://s21.ax1x.com/2025/04/26/pETFnbj.webp" alt="" v-slide-up="{ delay: 300 }">
 </template>
 <script setup>
 import { useData, useRouter } from "vitepress";
