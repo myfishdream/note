@@ -1,20 +1,24 @@
 <template>
-    <h1 class="title" v-slide-up="{ delay: 100 }">YuMeng's Point</h1>
+    <h1 class="title" v-slide-up="{ delay: 100 }">YuMeng's Blog</h1>
     <p v-slide-up="{ delay: 300 }">
         Articles, Tutorials & Understand from the author of YuMeng.
     </p>
-    <button @click="navigateToFirstPage" v-slide-up="{ delay: 500 }">
+    <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 500 }">
       Read More
   </button>
-  <img no-zoomable style="width: 300px; margin-top: 20px;" src="https://s21.ax1x.com/2025/04/26/pETSdaV.png" alt="" v-slide-up="{ delay: 700 }">
+  &nbsp;
+  <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 500 }">
+     Change log
+  </button>
+  <img no-zoomable style="width: 300px; margin-top: 20px;" src="https://s21.ax1x.com/2025/04/26/pETFnbj.webp" alt="" v-slide-up="{ delay: 700 }">
 </template>
 <script setup>
 import { useData, useRouter } from "vitepress";
 const { theme } = useData();
 const router = useRouter();
 
-function navigateToFirstPage() {
-  router.go('/page_1');
+function navigateToFirstPage(url) {
+  router.go(url);
 }
 
 

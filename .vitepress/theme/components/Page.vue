@@ -38,7 +38,7 @@
                 v-if="i === 1" 
                 class="link" 
                 :class="{ active: pageCurrent === i }" 
-                :href="withBase('/index.html')"
+                :href="withBase(`/page_${i}.html`)"
             >
                 {{ i }}
             </a>
@@ -131,7 +131,7 @@ const jumpToPage = () => {
     
     if (pageNum && pageNum >= 1 && pageNum <= props.pagesNum) {
         const targetUrl = pageNum === 1 
-            ? withBase('/index.html') 
+            ? withBase(`/page_${pageNum}.html`) 
             : withBase(`/page_${pageNum}.html`)
         
         window.location.href = targetUrl

@@ -10,21 +10,21 @@ zoomable: false
 
 <Finish/>
 
-## 关于我
+## About Me
 
 <img src="https://s21.ax1x.com/2025/02/07/pEm9bQO.jpg" alt="logo" style="width: 100px; height: 100px; border-radius: 50%; display: block; margin: 10px auto;">
 
 <div style="text-align: center;">
-    <p>👋 你好，我是 [ 鱼梦江湖 ]</p>
-    <p>📮️ 我的邮箱: <span style="text-decoration: underline; font-weight: bold;">yumengjh@outlook.com</span></p>
-    <p>📈 我的状态: 
+    <p>👋 Hi, I'm [ YuMeng ]</p>
+    <p>📮️ My email: <span style="text-decoration: underline; font-weight: bold;">yumengjh@outlook.com</span></p>
+    <p>📈 My status: 
     <span style="font-weight: bold;">沉淀中</span>
     </p>
 </div>
 
 
 
-## 技术栈
+## Tech Stack
 
 <p>
   <img src="https://img.shields.io/badge/-Microsoft%20SQL%20Server-D3D3D3?logo=Microsoft-SQL-Server&logoColor=CC2927" alt="Microsoft SQL Server" style="display: inline-block;" />&nbsp;
