@@ -250,6 +250,12 @@ export const toolsdata = [
     title: '开发',
     items: [
       {
+        title:'开发者路线图',
+        desc:'交互式路线图、指南和其他教育内容可帮助开发人员在职业生涯中成长。',
+        link:'https://github.com/kamranahmedse/developer-roadmap',
+        linktxt:'github.com/kamranahmedse/developer-roadmap',
+      },
+      {
         title: 'Rust 语言圣经',
         desc: '如果你想成为更优秀的程序员或者是玩转开源，那 Rust 还真是不错的选择',
         link: 'https://course.rs/about-book.html',

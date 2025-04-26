@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
 import timeline from "vitepress-markdown-timeline";
 import { RssPlugin } from 'vitepress-plugin-rss'
+import { fileURLToPath, URL } from 'node:url'
 //     "markdown-it-custom-attrs": "^1.0.2",
 // import mdItCustomAttrs from 'markdown-it-custom-attrs'
 
@@ -131,6 +132,16 @@ export default defineConfig({
         ssr: {
             noExternal: [
                 'vitepress-plugin-rss'
+            ]
+        },
+        resolve: {
+            alias: [
+                {
+                    find: /^.*\/VPSwitchAppearance\.vue$/,
+                    replacement: fileURLToPath(
+                        new URL('./theme/components/CustomSwitchAppearance.vue', import.meta.url)
+                    )
+                }
             ]
         }
     },
