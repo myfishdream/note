@@ -7,6 +7,9 @@ import Page from './components/Page.vue'
 import Confetti from './components/confetti.vue'
 import Finish from './components/finish.vue'
 
+// 导入自定义指令
+import directives from './utils/directives'
+
 // 代码块折叠
 // https://github.com/T-miracle/vitepress-plugin-codeblocks-fold/blob/main/README_zh.md
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold'; // 导入方法
@@ -39,6 +42,8 @@ export default {
         ctx.app.component('Page', Page)
         ctx.app.component('Confetti', Confetti)
         ctx.app.component('Finish', Finish)
+        // 注册自定义指令
+        ctx.app.use(directives)
     },
     setup() {
         const route = useRoute();

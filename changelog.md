@@ -6,6 +6,22 @@ title: 更新历史
 
 ---
 
+::: timeline 2025-04-26
+- **自定义指令v-slide-up**
+- 参数：
+  - delay: 延迟时间(ms)
+  - duration: 动画持续时间(ms)
+  - distance: 移动距离
+  - once: 是否只执行一次
+  - threshold: 触发阈值(0-1)
+- 使用：
+```vue
+<div v-slide-up="{ delay: 100, duration: 1000, distance: '30px', once: true, threshold: 0.2 }">
+  内容
+</div>
+```
+:::
+
 ::: timeline 2025-04-23
 - **图片缩放**
 - 添加图片缩放功能
