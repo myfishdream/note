@@ -76,7 +76,7 @@ export default defineConfig({
             { text: 'Tags', link: '/pages/tags' },
             { text: 'Archives', link: '/pages/archives' },
             { text: 'Site', link: '/pages/site' },
-            { text: 'About', link: '/pages/about' },
+            // { text: 'About', link: '/pages/about' },
         ],
         search: {
             provider: 'local',

@@ -2,11 +2,11 @@
   <div class="head">
     <h1 class="title" v-slide-up="{ delay: 0 }">Blog</h1>
     <span class="btn">
-      <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 200 }">
+      <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 0 }">
         Read More
       </button>
       &nbsp;
-      <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 200 }">
+      <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 0 }">
         Change log
       </button>
     </span>
