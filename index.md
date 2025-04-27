@@ -1,6 +1,6 @@
 ---
 page: true
-title: Home
+title: Blog
 aside: false
 lastUpdated: false
 comments: false

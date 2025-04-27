@@ -7,14 +7,11 @@
           Read More
         </button>
         &nbsp;
-        <button @click="navigateToFirstPage('/changelog')">
+        <!-- <button @click="navigateToFirstPage('/changelog')">
           Change log
-        </button>
+        </button> -->
       </span>
     </div>
-    <p style="border-bottom: 1px solid var(--vp-c-divider);">
-
-    </p>
     <div class="introduce">
       <p style="font-size: 2rem;">
         Hi, I'm YuMeng.
@@ -23,7 +20,7 @@
         I'm a Student from China. My hobby is to learn new things.
       </p>
       <p style="font-size: 1rem; font-weight: normal;">
-        Currently living in <a href="https://s21.ax1x.com/2025/04/26/pETA0gK.webp">Zhuhai</a> — possibly the most
+        Currently living in <a href="https://s21.ax1x.com/2025/04/26/pETA0gK.webp" target="_blank">Zhuhai</a> — possibly the most
         comfortable city in the world.
       </p>
       <p style="font-size: 1rem; font-weight: normal;">
@@ -35,14 +32,14 @@
     </div>
     <div class="post">
       <p style="font-size: 1.2rem;">My most recent posts</p>
-      <ul v-if="theme.posts && theme.posts.length" style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
+      <ul v-if="theme.posts && theme.posts.length">
         <li v-for="(post, index) in theme.posts.slice(0, 5)" :key="index" style="margin-bottom: 0.3em;">
           <a :href="withBase(post.regularPath)">{{ post.frontMatter.title }}</a>
         </li>
       </ul>
       
       <p style="font-size: 1.2rem;">Visit the website often</p>
-      <ul style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
+      <ul>
         <li v-for="(item, index) in toolsdata[0].items" :key="index" style="margin-bottom: 0.3em;">
           <a :href="item.link" target="_blank">{{ item.title }}</a>
         </li>
