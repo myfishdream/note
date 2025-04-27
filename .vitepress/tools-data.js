@@ -26,10 +26,16 @@ export const toolsdata = [
         badgeType: 'hot'
       },
       {
-        title: '掘金',
-        desc: '掘金是一个面向技术开发者的社区',
-        link: 'https://juejin.cn/',
-        linktxt: 'juejin.cn',
+        title: 'JavaScript 教程',
+        desc: 'JavaScript 教程',
+        link: 'https://wangdoc.com/javascript/',
+        linktxt: 'wangdoc.com',
+      },
+      {
+        title: 'ES6 教程',
+        desc: 'ES6 教程',
+        link: 'https://wangdoc.com/es6/',
+        linktxt: 'wangdoc.com',
       },
       {
         title: 'Quick Reference',
