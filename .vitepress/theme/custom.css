@@ -118,18 +118,10 @@
     /* font-size: 0.9375rem; */
 }
 
-@font-face {
-    font-family: "Yuu";
-    font-weight: 400;
-    src: url("/static/font/yuu.woff") format("woff");
-    font-display: swap;
-}
-
 .VPNavBarTitle .title,
 .site-footer .title {
-    font-family: "Yuu", Optima, sans-serif !important;
+    font-family: "Verdana", Optima, sans-serif !important;
     color: var(--bt-theme-title) !important;
-    font-size: 1.5rem !important;
 }
 
 h1 {
