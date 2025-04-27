@@ -11,8 +11,6 @@ sticky: false
 done: false
 ---
 
-<Finish />
-
 # rollup.js
 
 ## 核心功能{#core}

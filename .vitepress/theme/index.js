@@ -4,8 +4,6 @@ import Archives from './components/Archives.vue'
 import Category from './components/Category.vue'
 import Tags from './components/Tags.vue'
 import Page from './components/Page.vue'
-import Confetti from './components/confetti.vue'
-import Finish from './components/finish.vue'
 
 // 代码块折叠
 // https://github.com/T-miracle/vitepress-plugin-codeblocks-fold/blob/main/README_zh.md
@@ -19,7 +17,6 @@ import 'vitepress-plugin-nprogress/lib/css/index.css'
 // 时间轴
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
-import './style.css'
 import './custom.css'
 
 // 图片处理
@@ -37,8 +34,6 @@ export default {
         ctx.app.component('Category', Category)
         ctx.app.component('Archives', Archives)
         ctx.app.component('Page', Page)
-        ctx.app.component('Confetti', Confetti)
-        ctx.app.component('Finish', Finish)
     },
     setup() {
         const route = useRoute();

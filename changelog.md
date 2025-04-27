@@ -7,7 +7,7 @@ title: 更新历史
 ---
 
 ::: timeline 2025-04-26
-- **自定义指令v-slide-up**
+- ~~**自定义指令v-slide-up**~~
 - 参数：
   - delay: 延迟时间(ms)
   - duration: 动画持续时间(ms)
