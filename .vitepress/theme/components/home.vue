@@ -1,54 +1,54 @@
 <template>
-  <div class="head">
-    <h1 class="title" v-slide-up="{ delay: 0 }">Blog</h1>
-    <span class="btn">
-      <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 0 }">
-        Read More
-      </button>
-      &nbsp;
-      <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 0 }">
-        Change log
-      </button>
-    </span>
-  </div>
-  <p v-slide-up="{ delay: 100 }" style="border-bottom: 1px solid var(--vp-c-divider);">
+  <div class="home-container">
+    <div class="head">
+      <h1 class="title">Blog</h1>
+      <span class="btn">
+        <button @click="navigateToFirstPage('/page_1')">
+          Read More
+        </button>
+        &nbsp;
+        <button @click="navigateToFirstPage('/changelog')">
+          Change log
+        </button>
+      </span>
+    </div>
+    <p style="border-bottom: 1px solid var(--vp-c-divider);">
 
-  </p>
-  <div class="introduce">
-    <p v-slide-up="{ delay: 200 }" style="font-size: 2rem;">
-      Hi, I'm YuMeng.
     </p>
-    <p v-slide-up="{ delay: 300 }" style="font-size: 1.2rem;">
-      I'm a Student from China. My hobby is to learn new things.
-    </p>
-    <p v-slide-up="{ delay: 400 }" style="font-size: 1rem; font-weight: normal;">
-      Currently living in <a href="https://s21.ax1x.com/2025/04/26/pETA0gK.webp">Zhuhai</a> — possibly the most
-      comfortable city in the world.
-    </p>
-    <p v-slide-up="{ delay: 500 }" style="font-size: 1rem; font-weight: normal;">
-      I write some articles about my learning and life.
-    </p>
-    <p v-slide-up="{ delay: 600 }" style="font-size: 1rem; font-weight: normal;">
-      I hope you like my articles.
-    </p>
+    <div class="introduce">
+      <p style="font-size: 2rem;">
+        Hi, I'm YuMeng.
+      </p>
+      <p style="font-size: 1.2rem;">
+        I'm a Student from China. My hobby is to learn new things.
+      </p>
+      <p style="font-size: 1rem; font-weight: normal;">
+        Currently living in <a href="https://s21.ax1x.com/2025/04/26/pETA0gK.webp">Zhuhai</a> — possibly the most
+        comfortable city in the world.
+      </p>
+      <p style="font-size: 1rem; font-weight: normal;">
+        I write some articles about my learning and life.
+      </p>
+      <p style="font-size: 1rem; font-weight: normal;">
+        I hope you like my articles.
+      </p>
+    </div>
+    <div class="post">
+      <p style="font-size: 1.2rem;">My most recent posts</p>
+      <ul v-if="theme.posts && theme.posts.length" style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
+        <li v-for="(post, index) in theme.posts.slice(0, 5)" :key="index" style="margin-bottom: 0.3em;">
+          <a :href="withBase(post.regularPath)">{{ post.frontMatter.title }}</a>
+        </li>
+      </ul>
+      
+      <p style="font-size: 1.2rem;">Visit the website often</p>
+      <ul style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
+        <li v-for="(item, index) in toolsdata[0].items" :key="index" style="margin-bottom: 0.3em;">
+          <a :href="item.link" target="_blank">{{ item.title }}</a>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="post" v-slide-up="{ delay: 700 }">
-    <p style="font-size: 1.2rem;">My most recent posts</p>
-    <ul v-if="theme.posts && theme.posts.length" style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
-      <li v-for="(post, index) in theme.posts.slice(0, 5)" :key="index" style="margin-bottom: 0.3em;">
-        <a :href="withBase(post.regularPath)">{{ post.frontMatter.title }}</a>
-      </li>
-    </ul>
-    
-    <p style="font-size: 1.2rem;">Visit the website often</p>
-    <ul style="padding-left: 1.2em; margin-top: 0.5em;margin-left: 1.2em;">
-      <li v-for="(item, index) in toolsdata[0].items" :key="index" style="margin-bottom: 0.3em;">
-        <a :href="item.link" target="_blank">{{ item.title }}</a>
-      </li>
-    </ul>
-  </div>
-
-
 </template>
 <script setup>
 import { useData, useRouter, withBase } from "vitepress";
@@ -59,15 +59,12 @@ const router = useRouter();
 function navigateToFirstPage(url) {
   router.go(url);
 }
-
-
 </script>
 
 <style scoped>
 .post {
   font-family: Verdana, sans-serif;
   font-weight: bold;
-
 }
 
 .introduce p {
