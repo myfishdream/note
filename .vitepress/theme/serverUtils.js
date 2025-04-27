@@ -50,7 +50,7 @@ async function generatePaginationPages(total, pageSize) {
             const page = `
 ---
 page: true
-title: ${'Page ' + i}
+title: ${i === 1 ? 'Blog' : 'Page ' + i}
 aside: false
 lastUpdated: false
 comments: false
@@ -68,7 +68,7 @@ const posts = theme.value.posts.slice(${pageSize * (i - 1)},${pageSize * i})
         }
     }
     // rename page_1 to index for homepage
-    // await fs.move(paths + '/page_1.md', paths + '/index.md', { overwrite: true })
+    await fs.move(paths + '/page_1.md', paths + '/index.md', { overwrite: true })
 }
 
 function _convertDate(date = new Date().toString()) {

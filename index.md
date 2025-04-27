@@ -6,6 +6,9 @@ lastUpdated: false
 comments: false
 ---
 <script setup>
-import Home from "./.vitepress/theme/components/home.vue";
+import Page from "./.vitepress/theme/components/Page.vue";
+import { useData } from "vitepress";
+const { theme } = useData();
+const posts = theme.value.posts.slice(0,10)
 </script>
-<Home />
+<Page :posts="posts" :pageCurrent="1" :pagesNum="3" />
