@@ -9,7 +9,7 @@ draft: false
 outline: [2,3]
 # sticky: true
 done: true
-gridPaper: false
+gridPaper: true
 ---
 
 # JavaScript 核心知识点与编程技巧小记

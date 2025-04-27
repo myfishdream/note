@@ -92,11 +92,11 @@ export default {
                 
                 if (gridPaperEnabled) {
                     mainElement.classList.add('grid-paper-bg');
+                    document.querySelector('.VPNavBar').style.backdropFilter = 'none';
                 } else {
                     mainElement.classList.remove('grid-paper-bg');
+                    document.querySelector('.VPNavBar').style.backdropFilter = 'blur(10px)';
                 }
-                
-                // console.log(`[Theme] Grid paper background ${gridPaperEnabled ? 'enabled' : 'disabled'}`);
             });
         };
 
