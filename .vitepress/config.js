@@ -92,8 +92,6 @@ export default defineConfig({
         ],
         website: {
             copyrightLink: '/pages/about',
-            showLantern: false,
-            lanternText: ['康'],
             showJumpBtn: false,  // 是否开启跳页按钮
             showPrevNextBtn: false,     // 上一頁/下一页按钮是否显示
         }
