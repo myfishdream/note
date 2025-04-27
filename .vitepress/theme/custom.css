@@ -360,8 +360,6 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 :root {
     --vp-c-gutter: 0 !important;
 }
-.site-footer {
-    /* background-color: #fefefe !important; */
 
 /* 格子纸背景效果增强版 */
 .grid-paper-bg {
