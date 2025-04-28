@@ -376,3 +376,32 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 .outline-marker{
     width: var(--outline-marker-width) !important;
 }
+
+/* 格子纸背景下的blockquote样式 */
+.grid-paper-blockquote {
+    background-color: rgba(245, 245, 245, 0.6) !important;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dark .grid-paper-blockquote {
+    background-color: rgba(40, 40, 45, 0.6) !important;
+    border-left-color: #5959e6 !important;
+}
+
+/* 内联代码在格子纸背景下的样式 */
+.grid-paper-bg :not(pre) > code {
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .grid-paper-bg :not(pre) > code {
+    background-color: rgba(99, 110, 123, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}

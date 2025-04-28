@@ -146,12 +146,19 @@ export function setupGridPaperBg(frontmatter, isDark) {
  */
 export function setupCodeBlockStyleForGridPaper(isDark) {
     if (isDark) {
-        document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(30, 30, 32, 0.8)');
+        document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(30, 30, 32, 0.7)');
         document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(30, 30, 32, 0.8)');
     } else {
-        document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(245, 245, 245, 0.8)');
+        document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(245, 245, 245, 0.6)');
         document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(245, 245, 245, 0.8)');
     }
+    
+    // 设置blockquote样式
+    const blockquotes = document.querySelectorAll('.vp-doc blockquote');
+    blockquotes.forEach(blockquote => {
+        blockquote.style.borderLeft = '5px solid var(--vp-c-brand)';
+        blockquote.classList.add('grid-paper-blockquote');
+    });
     
     // 为代码块添加纸质感和阴影
     const codeBlocks = document.querySelectorAll('div[class*="language-"]');
@@ -169,6 +176,13 @@ export function setupCodeBlockStyleForGridPaper(isDark) {
 export function resetCodeBlockStyle() {
     document.documentElement.style.removeProperty('--vp-code-block-bg');
     document.documentElement.style.removeProperty('--vp-c-bg-alt');
+    
+    // 重置blockquote样式
+    const blockquotes = document.querySelectorAll('.vp-doc blockquote');
+    blockquotes.forEach(blockquote => {
+        blockquote.style.borderLeft = '';
+        blockquote.classList.remove('grid-paper-blockquote');
+    });
     
     // 移除代码块特殊样式
     const codeBlocks = document.querySelectorAll('div[class*="language-"]');
