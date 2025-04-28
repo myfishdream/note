@@ -1,18 +1,19 @@
 ---
-title: JavaScript 核心知识点与编程技巧小记：从闭包到对象属性描述符的深入解析
+title: JavaScript 核心知识点小记
 date: 2025-04-27
 category: Note
 tags: 
     - JavaScript
-description: 深入解析JavaScript核心概念：从闭包到对象属性描述符，涵盖函数作用域、内存管理、对象属性控制等关键知识点，帮助开发者更好地理解JavaScript的底层机制和编程技巧。
+description: 从闭包到对象属性描述符，涵盖函数作用域、内存管理、对象属性控制等关键知识点。
 draft: false
 outline: [2,3]
 # sticky: true
 done: true
 gridPaper: true
+cbf: false
 ---
 
-# JavaScript 核心知识点与编程技巧小记
+# JavaScript 核心知识点小记
 
 ## 闭包
 
@@ -205,10 +206,313 @@ obj.p3 // "123abc"
 
 `writable`属性是一个布尔值，决定了目标属性的**值（value）**是否可以被改变。
 
-**注意：**如果原型对象的某个属性的`writable`为`false`，那么子对象将无法自定义这个属性。
+**注意：**如果原型对象的某个属性的`writable`为`false`，那么**子对象**将无法自定义这个属性。
 
 > [!tip]
 >
-> 有一个规避方法，就是通过覆盖属性描述对象，绕过这个限制。原因是这种情况下，原型链会被完全忽视。
+> 有一个规避方法，就是通**过覆盖属性描述对象**，绕过这个限制。原因是这种情况下，原型链会被完全忽视。
 
-### enumerable。。。
+```js
+var proto = Object.defineProperty({}, 'foo', {
+  value: 'a',
+  writable: false
+});
+
+var obj = Object.create(proto);
+Object.defineProperty(obj, 'foo', {
+  value: 'b'
+});
+
+obj.foo // "b"
+```
+
+`enumerable`表示目标属性是否可遍历。
+
+> 在早期JavaScript中，`for...in`循环是基于`in`运行符的，而`in`运算符不管某个属性是自身的还是继承的都会返回`true`
+>
+> ```js
+> var obj = {};
+> 'toString' in obj // true
+> ```
+>
+> `toString`不是`obj`对象自身的属性，但是in返会了true，导致了`toString`属性也会被for in 循环遍历
+>
+> 再之后，引入了一个 **可遍历性** 这个概念，只有可遍历的属性才能被`for in` 循环遍历，
+>
+> 并且规定了像`toString`这一类实例对象继承的原生属性，都是不可遍历的，这样就保证了`for...in`循环的可用性。
+>
+> 所以：如果一个属性的`enumerable`为`false`，以下操作不会读取到该属性
+>
+> - `for..in`循环
+> - `Object.keys`方法
+> - `JSON.stringify`方法
+
+`configurable`属性决定了是否可以修改属性描述对象，还决定了目标属性是否可以被删除（delete）
+
+注意，`writable`属性只有在`false`改为`true`时会报错，`true`改为`false`是允许的。
+
+`value`属性的情况比较特殊。只要`writable`和`configurable`有一个为`true`，就允许改动`value`。
+
+### 存取器 
+
+```js
+// 写法一
+var obj = Object.defineProperty({}, 'p', {
+  get: function () {
+    return 'getter';
+  },
+  set: function (value) {
+    console.log('setter: ' + value);
+  }
+});
+// 写法二
+var obj = {
+  get p() {
+    return 'getter';
+  },
+  set p(value) {
+    console.log('setter: ' + value);
+  }
+};
+```
+
+第一种写法，属性`p`的`configurable`和`enumerable`都为`false`，从而导致属性`p`是不可遍历的；
+
+第二种写法，属性`p`的`configurable`和`enumerable`都为`true`，因此属性`p`是可遍历的。
+
+存取器往往用于，**属性的值依赖对象内部数据**的场合。
+
+```js
+var obj ={
+  $n : 5,
+  get next() { return this.$n++ },
+  set next(n) {
+    if (n >= this.$n) this.$n = n;
+    else throw new Error('新的值必须大于当前值');
+  }
+};
+
+obj.next // 5
+
+obj.next = 10;
+obj.next // 10
+
+obj.next = 5;
+// Uncaught Error: 新的值必须大于当前值
+```
+
+### 对象的拷贝
+
+将一个对象的所有属性拷贝到另一个对象
+
+```js
+var extend = function (to, from) {
+  for (var property in from) {
+    to[property] = from[property];
+  }
+
+  return to;
+}
+
+extend({}, {
+  a: 1
+})
+// {a: 1}
+```
+
+上述方法的缺点是遇到**存取器只会拷贝值**
+
+```js
+extend({}, {
+  get a() { return 1 }
+})
+// {a: 1}
+```
+
+解决办法是通过`Object.defineProperty`方法来拷贝属性
+
+```js
+var extend = function (to, from) {
+  for (var property in from) {
+    if (!from.hasOwnProperty(property)) continue;
+    Object.defineProperty(
+      to,
+      property,
+      Object.getOwnPropertyDescriptor(from, property)
+    );
+  }
+
+  return to;
+}
+
+extend({}, { get a(){ return 1 } })
+// { get a(){ return 1 } })
+```
+
+`hasOwnProperty`那一行用来过滤掉继承的属性，否则可能会报错，因为`Object.getOwnPropertyDescriptor`读不到继承属性的属性描述对象。
+
+### 控制对象状态
+
+`Object.preventExtensions`方法可以使得一个对象无法**再添加**新的属性。
+
+`Object.isExtensible`方法用于检查一个对象是否使用了`Object.preventExtensions`方法。
+
+`Object.seal`方法使得一个对象既无法添加新属性，也无法删除旧属性。
+
+> `Object.seal`实质是把属性描述对象的`configurable`属性设为`false`，因此属性描述对象不再能改变了。`Object.seal`只是禁止新增或删除属性，并不影响修改某个属性的值。
+
+`Object.isSealed`方法用于检查一个对象是否使用了`Object.seal`方法。
+
+`Object.freeze`方法可以使得一个对象无法添加新属性、无法删除旧属性、也无法改变属性的值，使得这个对象实际上变成了常量。
+
+`Object.isFrozen`方法用于检查一个对象是否使用了`Object.freeze`方法。
+
+> `Object.isFrozen`的一个用途是，确认某个对象没有被冻结后，再对它的属性赋值。
+
+> [!tip]
+>
+> 上述方法中，如果操作了被限制的属性，在严格模式下，大部分会报错，否则只是静默失败
+
+### 局限性
+
+上面的三个方法锁定对象的可写性有一个漏洞：可以通过**改变原型对象**，来为对象增加属性。
+
+```js
+var obj = new Object();
+Object.preventExtensions(obj); // 限制对象
+
+var proto = Object.getPrototypeOf(obj); // 在原型对象操作
+proto.t = 'hello';
+obj.t // 依然可以读取到
+// hello
+```
+
+解决方案是，把`obj`的原型也冻结住
+
+```js
+var obj = new Object();
+Object.preventExtensions(obj);
+
+var proto = Object.getPrototypeOf(obj);
+Object.preventExtensions(proto);
+
+proto.t = 'hello';
+obj.t // undefined
+```
+
+还有一个局限性是，如果属性值是对象，上述的方法只能冻结属性**指向的对象**，而不能冻结对象的本身的内容。
+
+```js
+var obj = {
+  foo: 1,
+  bar: ['a', 'b']
+};
+Object.freeze(obj);
+
+obj.bar.push('c');
+obj.bar // ["a", "b", "c"]
+```
+
+上述代码中，将`obj`对象冻结后，**其指向将无法改变，即无法指向其他值**，但是其中的数组是可变的。类似于说，**只能冻结一个对象的顶层属性**，嵌套属性则不行
+
+## Array
+
+`new Array`用于生成新的数组，可以传入数字参数，表示生成指定个数成员的数组，每个位置都是空的。
+
+`Array.isArray`方法返回一个布尔值，表示参数是否为数组。它可以弥补`typeof`运算符的不足，`typeof`运算符只能显示数组的类型是`Object`
+
+`valueOf`方法是一个所有对象都拥有的方法，表示对该对象求值。不同对象的`valueOf`方法不尽一致，数组的`valueOf`方法返回数组本身。
+
+`toString`方法返回数组的字符串形式。
+
+`push`方法用于在数组的末端添加一个或多个元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组。
+
+`pop`方法用于删除数组的最后一个元素，并返回该元素。注意，该方法会改变原数组，对空数组使用`pop`方法，不会报错，而是返回`undefined`。
+
+> [!tip]
+>
+> `push`和`pop`结合使用，就构成了“后进先出”的栈结构（stack）。
+
+`shift()`方法用于删除数组的第一个元素，并返回该元素。注意，该方法会改变原数组。
+
+> ```js
+> var list = [1, 2, 3, 4];
+> var item;
+> 
+> while (item = list.shift()) {
+>   console.log(item);
+> }
+> 
+> list // []
+> ```
+>
+> 遍历输出并清空一个数组，局限性：数组元素不能是`0`或任何布尔值等于`false`的元素
+
+`unshift()`方法用于在数组的第一个位置添加元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组，可以接受多个参数
+
+`join()`方法以指定参数作为分隔符，将所有数组成员连接为一个字符串返回。如果不提供参数，默认用逗号分隔。
+
+```js
+var a = [1, 2, 3, 4];
+
+a.join(' ') // '1 2 3 4'
+a.join(' | ') // "1 | 2 | 3 | 4"
+a.join() // "1,2,3,4"
+```
+
+>通过`call`方法，这个方法也可以用于字符串或类似数组的对象。
+>
+>```js
+>Array.prototype.join.call('hello', '-')
+>// "h-e-l-l-o"
+>
+>var obj = { 0: 'a', 1: 'b', length: 2 };
+>Array.prototype.join.call(obj, '-')
+>// 'a-b'
+>```
+
+`concat`方法用于多个数组的合并。它将新数组的成员，添加到原数组成员的后部，然后返回一个新数组，原数组不变，其参数可以是数组，数字，字符串....
+
+>如果数组成员包括对象，`concat`方法返回当前数组的一个浅拷贝。所谓“浅拷贝”，指的是新数组拷贝的是对象的引用。
+>
+>```
+>var obj = { a: 1 };
+>var oldArray = [obj];
+>
+>var newArray = oldArray.concat();
+>
+>obj.a = 2;
+>newArray[0].a // 2
+>```
+>
+>上面代码中，原数组包含一个对象，`concat`方法生成的新数组包含这个对象的引用。所以，改变原对象以后，新数组跟着改变。
+
+`reverse`方法用于颠倒排列数组元素，返回改变后的数组。注意，该方法将改变原数组。
+
+`slice()`方法用于提取目标数组的一部分，返回一个新数组，原数组不变。
+
+```js
+arr.slice(start, end);
+```
+
+它的第一个参数为起始位置（从0开始，会包括在返回的新数组之中），第二个参数为终止位置（但该位置的元素本身不包括在内）。如果省略第二个参数，则一直返回到原数组的最后一个成员。
+
+如果`slice()`方法的参数是负数，则表示倒数计算的位置。
+
+> [!tip]
+>
+> `slice()`方法的一个重要应用，是将类似数组的对象转为真正的数组。
+>
+> ```js
+> Array.prototype.slice.call({ 0: 'a', 1: 'b', length: 2 })
+> // ['a', 'b']
+> 
+> Array.prototype.slice.call(document.querySelectorAll("div"));
+> Array.prototype.slice.call(arguments);
+> ```
+>
+> 上面代码的参数都不是数组，但是通过`call`方法，在它们上面调用`slice()`方法，就可以把它们转为真正的数组。
+
+`splice()`
+
+...

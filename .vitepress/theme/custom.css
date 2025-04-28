@@ -223,10 +223,6 @@ h3 {
         padding-bottom: 20px !important;
     }
 
-    .vp-doc h1 {
-        font-size: 1.25rem !important;
-    }
-
     .posts {
         padding: 4px;
     }
@@ -299,18 +295,6 @@ h3 {
 img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-}
-
-
-.VPNavBarMenuLink {
-    /* font-weight: bold !important; */
-}
-.VPNavBarMenuLink.active {
-    font-weight: bold !important;
-    color: inherit !important;
-}
-.VPNavBarMenuLink:hover {
-    color: inherit !important;
 }
 
 /* 图片缩放 */

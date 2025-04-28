@@ -1,11 +1,11 @@
 ---
-title: Vue Router 核心概念与最佳实践：从基础路由到高级路由守卫的完整指南
+title: Vue Router 核心概念与最佳实践
 date: 2025-04-25
-category: other
+category: Note
 tags: 
     - Vue
     - Vue Router
-description: 深入解析Vue Router的核心概念与最佳实践，从基础路由配置到高级路由守卫，涵盖路由链接高亮、嵌套路由、动态路由、路由元信息、路由守卫等关键知识点，帮助开发者构建更强大的单页面应用。
+description: 从基础路由配置到高级路由守卫，涵盖路由链接高亮、嵌套路由、动态路由、路由元信息、路由守卫等关键知识点。
 draft: false
 outline: [2,3]
 # sticky: true

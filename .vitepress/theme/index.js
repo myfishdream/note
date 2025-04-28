@@ -76,6 +76,18 @@ export default {
 
         watch(isDark, () => {
             updateErrorImages();
+            
+            // 检查是否启用格子纸背景，如果启用则根据主题调整代码块样式
+            const mainElement = document.querySelector('.VPContent');
+            if (mainElement && mainElement.classList.contains('grid-paper-bg')) {
+                if (isDark.value) {
+                    document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(30, 30, 32, 0.8)');
+                    document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(30, 30, 32, 0.8)');
+                } else {
+                    document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(245, 245, 245, 0.8)');
+                    document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(245, 245, 245, 0.8)');
+                }
+            }
         });
 
         // 处理格子纸背景
@@ -93,10 +105,41 @@ export default {
                     document.documentElement.style.setProperty('--content-border-left', 'transparent');
                     document.documentElement.style.setProperty('--outline-marker-width', '5px');
                     
+                    // 优化代码块在格子纸背景下的样式
+                    document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(245, 245, 245, 0.8)');
+                    document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(245, 245, 245, 0.8)');
+                    
+                    // 为代码块添加纸质感和阴影
+                    const codeBlocks = document.querySelectorAll('div[class*="language-"]');
+                    codeBlocks.forEach(block => {
+                        block.style.borderRadius = '6px';
+                        block.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.15)';
+                        block.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+                        block.classList.add('grid-paper-code-block');
+                    });
+                    
+                    // 黑暗模式下的特殊处理
+                    if (isDark.value) {
+                        document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(30, 30, 32, 0.8)');
+                        document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(30, 30, 32, 0.8)');
+                    }
                 } else {
                     mainElement.classList.remove('grid-paper-bg');
                     document.documentElement.style.setProperty('--content-border-left', 'var(--vp-c-divider)');
                     document.documentElement.style.setProperty('--outline-marker-width', '2px');
+                    
+                    // 恢复默认代码块样式
+                    document.documentElement.style.removeProperty('--vp-code-block-bg');
+                    document.documentElement.style.removeProperty('--vp-c-bg-alt');
+                    
+                    // 移除代码块特殊样式
+                    const codeBlocks = document.querySelectorAll('div[class*="language-"]');
+                    codeBlocks.forEach(block => {
+                        block.style.borderRadius = '';
+                        block.style.boxShadow = '';
+                        block.style.border = '';
+                        block.classList.remove('grid-paper-code-block');
+                    });
                 }
             });
         };
