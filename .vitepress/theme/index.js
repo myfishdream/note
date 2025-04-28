@@ -92,10 +92,16 @@ export default {
                 
                 if (gridPaperEnabled) {
                     mainElement.classList.add('grid-paper-bg');
-                    document.querySelector('.VPNavBar').style.backdropFilter = 'none';
+                    // 设置大纲竖线变量
+                    // --content-border-left: var(--vp-c-divider);
+                    // --outline-marker-width: 2px;
+                    document.documentElement.style.setProperty('--content-border-left', 'transparent');
+                    document.documentElement.style.setProperty('--outline-marker-width', '5px');
+                    
                 } else {
                     mainElement.classList.remove('grid-paper-bg');
-                    document.querySelector('.VPNavBar').style.backdropFilter = 'blur(10px)';
+                    document.documentElement.style.setProperty('--content-border-left', 'var(--vp-c-divider)');
+                    document.documentElement.style.setProperty('--outline-marker-width', '2px');
                 }
             });
         };

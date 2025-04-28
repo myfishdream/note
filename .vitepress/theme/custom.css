@@ -349,16 +349,7 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 
 .VPNavBar {
     background-color: transparent !important;
-    backdrop-filter: blur(10px);
-}
-
-
-.divider .divider-line {
-    background-color: transparent !important;
-}
-
-:root {
-    --vp-c-gutter: 0 !important;
+    backdrop-filter: blur(50px);
 }
 
 /* 格子纸背景效果增强版 */
@@ -388,4 +379,16 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 
 .dark .grid-paper-bg::before {
     opacity: 0.03;
+}
+
+/* 大纲竖线 */
+:root {
+    --content-border-left: var(--vp-c-divider);
+    --outline-marker-width: 2px;
+}
+.content{
+    border-left-color: var(--content-border-left) !important;
+}
+.outline-marker{
+    width: var(--outline-marker-width) !important;
 }

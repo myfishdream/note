@@ -112,14 +112,14 @@ export default defineConfig({
             ]
         },
         resolve: {
-            alias: [
-                {
-                    find: /^.*\/VPSwitchAppearance\.vue$/,
-                    replacement: fileURLToPath(
-                        new URL('./theme/components/CustomSwitchAppearance.vue', import.meta.url)
-                    )
-                }
-            ]
+            // alias: [
+            //     {
+            //         find: /^.*\/VPSwitchAppearance\.vue$/,
+            //         replacement: fileURLToPath(
+            //             new URL('./theme/components/CustomSwitchAppearance.vue', import.meta.url)
+            //         )
+            //     }
+            // ]
         }
     },
     // 重写路由
