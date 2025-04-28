@@ -63,7 +63,7 @@ export function useYearSort(post) {
  * @returns {string} - 错误图片路径
  */
 export function getErrorImage(isDark) {
-    return isDark ? '/images/loading-error-dark.png' : '/images/loading-error-light.png';
+    return isDark ? '/images/loading-error-dark.webp' : '/images/loading-error-light.webp';
 }
 
 /**
