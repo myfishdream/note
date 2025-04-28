@@ -27,17 +27,99 @@ const cdnSources = [
     }
 ];
 
-// 图片加载超时设置（毫秒）
-const IMAGE_TIMEOUT = 10000;
+// 图片加载超时设置（毫秒）- 作为最大超时使用
+const MAX_TIMEOUT = 5000;
 
 // 是否开启调试
-const debug = false;
+const debug = true;
+
+// 存储组件实例标识，避免重复初始化
+let isInitialized = false;
 
 // 初始化图片自动切换功能
-export function setupImgFallback() {
+export function setupImgFallback(frontmatterData) {
     if (typeof window === 'undefined') return;
+    
+    // 清理之前的初始化状态
+    if (isInitialized) {
+        clearImgFallbackState();
+    }
+    
+    // 优先使用传入的frontmatter，其次尝试从window中获取
+    const pageData = frontmatterData || window?.__VitePress__?.page?.frontmatter;
+    // console.log('imgFallback State:', pageData.imgFallback || '默认开启');
+    // 检查当前页面是否开启自动切换功能
+    const checkPageConfig = () => {
+        // 明确设置为 false 才禁用，默认开启
+        if (pageData && pageData.imgFallback === false) {
+            if (debug) console.log('当前页面禁用了图片CDN自动切换功能', pageData);
+            return false;
+        }
+        return true;
+    };
 
+    // 如果页面配置禁用了该功能，则不执行
+    if (!checkPageConfig()) {
+        return;
+    }
+
+    // 标记为已初始化
+    isInitialized = true;
+    
+    // 添加全局CSS样式
+    function addGlobalStyles() {
+        if (document.getElementById('img-fallback-styles')) return;
+        
+        const styleElement = document.createElement('style');
+        styleElement.id = 'img-fallback-styles';
+        styleElement.textContent = `
+            /* 图片容器样式 */
+            .vp-img-with-title {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 16px 0;
+            }
+            
+            /* 图片标题样式 */
+            .vp-img-title {
+                margin-top: 8px;
+                font-size: 0.9em;
+                color: var(--vp-c-text-2);
+                text-align: center;
+                font-weight: 500;
+            }
+        `;
+        
+        document.head.appendChild(styleElement);
+    }
+    
     let debugPanel = null;
+    
+    // 网络状况评估
+    const networkMonitor = {
+        // 保存最近的加载时间记录
+        loadTimes: [],
+        // 添加加载时间记录
+        addLoadTime(time) {
+            this.loadTimes.push(time);
+            // 只保留最近10条记录
+            if (this.loadTimes.length > 10) {
+                this.loadTimes.shift();
+            }
+        },
+        // 获取动态超时时间
+        getDynamicTimeout() {
+            if (this.loadTimes.length === 0) return MAX_TIMEOUT;
+            
+            // 计算平均加载时间
+            const avgTime = this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length;
+            // 动态超时 = 平均时间 * 2 + 1000ms缓冲，但不超过最大超时
+            const dynamicTimeout = Math.min(Math.round(avgTime * 2 + 1000), MAX_TIMEOUT);
+            
+            return dynamicTimeout;
+        }
+    };
     
     // 创建调试面板
     function createDebugPanel() {
@@ -122,6 +204,10 @@ export function setupImgFallback() {
                 background: rgba(255, 150, 0, 0.1);
             }
             
+            .debug-log.info {
+                background: rgba(0, 150, 255, 0.1);
+            }
+            
             .debug-url {
                 color: var(--vp-c-brand);
                 text-decoration: underline;
@@ -183,6 +269,57 @@ export function setupImgFallback() {
         return isDark ? '/images/loading-error-dark.png' : '/images/loading-error-light.png';
     };
 
+    // 清理图片自动切换状态
+    function clearImgFallbackState() {
+        // 移除调试面板
+        const panel = document.querySelector('.img-debug-panel');
+        if (panel) {
+            panel.remove();
+        }
+        
+        // 重置已初始化的标记
+        document.querySelectorAll('img[data-fallback-initialized]').forEach(img => {
+            img.removeAttribute('data-fallback-initialized');
+            img.removeAttribute('data-original-src');
+        });
+        
+        // 重置初始化标志
+        isInitialized = false;
+    }
+    
+    // 解析图片标题
+    function parseImageTitle(img) {
+        // 检查是否已有标题容器
+        if (img.parentNode && img.parentNode.classList.contains('vp-img-with-title')) {
+            return;
+        }
+        
+        // 从data-title属性获取标题
+        let title = img.getAttribute('data-title');
+        
+        // 从元素上的title属性获取
+        if (!title) {
+            title = img.getAttribute('title');
+        }
+        
+        // 如果找到标题，则添加到图片下方
+        if (title) {
+            // 创建父容器
+            const container = document.createElement('div');
+            container.className = 'vp-img-with-title';
+            
+            // 插入容器到DOM
+            img.parentNode.insertBefore(container, img);
+            container.appendChild(img);
+            
+            // 创建标题元素
+            const titleElement = document.createElement('div');
+            titleElement.className = 'vp-img-title';
+            titleElement.textContent = title;
+            container.appendChild(titleElement);
+        }
+    }
+
     // 解析URL参数
     function parseUrl(url) {
         for (const source of cdnSources) {
@@ -221,27 +358,43 @@ export function setupImgFallback() {
         }).filter(url => url !== null);
     }
 
-    // 使用超时控制的图片加载
+    // 使用动态超时控制的图片加载
     function loadImageWithTimeout(img, url, fallbackUrls, currentIndex) {
+        const startTime = Date.now();
+        // 获取动态超时时间
+        const dynamicTimeout = networkMonitor.getDynamicTimeout();
+        
+        if (debug && currentIndex === 0) {
+            addDebugLog('info', `当前动态超时设置: ${dynamicTimeout}ms`);
+        }
+        
         // 设置加载超时计时器
         const timeoutTimer = setTimeout(() => {
             // 超时后，取消加载并尝试下一个URL
-            addDebugLog('error', `图片加载超时(${IMAGE_TIMEOUT}ms)，尝试下一个地址`);
+            addDebugLog('error', `图片加载超时(${dynamicTimeout}ms)，尝试下一个地址`);
             tryNextUrl(img, fallbackUrls, currentIndex);
-        }, IMAGE_TIMEOUT);
+        }, dynamicTimeout);
 
         // 设置图片地址前先绑定事件
         // 成功时清除计时器
         const originalOnload = img.onload;
         img.onload = function(event) {
             clearTimeout(timeoutTimer);
+            
+            // 记录加载时间
+            const loadTime = Date.now() - startTime;
+            networkMonitor.addLoadTime(loadTime);
+            
             if (originalOnload) originalOnload.call(this, event);
+            
+            // 解析并处理图片标题
+            parseImageTitle(img);
             
             if (!img.src.includes('loading-error')) {
                 if (currentIndex === 0) {
-                    addDebugLog('success', '图片加载成功:', img.src);
+                    addDebugLog('success', `图片加载成功 (${loadTime}ms):`, img.src);
                 } else {
-                    addDebugLog('success', `备用地址(${currentIndex + 1}/${fallbackUrls.length})加载成功:`, img.src);
+                    addDebugLog('success', `备用地址(${currentIndex + 1}/${fallbackUrls.length})加载成功 (${loadTime}ms):`, img.src);
                 }
             }
         };
@@ -294,6 +447,32 @@ export function setupImgFallback() {
             loadImageWithTimeout(img, fallbackUrls[0], fallbackUrls, 0);
         }
     }
+    
+    // 处理Markdown中的图片标题
+    function processImageTitles() {
+        const markdownImages = document.querySelectorAll('.vp-doc img');
+        markdownImages.forEach(img => {
+            // 查找Markdown格式中的{title: xxx}部分
+            const parent = img.parentElement;
+            if (parent && parent.nodeName === 'P') {
+                const text = parent.innerHTML;
+                const titleRegex = /{title:\s*([^}]+)}/i;
+                const match = text.match(titleRegex);
+                
+                if (match) {
+                    // 提取标题
+                    const title = match[1].trim();
+                    img.setAttribute('data-title', title);
+                    
+                    // 从文本中移除标题部分
+                    parent.innerHTML = text.replace(titleRegex, '');
+                    
+                    // 直接应用标题
+                    parseImageTitle(img);
+                }
+            }
+        });
+    }
 
     // 处理页面上的所有图片
     function processImages() {
@@ -323,6 +502,7 @@ export function setupImgFallback() {
     function observeImages() {
         const observer = new MutationObserver((mutations) => {
             let hasNewImages = false;
+            let hasNewContent = false;
             
             mutations.forEach(mutation => {
                 if (mutation.type === 'childList') {
@@ -330,11 +510,20 @@ export function setupImgFallback() {
                     if (images.length > 0) {
                         hasNewImages = true;
                     }
+                    
+                    // 检查是否有新内容添加
+                    if (mutation.addedNodes.length > 0) {
+                        hasNewContent = true;
+                    }
                 }
             });
             
             if (hasNewImages) {
                 processImages();
+            }
+            
+            if (hasNewContent) {
+                processImageTitles();
             }
         });
         
@@ -346,12 +535,27 @@ export function setupImgFallback() {
 
     // 初始调用
     setTimeout(() => {
+        // 添加全局样式
+        addGlobalStyles();
+        
         if (debug) {
             debugPanel = createDebugPanel();
             addDebugLog('success', '初始化图片CDN自动切换功能成功');
-            addDebugLog('success', `图片加载超时设置: ${IMAGE_TIMEOUT}ms`);
+            addDebugLog('success', `最大超时设置: ${MAX_TIMEOUT}ms (动态调整)`);
+            
+            // 在调试模式下显示前置元数据信息
+            if (pageData) {
+                addDebugLog('info', `页面配置: imgFallback=${pageData.imgFallback !== false ? 'true (默认)' : 'false'}`);
+            }
         }
+        
+        // 处理页面图片
         processImages();
+        
+        // 处理图片标题
+        processImageTitles();
+        
+        // 监听DOM变化
         observeImages();
     }, 0);
 } 

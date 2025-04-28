@@ -26,7 +26,8 @@ import {
     initImages, 
     initZoom, 
     updateErrorImages, 
-    setupGridPaperBg 
+    setupGridPaperBg,
+    initImageTitles
 } from './functions';
 
 export default {
@@ -65,6 +66,9 @@ export default {
             
             // 设置格子纸背景
             setupGridPaperBg(frontmatter.value, isDark.value);
+            
+            // 初始化图片标题显示
+            initImageTitles();
         });
         
         // 路由变化监听
@@ -75,6 +79,9 @@ export default {
                 initImages(isDark.value);
                 initZoom(frontmatter.value);
                 setupGridPaperBg(frontmatter.value, isDark.value);
+                
+                // 重新初始化图片标题显示
+                initImageTitles();
             })
         );
         

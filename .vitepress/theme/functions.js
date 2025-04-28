@@ -192,4 +192,112 @@ export function resetCodeBlockStyle() {
         block.style.border = '';
         block.classList.remove('grid-paper-code-block');
     });
+}
+
+/**
+ * 初始化图片标题显示功能，将title属性显示为图片下方的标题
+ */
+export function initImageTitles() {
+    if (typeof window === 'undefined') return;
+    
+    // 添加全局CSS样式
+    function addTitleStyles() {
+        if (document.getElementById('img-title-styles')) return;
+            
+        const styleElement = document.createElement('style');
+        styleElement.id = 'img-title-styles';
+        styleElement.textContent = `
+            /* 图片容器样式 */
+            .vp-img-with-title {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 16px 0;
+            }
+            
+            /* 图片标题样式 */
+            .vp-img-title {
+                margin-top: 12px;
+                font-size: 0.9em;
+                color: var(--vp-c-text-2);
+                text-align: center;
+                font-weight: 500;
+            }
+        `;
+        
+        document.head.appendChild(styleElement);
+    }
+    
+    // 解析图片标题并添加到图片下方
+    function parseImageTitle(img) {
+        // 检查是否已有标题容器
+        if (img.parentNode && img.parentNode.classList.contains('vp-img-with-title')) {
+            return;
+        }
+        
+        // 获取title属性
+        const title = img.getAttribute('title');
+        
+        // 如果找到标题，则添加到图片下方
+        if (title) {
+            // 创建父容器
+            const container = document.createElement('div');
+            container.className = 'vp-img-with-title';
+            
+            // 插入容器到DOM
+            img.parentNode.insertBefore(container, img);
+            container.appendChild(img);
+            
+            // 创建标题元素
+            const titleElement = document.createElement('div');
+            titleElement.className = 'vp-img-title';
+            titleElement.textContent = title;
+            container.appendChild(titleElement);
+        }
+    }
+    
+    // 处理页面上的所有图片
+    function processImages() {
+        const images = document.querySelectorAll('.vp-doc img');
+        images.forEach(img => {
+            parseImageTitle(img);
+        });
+    }
+    
+    // 监听DOM变化，处理新添加的图片
+    function observeImages() {
+        const observer = new MutationObserver((mutations) => {
+            let hasNewImages = false;
+            
+            mutations.forEach(mutation => {
+                if (mutation.type === 'childList') {
+                    const images = mutation.target.querySelectorAll('img');
+                    if (images.length > 0) {
+                        hasNewImages = true;
+                    }
+                }
+            });
+            
+            if (hasNewImages) {
+                processImages();
+            }
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+    
+    // 初始调用
+    setTimeout(() => {
+        // 添加全局样式
+        addTitleStyles();
+        
+        // 处理页面图片
+        processImages();
+        
+        // 监听DOM变化
+        observeImages();
+    }, 0);
 } 

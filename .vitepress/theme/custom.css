@@ -305,6 +305,10 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 .medium-zoom-image {
     z-index: 21;
 }
+/* 缩放层背景圆角 */
+.medium-zoom-overlay ~ .medium-zoom-image {
+    border-radius: 10px !important;
+}
 
 /* 时间轴 */
 .timeline-dot::before {
