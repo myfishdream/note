@@ -58,9 +58,6 @@ export default {
         }
 
         const initZoom = () => {
-            // 只有在Markdown中![](path/to/file.jpg){data-zoomable}
-            // mediumZoom('[data-zoomable]', { background: 'var(--vp-c-bg)' });
-
             // 全局图片使用
             if (frontmatter.value.zoomable !== false) {
                 mediumZoom('.main img:not([no-zoomable])', { background: 'rgba(0,0,0,0.2)' });
@@ -93,8 +90,6 @@ export default {
                 if (gridPaperEnabled) {
                     mainElement.classList.add('grid-paper-bg');
                     // 设置大纲竖线变量
-                    // --content-border-left: var(--vp-c-divider);
-                    // --outline-marker-width: 2px;
                     document.documentElement.style.setProperty('--content-border-left', 'transparent');
                     document.documentElement.style.setProperty('--outline-marker-width', '5px');
                     
