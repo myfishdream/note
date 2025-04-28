@@ -15,6 +15,9 @@ cbf: false
 
 # JavaScript 核心知识点小记
 
+![bukanwendang](https://jsd.cdn.zzko.cn/gh/fish81/picx-images-hosting@master/20250414/bukanwendang.77dqud641r.png){title="不是问题"}
+
+
 ## 闭包
 
 如果在函数外访问函数内的局部变量，正常情况下这无法读取，但是可以通过变通的方法。在函数的内部再定义一个函数。
