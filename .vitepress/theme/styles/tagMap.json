@@ -1,0 +1,23 @@
+{
+  "CSS": 1,
+  "Chrome": 2,
+  "Cursor": 3,
+  "Electron": 4,
+  "Error": 5,
+  "Git": 6,
+  "Github": 7,
+  "HTML": 8,
+  "JavaScript": 9,
+  "Mermaid": 10,
+  "Node.js": 11,
+  "Other": 12,
+  "Rollup": 13,
+  "Tool": 14,
+  "TypeScript": 15,
+  "Vue": 16,
+  "Vue Router": 17,
+  "Work": 18,
+  "工程化": 19,
+  "心理": 20,
+  "插件": 21
+}

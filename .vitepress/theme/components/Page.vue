@@ -22,6 +22,7 @@
                     <template v-for="(item, tagIndex) in article.frontMatter.tags" :key="item">
                         <a v-if="tagIndex < (isMobile ? 3 : 5)"
                            class="post-tag"
+                           :style="getTagStyle(item)"
                            :href="withBase(`/pages/tags.html?tag=${item}`)">
                             {{ item }}
                         </a>
@@ -114,6 +115,8 @@
 <script setup>
 import { withBase, useData } from 'vitepress'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import '../styles/tagColors.css'    // 引入标签颜色样式
+import tagMap from '../styles/tagMap.json'  // 引入标签映射
 
 const { theme } = useData()
 // console.log(theme.value.website.showJumpBtn)
@@ -169,6 +172,17 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('resize', checkMobile)
 })
+
+// 获取标签的样式
+const getTagStyle = (tag) => {
+    const index = tagMap[tag]
+    if (!index) return {}
+    
+    return {
+        color: `var(--tag-${index})`
+    , backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
+    }
+}
 </script>
 
 <style scoped>
@@ -244,14 +258,13 @@ onUnmounted(() => {
 .post-tag {
     padding: 2px 8px;
     border-radius: 2px;
-    background-color: var(--vp-c-bg-alt);
-    color: var(--vp-c-text-1);
     text-decoration: none;
-    transition: background-color 0.2s;
+    color: var(--vp-c-text-1);
+    transition: opacity 0.2s;
 }
 
 .post-tag:hover {
-    color: var(--vp-c-text-3);
+    opacity: 0.8;
 }
 
 .pagination {

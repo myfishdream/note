@@ -1,0 +1,75 @@
+/* 自动生成的标签颜色变量。请勿编辑变量名！ */
+/* 可以修改颜色值来自定义标签颜色 */
+
+:root {
+    --tag-1: #42A5F5; /* CSS */
+    --tag-2: #7E57C2; /* Chrome */
+    --tag-3: #FF7043; /* Cursor */
+    --tag-4: #26C6DA; /* Electron */
+    --tag-5: #EF5350; /* Error */
+    --tag-6: #FB8C00; /* Git */
+    --tag-7: #78909C; /* Github */
+    --tag-8: #EC407A; /* HTML */
+    --tag-9: #FDD835; /* JavaScript */
+    --tag-10: #66BB6A; /* Mermaid */
+    --tag-11: #8BC34A; /* Node.js */
+    --tag-12: #BDBDBD; /* Other */
+    --tag-13: #5C6BC0; /* Rollup */
+    --tag-14: #8D6E63; /* Tool */
+    --tag-15: #0288D1; /* TypeScript */
+    --tag-16: #4CAF50; /* Vue */
+    --tag-17: #26A69A; /* Vue Router */
+    --tag-18: #FF9800; /* Work */
+    --tag-19: #795548; /* 工程化 */
+    --tag-20: #E91E63; /* 心理 */
+    --tag-21: #9C27B0; /* 插件 */
+}
+
+.dark {
+    --tag-1: #42A5F5; /* CSS */
+    --tag-2: #7E57C2; /* Chrome */
+    --tag-3: #FF7043; /* Cursor */
+    --tag-4: #26C6DA; /* Electron */
+    --tag-5: #EF5350; /* Error */
+    --tag-6: #FB8C00; /* Git */
+    --tag-7: #78909C; /* Github */
+    --tag-8: #EC407A; /* HTML */
+    --tag-9: #FDD835; /* JavaScript */
+    --tag-10: #66BB6A; /* Mermaid */
+    --tag-11: #8BC34A; /* Node.js */
+    --tag-12: #BDBDBD; /* Other */
+    --tag-13: #5C6BC0; /* Rollup */
+    --tag-14: #8D6E63; /* Tool */
+    --tag-15: #0288D1; /* TypeScript */
+    --tag-16: #4CAF50; /* Vue */
+    --tag-17: #26A69A; /* Vue Router */
+    --tag-18: #FF9800; /* Work */
+    --tag-19: #795548; /* 工程化 */
+    --tag-20: #E91E63; /* 心理 */
+    --tag-21: #9C27B0; /* 插件 */
+}
+
+/* 标签名称到变量编号的映射 */
+/*
+ * CSS -> --tag-1
+ * Chrome -> --tag-2
+ * Cursor -> --tag-3
+ * Electron -> --tag-4
+ * Error -> --tag-5
+ * Git -> --tag-6
+ * Github -> --tag-7
+ * HTML -> --tag-8
+ * JavaScript -> --tag-9
+ * Mermaid -> --tag-10
+ * Node.js -> --tag-11
+ * Other -> --tag-12
+ * Rollup -> --tag-13
+ * Tool -> --tag-14
+ * TypeScript -> --tag-15
+ * Vue -> --tag-16
+ * Vue Router -> --tag-17
+ * Work -> --tag-18
+ * 工程化 -> --tag-19
+ * 心理 -> --tag-20
+ * 插件 -> --tag-21
+ */
