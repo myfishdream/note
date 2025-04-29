@@ -1,7 +1,7 @@
 ---
 page: true
-title: Site
-description: Site
+title: 站点
+description: 站点
 # aside: false
 comments: false
 externalLinkIcon: false

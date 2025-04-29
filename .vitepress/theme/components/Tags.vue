@@ -5,6 +5,7 @@
             v-for="(_, key) in data" 
             class="tag"
             :class="{ 'tag-active': selectTag === key }"
+            :style="getTagStyle(key)"
         >
             {{ key }} <sup>{{ data[key].length }}</sup>
         </span>
@@ -20,17 +21,41 @@
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
         </div>
-        <div class="date">{{ article.frontMatter.date }}</div>
+        <div class="date" :style="getYearStyle(article.frontMatter.date)">{{ article.frontMatter.date }}</div>
     </a>
 </template>
+
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { initTags } from '../functions'
+import '../styles/tagColors.css'
+import '../styles/yearColors.css'
+import tagMap from '../styles/tagMap.json'
 
 const { theme } = useData()
 const data = computed(() => initTags(theme.value.posts || []))
 let selectTag = ref('')
+
+// 获取标签的样式
+const getTagStyle = (tag) => {
+    const index = tagMap[tag]
+    if (!index) return {}
+    
+    return {
+        color: `var(--tag-${index})`,
+        backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
+    }
+}
+
+// 获取年份的样式
+const getYearStyle = (date) => {
+    if (!date) return {}
+    const year = date.substring(0, 4)
+    return {
+        color: `var(--year-${year})`
+    }
+}
 
 // 从URL中获取tag参数
 function getTagFromUrl() {
@@ -68,6 +93,7 @@ onMounted(() => {
 .posts {
     text-decoration: none;
 }
+
 .tags {
     margin-top: 14px;
     display: flex;
@@ -80,24 +106,16 @@ onMounted(() => {
     margin: 6px 8px;
     font-size: 0.875rem;
     line-height: 25px;
-    background-color: var(--vp-c-bg-alt);
-    transition: 0.4s;
     border-radius: 2px;
-    color: var(--vp-c-text-1);
     cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-.tag-active {
-    /* background-color: var(--vp-c-brand); */
-    /* color: white; */
-}
-
-.tag-active sup {
-    /* color: white !important; */
+.tag:hover {
+    opacity: 0.8;
 }
 
 .tag sup {
-    color: var(--vp-c-brand);
     font-weight: bold;
 }
 

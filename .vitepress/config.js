@@ -59,15 +59,32 @@ export default defineConfig({
         },
         posts: await getPosts(pageSize),
         nav: [
-            { text: 'Home', link: '/' },
-            { text: 'Category', link: '/pages/category' },
-            { text: 'Tags', link: '/pages/tags' },
-            { text: 'Archives', link: '/pages/archives' },
-            { text: 'Site', link: '/pages/site' },
-            // { text: 'About', link: '/pages/about' },
+            { text: '首页', link: '/' },
+            // { text: 'Category', link: '/pages/category' },
+            { text: '标签', link: '/pages/tags' },
+            { text: '归档', link: '/pages/archives' },
+            { text: '站点', link: '/pages/site' },
+            { text: '关于我', link: '/pages/about' },
         ],
         search: {
             provider: 'local',
+            options: {
+                translations: {
+                    button: {
+                        buttonText: '搜索',
+                        buttonAriaLabel: '搜索'
+                    },
+                    modal: {
+                        noResultsText: '无法找到相关结果',
+                        resetButtonTitle: '清除查询条件',
+                        footer: {
+                            selectText: '选择',
+                            navigateText: '切换',
+                            closeText: '关闭'
+                        }
+                    }
+                }
+            }
         },
         outline: {
             label: '本页目录'

@@ -259,10 +259,11 @@ h3 {
     display: inline-block;
     margin-right: 10px;
     margin-bottom: 3px;
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background-color: var(--li-dot-color);
+    vertical-align: middle;
 }
 
 .post-container {
@@ -407,4 +408,21 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 .dark .grid-paper-bg :not(pre) > code {
     background-color: rgba(99, 110, 123, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 标签与归档 */
+.date {
+    font-weight: 500;
+}
+
+
+.VPNavBarMenuLink {
+    /* font-weight: bold !important; */
+}
+.VPNavBarMenuLink.active {
+    font-weight: bold !important;
+    color: inherit !important;
+}
+.VPNavBarMenuLink:hover {
+    color: inherit !important;
 }
