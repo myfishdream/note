@@ -29,7 +29,9 @@
                         <span v-else-if="tagIndex === (isMobile ? 3 : 5)" class="post-tag more-tag">...</span>
                     </template>
                 </div>
-                <span class="post-date hide-on-mobile">{{ article.frontMatter.date }}</span>
+                <span class="post-date hide-on-mobile" :style="getYearStyle(article.frontMatter.date)">
+                    {{ article.frontMatter.date }}
+                </span>
             </div>
         </div>
     </div>
@@ -116,6 +118,7 @@
 import { withBase, useData } from 'vitepress'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import '../styles/tagColors.css'    // 引入标签颜色样式
+import '../styles/yearColors.css'   // 引入年份颜色样式
 import tagMap from '../styles/tagMap.json'  // 引入标签映射
 
 const { theme } = useData()
@@ -179,8 +182,18 @@ const getTagStyle = (tag) => {
     if (!index) return {}
     
     return {
-        color: `var(--tag-${index})`
-    , backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
+        color: `var(--tag-${index})`,
+        backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
+    }
+}
+
+// 获取年份的样式
+const getYearStyle = (date) => {
+    if (!date) return {}
+    const year = date.substring(0, 4)
+    return {
+        color: `var(--year-${year})`,
+        backgroundColor: `color-mix(in srgb, var(--year-${year}) 15%, transparent)`
     }
 }
 </script>
@@ -250,14 +263,10 @@ const getTagStyle = (tag) => {
 .post-tag,
 .post-date {
     padding: 2px 8px;
-    border-radius: 2px;
-    background-color: var(--vp-c-bg-alt);
-    color: var(--vp-c-text-1);
+    border-radius: 5px;
 }
 
 .post-tag {
-    padding: 2px 8px;
-    border-radius: 2px;
     text-decoration: none;
     color: var(--vp-c-text-1);
     transition: opacity 0.2s;
@@ -265,6 +274,10 @@ const getTagStyle = (tag) => {
 
 .post-tag:hover {
     opacity: 0.8;
+}
+
+.post-date {
+    font-weight: 500;
 }
 
 .pagination {

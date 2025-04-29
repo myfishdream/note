@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
 import timeline from "vitepress-markdown-timeline";
-
+import { RssPlugin } from 'vitepress-plugin-rss'
 //每页的文章数量
 const pageSize = 12
 
@@ -48,6 +48,7 @@ export default defineConfig({
         ["link", { rel: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/feed.xml" }],  // 使浏览器能够自动发现 RSS 源
     ],
     themeConfig: {
+        logo: '/favicon.ico',
         externalLinkIcon: true,
         lastUpdated: {
             text: 'Last updated',
@@ -84,6 +85,7 @@ export default defineConfig({
 
     vite: {
         server: { port: 5000 },
+        plugins: [RssPlugin(RSS)],
         optimizeDeps: {
             exclude: [
                 'vitepress-plugin-rss'
