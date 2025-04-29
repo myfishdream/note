@@ -28,6 +28,11 @@
 
     /* 格子纸背景颜色 */
     --grid-color-rgb: 0, 0, 0;
+
+    /* 文章状态颜色 */
+    --vp-c-success: #00989d;
+    --vp-c-warning: #cc8400;
+    --vp-c-danger: #a80000;
 }
 
 .dark {
@@ -332,12 +337,6 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
     left: 0;
     width: 100%;
     height: 2px;
-}
-
-
-.VPNavBar {
-    background-color: transparent !important;
-    backdrop-filter: blur(50px);
 }
 
 /* 格子纸背景效果增强版 */

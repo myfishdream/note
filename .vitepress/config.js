@@ -3,7 +3,7 @@ import { getPosts } from './theme/serverUtils'
 import timeline from "vitepress-markdown-timeline";
 
 //每页的文章数量
-const pageSize = 10
+const pageSize = 12
 
 // RSS 配置
 const baseUrl = 'https://yumeng.icu'

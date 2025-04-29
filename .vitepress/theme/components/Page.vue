@@ -2,20 +2,34 @@
     <div v-for="(article, index) in posts" :key="index" class="post-list">
         <div class="post-header">
             <div class="post-title">
-                <a class="post-title-link" :href="withBase(article.regularPath)"> {{ article.frontMatter.title }}</a>
-                <span v-if="article.frontMatter.sticky" class="sticky-tag">
-                    <!-- 此处可以添加置顶图标 -->
-                    <!-- 💡 -->
-                </span>
-                <span v-if="article.frontMatter.done" class="sticky-tag">
-                    <!-- 未完成图标 -->
-                    <!-- <svg t="1745112021376" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17279" width="17" ><path d="M512 19.692308C240.246154 19.692308 19.692308 240.246154 19.692308 512S240.246154 1004.307692 512 1004.307692 1004.307692 783.753846 1004.307692 512 783.753846 19.692308 512 19.692308z m0 35.446154c252.061538 0 456.861538 204.8 456.861538 456.861538S764.061538 968.861538 512 968.861538 55.138462 764.061538 55.138462 512 259.938462 55.138462 512 55.138462z" p-id="17280"></path></svg> -->
-                </span>
+                <svg class="doc-icon" 
+                     :class="{
+                         'is-sticky': article.frontMatter.sticky,
+                         'is-draft': article.frontMatter.done === true
+                     }"
+                     viewBox="0 0 1024 1024" 
+                     version="1.1" 
+                     xmlns="http://www.w3.org/2000/svg" 
+                     width="16" 
+                     height="16">
+                    <path d="M855.04 21.504H471.04c-214.016 0-388.096 174.08-388.096 388.096v504.32c0 50.176 40.96 91.136 91.136 91.136h384c214.016 0 388.096-174.08 388.096-388.096V112.128c0-50.176-40.96-90.624-91.136-90.624z m29.696 594.944c0 180.224-146.432 326.656-326.656 326.656H174.08c-16.384 0-29.696-13.312-29.696-29.696V409.088c0-180.224 146.432-326.656 326.656-326.656h384c16.384 0 29.696 13.312 29.696 29.696v504.32z" fill="currentColor"/>
+                    <path d="M314.88 415.744h144.896c16.896 0 30.72-13.824 30.72-30.72s-13.824-30.72-30.72-30.72H314.88c-16.896 0-30.72 13.824-30.72 30.72s13.824 30.72 30.72 30.72zM659.456 610.304H314.88c-16.896 0-30.72 13.824-30.72 30.72s13.824 30.72 30.72 30.72h344.576c16.896 0 30.72-13.824 30.72-30.72s-13.824-30.72-30.72-30.72z" fill="currentColor"/>
+                </svg>
+                <a class="post-title-link" :href="withBase(article.regularPath)">{{ article.frontMatter.title }}</a>
             </div>
-        </div>
-        <p class="describe" v-html="article.frontMatter.description"></p>
-        <div class='post-info'>
-            {{ article.frontMatter.date }} <span v-for="item in article.frontMatter.tags"><a class="post-tag-link" :href="withBase(`/pages/tags.html?tag=${item}`)"> {{ item }}</a></span>
+            <div class="post-meta">
+                <div class="post-tags">
+                    <template v-for="(item, tagIndex) in article.frontMatter.tags" :key="item">
+                        <a v-if="tagIndex < (isMobile ? 3 : 5)"
+                           class="post-tag"
+                           :href="withBase(`/pages/tags.html?tag=${item}`)">
+                            {{ item }}
+                        </a>
+                        <span v-else-if="tagIndex === (isMobile ? 3 : 5)" class="post-tag more-tag">...</span>
+                    </template>
+                </div>
+                <span class="post-date hide-on-mobile">{{ article.frontMatter.date }}</span>
+            </div>
         </div>
     </div>
 
@@ -99,7 +113,7 @@
 
 <script setup>
 import { withBase, useData } from 'vitepress'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const { theme } = useData()
 // console.log(theme.value.website.showJumpBtn)
@@ -140,48 +154,106 @@ const jumpToPage = () => {
         pageInput.value = ''
     }
 }
+
+const isMobile = ref(false)
+
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 768
+}
+
+onMounted(() => {
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile)
+})
 </script>
 
 <style scoped>
 .post-list {
-    /* border-bottom: 1px solid var(--vp-c-divider); */
-    padding: 14px 0 14px 0;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--vp-c-divider);
 }
+
 .post-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-.post-title {
-    font-size: 1.0625rem;
-    font-weight: 500;
-    color: var(--bt-theme-title)!important;
-    margin: 0.1rem 0;
-    
-}
-.post-title-link{
-    color: var(--bt-theme-title)!important;
-    text-decoration: none;
-}
-.post-tag-link{
-    color: var(--vp-c-text-1)!important;
-    text-decoration: none;
-}
-.post-tag-link:hover{
-    color: var(--vp-c-text-3)!important;
-    text-decoration: none;
+    gap: 16px;
 }
 
-.describe {
-    font-size: 0.9375rem;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-    color: var(--vp-c-text-2);
-    margin: 10px 0;
-    line-height: 1.5rem;
+.post-title {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
+.doc-icon {
+    flex-shrink: 0;
+    color: var(--vp-c-text-2);
+    transition: color 0.2s;
+}
+
+.doc-icon.is-sticky {
+    color: var(--vp-c-success); /* 置顶文章使用主题色 */
+}
+
+.doc-icon.is-draft {
+    color: var(--vp-c-warning); /* 未完成文章使用警告色 */
+}
+
+.post-title-link {
+    display: block;
+    color: var(--bt-theme-title);
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.post-title-link:hover {
+    color: var(--vp-c-text-1);
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.post-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post-tag,
+.post-date {
+    padding: 2px 8px;
+    border-radius: 2px;
+    background-color: var(--vp-c-bg-alt);
+    color: var(--vp-c-text-1);
+}
+
+.post-tag {
+    padding: 2px 8px;
+    border-radius: 2px;
+    background-color: var(--vp-c-bg-alt);
+    color: var(--vp-c-text-1);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.post-tag:hover {
+    color: var(--vp-c-text-3);
+}
+
 .pagination {
     margin-top: 16px;
     display: flex;
@@ -288,45 +360,33 @@ const jumpToPage = () => {
     color: var(--vp-c-text-2);
 }
 
-.sticky-tag {
-    display: inline-block;
-    margin-left: 8px;
-    fill: var(--vp-c-brand);
-    transform: translateY(2px);
+.more-tag {
+    background-color: transparent !important;
+    padding: 2px 0 !important;
 }
 
 @media screen and (max-width: 768px) {
-    .post-list {
-        padding: 14px 0 14px 0;
-    }
     .post-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        gap: 8px;
     }
-    .post-title {
-        font-size: 1.0625rem;
-        font-weight: 400;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-        width: 17rem;
+
+    .post-meta {
+        gap: 8px;
     }
-    .describe {
-        font-size: 0.9375rem;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        overflow: hidden;
-        margin: 0.5rem 0 1rem;
+
+    .post-tags {
+        gap: 4px;
     }
-    
-    /* 移动端适配 */
-    /* .pagination {
-        gap: 2px;
-    } */
-    
+
+    .post-tag {
+        padding: 2px 4px;
+        font-size: 0.75rem;
+    }
+
+    .hide-on-mobile {
+        display: none;
+    }
+
     .link, .page-btn {
         min-width: 28px;
         height: 28px;
@@ -342,6 +402,10 @@ const jumpToPage = () => {
     
     .jump-btn {
         padding: 0 4px;
+        font-size: 0.75rem;
+    }
+
+    .more-tag {
         font-size: 0.75rem;
     }
 }
