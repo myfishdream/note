@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import { getPosts } from './theme/serverUtils'
 import timeline from "vitepress-markdown-timeline";
 import { RssPlugin } from 'vitepress-plugin-rss'
+import { fileURLToPath } from 'url'
 //每页的文章数量
 const pageSize = 12
 
@@ -117,5 +118,15 @@ export default defineConfig({
                 'vitepress-plugin-rss'
             ]
         },
+        resolve: {
+            alias: [
+                {
+                    find: /^.*\/VPSwitchAppearance\.vue$/,
+                    replacement: fileURLToPath(
+                        new URL('./theme/components/CustomSwitchAppearance.vue', import.meta.url)
+                    )
+                }
+            ]
+        }
     },
 }) 
