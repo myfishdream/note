@@ -8,7 +8,7 @@ description: Vue中实现动画效果的多种方案详解，包括基于CSS的�
 draft: false
 outline: [2,3]
 # sticky: true
-done: true
+done: false
 ---
 
 # Vue的不同实现动画效果的方案

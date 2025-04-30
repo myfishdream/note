@@ -49,9 +49,13 @@ export default defineConfig({
     ],
     themeConfig: {
         logo: '/favicon.ico',
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '浅色模式',
+        darkModeSwitchTitle: '深色模式',
+        returnToTopLabel: '返回顶部',
         externalLinkIcon: true,
         lastUpdated: {
-            text: 'Last updated',
+            text: '最后更新时间',
             formatOptions: {
                 dateStyle: 'short', // full, long, medium, short
                 timeStyle: 'medium'

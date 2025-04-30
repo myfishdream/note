@@ -9,7 +9,7 @@ description: 记录一个普通程序员的一天，从睡过头到加班，从�
 draft: false
 outline: [2,3]
 # sticky: true
-done: true
+done: false
 gridPaper: true
 ---
 

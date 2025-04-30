@@ -10,19 +10,20 @@
             {{ key }} <sup>{{ data[key].length }}</sup>
         </span>
     </div>
-    <div class="tag-header">{{ selectTag }}</div>
-    <a
-        :href="withBase(article.regularPath)"
-        v-for="(article, index) in selectTag ? data[selectTag] : []"
-        :key="index"
-        class="posts"
-    >
-        <div class="post-container">
-            <div class="post-dot"></div>
-            {{ article.frontMatter.title }}
-        </div>
-        <div class="date" :style="getYearStyle(article.frontMatter.date)">{{ article.frontMatter.date }}</div>
-    </a>
+    <div class="tag-header" :style="getTagStyle(selectTag)">{{ selectTag }}</div>
+    <div class="posts-container">
+        <a
+            :href="withBase(article.regularPath)"
+            v-for="(article, index) in selectTag ? data[selectTag] : []"
+            :key="index"
+            class="posts"
+        >
+            <div class="post-container">
+                <span class="post-title">{{ article.frontMatter.title }}</span>
+            </div>
+            <div class="date" :style="getYearStyle(article.frontMatter.date)">{{ article.frontMatter.date }}</div>
+        </a>
+    </div>
 </template>
 
 <script setup>
@@ -90,46 +91,125 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.posts-container {
+    margin-top: 1rem;
+}
+
 .posts {
-    text-decoration: none;
-}
-
-.tags {
-    margin-top: 14px;
+    padding: 0.75rem 0;
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    border-bottom: 1px solid var(--vp-c-divider);
+    transition: all 0.2s ease;
 }
 
-.tag {
-    display: inline-block;
-    padding: 0 16px 4px 16px;
-    margin: 6px 8px;
-    font-size: 0.875rem;
-    line-height: 25px;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: opacity 0.2s;
+.post-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    color: var(--vp-c-text-1);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    transition: color 0.2s;
 }
 
-.tag:hover {
+
+.post-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 1rem;
+}
+
+.date {
+    flex-shrink: 0;
+    color: var(--date-color);
+    font-family: var(--date-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
     opacity: 0.8;
 }
 
+.tags {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 0.9375rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tag:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .tag sup {
-    font-weight: bold;
+    margin-left: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    opacity: 0.8;
 }
 
 .tag-header {
-    padding: 28px 0 10px 0;
-    font-size: 1.375rem;
+    margin: 2rem 0 1.5rem;
+    padding-bottom: 1rem;
+    font-size: 1.75rem;
     font-weight: 600;
-    color: var(--bt-theme-title);
-    font-family: var(--date-font-family);
+    border-bottom: 3px solid var(--vp-c-divider);
+    transition: all 0.3s ease;
 }
 
 @media screen and (max-width: 768px) {
+    .posts {
+        padding: 0.625rem 0;
+    }
+
+    .post-container {
+        font-size: 0.875rem;
+    }
+
+    .post-title {
+        max-width: calc(100vw - 110px);
+    }
+
     .date {
         font-size: 0.75rem;
+    }
+
+    .tag {
+        padding: 4px 12px;
+        font-size: 0.8125rem;
+    }
+
+    .tag sup {
+        font-size: 0.6875rem;
+        margin-left: 4px;
+    }
+
+    .tag-header {
+        font-size: 1.25rem;
+        margin: 1.5rem 0 1rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .tags {
+        margin: 1rem 0;
+        gap: 8px;
     }
 }
 </style>
