@@ -51,7 +51,7 @@
         <!-- 页码按钮 -->
         <template v-for="i in pagesNum" :key="i">
             <!-- 总是显示第一页 -->
-            <a 
+            <a  
                 v-if="i === 1" 
                 class="link" 
                 :class="{ active: pageCurrent === i }" 
@@ -86,19 +86,6 @@
                 {{ i }}
             </a>
         </template>
-        
-        <!-- 跳转输入框 -->
-        <div class="page-jump" v-if="theme.website.showJumpBtn">
-            <input 
-                v-model="pageInput" 
-                type="number" 
-                min="1" 
-                :max="pagesNum" 
-                @keyup.enter="jumpToPage"
-                placeholder="Page"
-            />
-            <button @click="jumpToPage" class="jump-btn">Jump</button>
-        </div>
         
         <!-- 下一页按钮 -->
         <a 
@@ -138,28 +125,9 @@ const props = defineProps({
     }
 })
 
-// 输入框的值
-const pageInput = ref('')
-
 // 分页控制参数
 const maxPageBtns = 5       // 控制分页器最多显示多少个页码按钮
 const maxVisiblePages = 3   // 控制当前页码前后最多显示多少个页码
-
-// 跳转到指定页面
-const jumpToPage = () => {
-    const pageNum = parseInt(pageInput.value)
-    
-    if (pageNum && pageNum >= 1 && pageNum <= props.pagesNum) {
-        const targetUrl = pageNum === 1 
-            ? withBase(`/index.html`) 
-            : withBase(`/page_${pageNum}.html`)
-        
-        window.location.href = targetUrl
-    } else {
-        // 无效输入
-        pageInput.value = ''
-    }
-}
 
 const isMobile = ref(false)
 
@@ -288,6 +256,7 @@ const getYearStyle = (date) => {
     flex-wrap: wrap;
     gap: 7px;
 }
+
 .link {
     display: inline-flex;
     align-items: center;
@@ -298,16 +267,17 @@ const getYearStyle = (date) => {
     text-align: center;
     border: 1px var(--vp-c-divider) solid;
     font-weight: 400;
-    border-radius: 50%;
+    border-radius: 4px;
     transition: all 0.2s;
     text-decoration: none;
     color: var(--vp-c-text-1);
 }
+
 .link:hover {
-    /* border-color: var(--vp-c-text-1); */
     color: var(--vp-c-text-1);
     text-decoration: none;
 }
+
 .link.active {
     background: var(--vp-c-text-1);
     color: var(--vp-c-neutral-inverse);
@@ -324,10 +294,10 @@ const getYearStyle = (date) => {
     border-radius: 4px;
     transition: all 0.2s;
     text-decoration: none;
+    color: var(--vp-c-text-1);
 }
 
 .page-btn:hover:not(.disabled) {
-    /* border-color: var(--vp-c-text-1); */
     color: var(--vp-c-text-1);
     text-decoration: none;
 }
@@ -336,45 +306,6 @@ const getYearStyle = (date) => {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
-}
-
-.page-jump {
-    display: flex;
-    margin: 0 4px;
-    height: 32px;
-}
-
-.page-jump input {
-    width: 50px;
-    border: 1px var(--vp-c-divider) solid;
-    border-radius: 4px 0 0 4px;
-    text-align: center;
-    outline: none;
-    transition: all 0.2s;
-    padding: 0 4px;
-    background: var(--vp-c-bg);
-    color: var(--vp-c-text-1);
-}
-
-.page-jump input:focus {
-    border-color: var(--vp-c-brand);
-}
-
-.jump-btn {
-    padding: 0 8px;
-    border: 1px var(--vp-c-divider) solid;
-    border-left: none;
-    border-radius: 0 4px 4px 0;
-    background: var(--vp-c-bg-soft);
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--vp-c-text-1);
-}
-
-.jump-btn:hover {
-    background: var(--vp-c-brand);
-    border-color: var(--vp-c-brand);
-    color: white;
 }
 
 .ellipsis {
@@ -416,19 +347,6 @@ const getYearStyle = (date) => {
     .link, .page-btn {
         min-width: 28px;
         height: 28px;
-    }
-    
-    .page-jump {
-        height: 28px;
-    }
-    
-    .page-jump input {
-        width: 40px;
-    }
-    
-    .jump-btn {
-        padding: 0 4px;
-        font-size: 0.75rem;
     }
 
     .more-tag {
