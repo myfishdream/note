@@ -55,7 +55,7 @@ async function generatePaginationPages(total, pageSize) {
             const page = `
 ---
 page: true
-title: ${i === 1 ? 'Blog' : 'Page ' + i}
+title: ${i === 1 ? 'Yumo' : 'Page ' + i}
 aside: false
 lastUpdated: false
 comments: false
