@@ -4,7 +4,7 @@ import timeline from "vitepress-markdown-timeline";
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { fileURLToPath } from 'url'
 //每页的文章数量
-const pageSize = 12
+const pageSize = 14
 
 // RSS 配置
 const baseUrl = 'https://yumeng.icu'
@@ -25,7 +25,7 @@ const RSS = {
 
 export default defineConfig({
     title: 'YuMeng',
-    titleTemplate: "YuMeng's :title",
+    titleTemplate: ":title",
     base: '/',
     cacheDir: './node_modules/vitepress_cache',
     description: '鱼梦江湖的个人博客，记录生活，分享技术。',
@@ -49,7 +49,6 @@ export default defineConfig({
         ["link", { rel: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/feed.xml" }],  // 使浏览器能够自动发现 RSS 源
     ],
     themeConfig: {
-        logo: '/favicon.ico',
         darkModeSwitchLabel: '主题',
         lightModeSwitchTitle: '浅色模式',
         darkModeSwitchTitle: '深色模式',
