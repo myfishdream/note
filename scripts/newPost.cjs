@@ -20,9 +20,12 @@ tags:
 description: ${description}
 draft: false
 outline: [2,3]
-# sticky: true
-done: true
+sticky: false
+done: false
 gridPaper: false
+cbf: false
+zoomable: true
+publish: true
 ---
 
 `

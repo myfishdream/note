@@ -153,8 +153,8 @@ onMounted(() => {
 
 .tag:hover {
     opacity: 0.9;
-    transform: rotate(5deg);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
 }
 
 .tag sup {
