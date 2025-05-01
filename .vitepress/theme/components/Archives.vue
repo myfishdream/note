@@ -1,3 +1,4 @@
+<!-- 废弃 -->
 <template>
     <div class="archives-container">
         <div v-for="yearList in data" class="year-section">

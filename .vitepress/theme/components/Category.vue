@@ -1,3 +1,4 @@
+<!-- 废弃 -->
 <template>
     <div v-for="(posts, key) in data">
         <div class="category">

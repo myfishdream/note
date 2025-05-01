@@ -37,7 +37,6 @@
 <script lang="js" setup>
 import { computed, ref } from 'vue'
 import { useData } from 'vitepress'
-// import type { Tools } from '../types'
 import { toolsdata } from '../../tools-data'
 
 const { theme, frontmatter } = useData();

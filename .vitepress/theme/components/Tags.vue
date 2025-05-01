@@ -153,7 +153,7 @@ onMounted(() => {
 
 .tag:hover {
     opacity: 0.9;
-    transform: translateY(-2px);
+    transform: rotate(5deg);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
