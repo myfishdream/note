@@ -90,6 +90,12 @@ export const toolsdata = [
     title: '设计',
     items: [
       {
+        title:'ascii-tree-generator',
+        desc:'ascii树生成器',
+        link:'https://ascii-tree-generator.com/',
+        linktxt:'ascii-tree-generator.com'
+      },
+      {
         title:'favicon',
         desc:'favicon生成器',
         link:'https://favicon.io/',

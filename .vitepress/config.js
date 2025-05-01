@@ -53,7 +53,7 @@ export default defineConfig({
         lightModeSwitchTitle: '浅色模式',
         darkModeSwitchTitle: '深色模式',
         returnToTopLabel: '返回顶部',
-        externalLinkIcon: true,
+        externalLinkIcon: false,
         lastUpdated: {
             text: '最后更新时间',
             formatOptions: {
@@ -64,10 +64,8 @@ export default defineConfig({
         posts: await getPosts(pageSize),
         nav: [
             { text: '首页', link: '/' },
-            // { text: 'Category', link: '/pages/category' },
             { text: '标签', link: '/pages/tags' },
-            { text: '归档', link: '/pages/archives' },
-            { text: '站点', link: '/pages/site' },
+            { text: '工具', link: '/pages/site' },
             { text: '关于我', link: '/pages/about' },
         ],
         search: {
