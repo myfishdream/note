@@ -15,7 +15,7 @@
                     <path d="M855.04 21.504H471.04c-214.016 0-388.096 174.08-388.096 388.096v504.32c0 50.176 40.96 91.136 91.136 91.136h384c214.016 0 388.096-174.08 388.096-388.096V112.128c0-50.176-40.96-90.624-91.136-90.624z m29.696 594.944c0 180.224-146.432 326.656-326.656 326.656H174.08c-16.384 0-29.696-13.312-29.696-29.696V409.088c0-180.224 146.432-326.656 326.656-326.656h384c16.384 0 29.696 13.312 29.696 29.696v504.32z" fill="currentColor"/>
                     <path d="M314.88 415.744h144.896c16.896 0 30.72-13.824 30.72-30.72s-13.824-30.72-30.72-30.72H314.88c-16.896 0-30.72 13.824-30.72 30.72s13.824 30.72 30.72 30.72zM659.456 610.304H314.88c-16.896 0-30.72 13.824-30.72 30.72s13.824 30.72 30.72 30.72h344.576c16.896 0 30.72-13.824 30.72-30.72s-13.824-30.72-30.72-30.72z" fill="currentColor"/>
                 </svg>
-                <a class="post-title-link" :href="withBase(article.regularPath)">{{ article.frontMatter.title }}</a>
+                <a class="post-title-link" :href="withBase(article.regularPath)" :title="article.frontMatter.description">{{ article.frontMatter.title }}</a>
             </div>
             <div class="post-meta">
                 <div class="post-tags">
@@ -203,7 +203,7 @@ const getYearStyle = (date) => {
 
 .post-title-link {
     display: block;
-    color: var(--bt-theme-title);
+    color: var(--yu-theme-title);
     text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;

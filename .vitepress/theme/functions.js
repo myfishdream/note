@@ -300,4 +300,139 @@ export function initImageTitles() {
         // 监听DOM变化
         observeImages();
     }, 0);
-} 
+}
+
+/**
+ * 时间处理相关函数
+ * ---------------------------------------------
+ */
+
+/**
+ * 格式化日期为字符串
+ * @param {Date|string|number} date - 要格式化的日期
+ * @param {string} format - 日期格式，默认为 'YYYY-MM-DD'
+ * @returns {string} - 格式化后的日期字符串
+ */
+export function formatDate(date, format = 'YYYY-MM-DD') {
+    if (!date) return '';
+    
+    // 确保date是Date对象
+    const dateObj = date instanceof Date ? date : new Date(date);
+    
+    // 如果日期无效，返回空字符串
+    if (isNaN(dateObj.getTime())) return '';
+    
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+    
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes)
+        .replace('ss', seconds);
+}
+
+/**
+ * 计算相对时间
+ * @param {Date|string|number} date - 日期或时间戳
+ * @param {Object} options - 配置选项
+ * @param {number} options.maxDays - 最大天数，超过则显示完整日期，默认为7
+ * @param {string} options.format - 完整日期的格式，默认为 'YYYY-MM-DD'
+ * @param {boolean} options.suffix - 是否添加"前"或"后"后缀，默认为true
+ * @param {string} options.nowText - "刚刚"的文本，默认为"刚刚"
+ * @param {Object} options.texts - 自定义文本
+ * @returns {string} - 相对时间字符串
+ */
+export function getRelativeTime(date, options = {}) {
+    if (!date) return '';
+    
+    // 默认选项
+    const defaultOptions = {
+        maxDays: 7,               // 超过7天显示完整日期
+        format: 'YYYY-MM-DD',     // 完整日期格式
+        suffix: true,             // 是否显示"前"或"后"
+        nowText: '刚刚',           // "刚刚"文本
+        texts: {
+            now: '刚刚',
+            second: '秒',
+            minute: '分钟',
+            hour: '小时',
+            day: '天',
+            week: '周',
+            month: '个月',
+            year: '年'
+        }
+    };
+    
+    // 合并选项
+    const opts = { ...defaultOptions, ...options };
+    
+    // 确保date是Date对象
+    const targetDate = date instanceof Date ? date : new Date(date);
+    
+    // 如果日期无效，返回空字符串
+    if (isNaN(targetDate.getTime())) return '';
+    
+    const now = new Date();
+    const diff = now - targetDate; // 毫秒差
+    const diffAbs = Math.abs(diff);
+    const isPast = diff > 0;  // 是否是过去的时间
+    
+    // 时间单位（毫秒）
+    const second = 1000;
+    const minute = 60 * second;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    const week = 7 * day;
+    const month = 30 * day;
+    const year = 365 * day;
+    
+    // 如果超过最大天数，返回完整日期
+    if (diffAbs > opts.maxDays * day) {
+        return formatDate(targetDate, opts.format);
+    }
+    
+    // 计算相对时间
+    let value, unit;
+    
+    if (diffAbs < 10 * second) {
+        return opts.texts.now;
+    } else if (diffAbs < minute) {
+        value = Math.floor(diffAbs / second);
+        unit = opts.texts.second;
+    } else if (diffAbs < hour) {
+        value = Math.floor(diffAbs / minute);
+        unit = opts.texts.minute;
+    } else if (diffAbs < day) {
+        value = Math.floor(diffAbs / hour);
+        unit = opts.texts.hour;
+    } else if (diffAbs < week) {
+        value = Math.floor(diffAbs / day);
+        unit = opts.texts.day;
+    } else if (diffAbs < month) {
+        value = Math.floor(diffAbs / week);
+        unit = opts.texts.week;
+    } else if (diffAbs < year) {
+        value = Math.floor(diffAbs / month);
+        unit = opts.texts.month;
+    } else {
+        value = Math.floor(diffAbs / year);
+        unit = opts.texts.year;
+    }
+    
+    // 构建相对时间字符串
+    let relativeTime = `${value}${unit}`;
+    
+    // 添加后缀
+    if (opts.suffix) {
+        relativeTime += isPast ? '前' : '后';
+    }
+    
+    return relativeTime;
+}

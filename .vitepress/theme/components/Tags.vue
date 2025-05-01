@@ -126,7 +126,6 @@ onMounted(() => {
 
 .date {
     flex-shrink: 0;
-    color: var(--date-color);
     font-family: var(--date-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-weight: 500;
     font-size: 1rem;

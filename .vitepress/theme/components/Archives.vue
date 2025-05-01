@@ -105,7 +105,6 @@ const getYearStyle = (date) => {
 
 .date {
     flex-shrink: 0;
-    color: var(--date-color);
     font-weight: 500;
     font-size: 0.875rem;
     opacity: 0.8;
