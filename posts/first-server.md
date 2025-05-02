@@ -664,3 +664,25 @@ git merge origin/main    # 手动合并
 git reset --hard origin/main
 ```
 
+## 查看系统空间
+
+使用以下命令查看所有挂载的文件系统的磁盘空间：
+
+`-h` 选项表示以人类可读的格式显示（例如，以GB、MB为单位）。
+
+```bash
+df -h
+```
+
+查看某个目录的磁盘使用情况，`-s` 选项表示汇总，只显示总计
+
+```bash
+du -sh /path/to/directory
+```
+
+查看根目录（`/`）的空间使用情况
+
+```bash
+df -h /
+```
+

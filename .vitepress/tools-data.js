@@ -1,5 +1,3 @@
-
-
 const badge = {
   new: 'NEW',
   hot: 'HOT',
@@ -204,6 +202,18 @@ export const toolsdata = [
   {
     title: '工具',
     items: [
+      {
+        title: 'IP地址查询',
+        desc: 'IP地址查询',
+        link: 'https://ipinfo.io/',
+        linktxt: 'ipinfo.io',
+      },
+      {
+        title: '密码生成器',
+        desc: '密码生成器',
+        link: 'https://mima.3gifs.com/',
+        linktxt: 'mima.3gifs.com',
+      },
       {
         title: '开发者武器库',
         desc: '涵盖多种工具',

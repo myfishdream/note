@@ -202,4 +202,23 @@ FLUSH PRIVILEGES;
 
 然后在Vscode中使用**用户名**：`remote_user`，**密码**：`StrongPassword123!`登录即可
 
+**创建一个安全的远程用户**
+
+```bash
+CREATE USER 'new_remote'@'192.168.1.100' IDENTIFIED BY '强密码';
+GRANT SELECT, INSERT ON 数据库名.* TO 'new_remote'@'192.168.1.100';
+FLUSH PRIVILEGES;
+```
+
+**删除登录用户**
+
+```bash
+DROP USER 'remote_user'@'%';
+```
+
+**限制访问IP**
+
+```bash
+RENAME USER 'remote_user'@'%' TO 'remote_user'@'192.168.1.100';
+```
 
