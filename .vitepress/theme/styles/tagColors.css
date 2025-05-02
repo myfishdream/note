@@ -17,13 +17,14 @@
     --tag-13: #5C6BC0; /* Rollup */
     --tag-14: #FF5722; /* Tool */
     --tag-15: #0288D1; /* TypeScript */
-    --tag-16: #4CAF50; /* Vue */
-    --tag-17: #26A69A; /* Vue Router */
-    --tag-18: #FF9800; /* Work */
-    --tag-19: #00BCD4; /* 工程化 */
-    --tag-20: #E91E63; /* 心理 */
-    --tag-21: #9C27B0; /* 插件 */
-    --tag-22: #0049ff; /* 服务器 */
+    --tag-16: #4CAF50; /* Ubuntu */
+    --tag-17: #26A69A; /* Vue */
+    --tag-18: #FF9800; /* Vue Router */
+    --tag-19: #00BCD4; /* Work */
+    --tag-20: #E91E63; /* 工程化 */
+    --tag-21: #9C27B0; /* 心理 */
+    --tag-22: #0049ff; /* 插件 */
+    --tag-23: #0048ff; /* 服务器 */
 }
 
 .dark {
@@ -42,13 +43,14 @@
     --tag-13: #5C6BC0; /* Rollup */
     --tag-14: #FF5722; /* Tool */
     --tag-15: #0288D1; /* TypeScript */
-    --tag-16: #4CAF50; /* Vue */
-    --tag-17: #26A69A; /* Vue Router */
-    --tag-18: #FF9800; /* Work */
-    --tag-19: #00BCD4; /* 工程化 */
-    --tag-20: #E91E63; /* 心理 */
-    --tag-21: #9C27B0; /* 插件 */
-    --tag-22: #0049ff; /* 服务器 */
+    --tag-16: #4CAF50; /* Ubuntu */
+    --tag-17: #26A69A; /* Vue */
+    --tag-18: #FF9800; /* Vue Router */
+    --tag-19: #00BCD4; /* Work */
+    --tag-20: #E91E63; /* 工程化 */
+    --tag-21: #9C27B0; /* 心理 */
+    --tag-22: #0049ff; /* 插件 */
+    --tag-23: #0048ff; /* 服务器 */
 }
 
 /* 标签名称到变量编号的映射 */
@@ -68,11 +70,12 @@
  * Rollup -> --tag-13
  * Tool -> --tag-14
  * TypeScript -> --tag-15
- * Vue -> --tag-16
- * Vue Router -> --tag-17
- * Work -> --tag-18
- * 工程化 -> --tag-19
- * 心理 -> --tag-20
- * 插件 -> --tag-21
- * 服务器 -> --tag-22
+ * Ubuntu -> --tag-16
+ * Vue -> --tag-17
+ * Vue Router -> --tag-18
+ * Work -> --tag-19
+ * 工程化 -> --tag-20
+ * 心理 -> --tag-21
+ * 插件 -> --tag-22
+ * 服务器 -> --tag-23
  */
