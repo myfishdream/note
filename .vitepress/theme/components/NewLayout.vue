@@ -21,11 +21,16 @@
                         </a>
                     </div>
                 </div>
-                <div class="post-info-right" v-if="lastUpdated && $frontmatter.date && formatDate(lastUpdated) !== $frontmatter.date.substring(0,10)">
-                    <span class="post-updated" :title="formatDate(lastUpdated, 'YYYY-MM-DD HH:mm')">
+                <div class="post-info-right" v-if="lastUpdated && $frontmatter.date">
+                    <span class="post-updated" :title="formatDate(lastUpdated, 'YYYY-MM-DD HH:mm:ss')">
                         更新: {{ displayUpdatedTime }}
                     </span>
                 </div>
+            </div>
+            
+            <!-- 文章简介 -->
+            <div class="post-description" v-if="$frontmatter.description && $frontmatter.date">
+                <p>{{ $frontmatter.description }}</p>
             </div>
         </template>
         <template #doc-footer-before>
@@ -59,7 +64,6 @@ const { page } = useData()
 
 // 计算最后更新时间
 const lastUpdated = computed(() => page.value.lastUpdated)
-
 // 计算显示的更新时间（相对或绝对）
 const displayUpdatedTime = computed(() => {
     if (!lastUpdated.value) return ''
@@ -77,7 +81,6 @@ const displayUpdatedTime = computed(() => {
         }
     })
 })
-
 // 获取标签的样式
 const getTagStyle = (tag) => {
     const index = tagMap[tag]
@@ -156,10 +159,25 @@ const getYearStyle = (date) => {
     font-weight: 500;
     font-size: 0.875rem;
     padding: 2px 10px;
-    border-radius: 6px;
     white-space: nowrap;
     color: var(--vp-c-text-dark-1);
-    background-color: rgba(0, 170, 70, 0.15);
+    border-bottom: 2px solid var(--vp-c-brand);
+}
+
+/* 文章简介样式 */
+.post-description {
+    margin: 1rem 0 1.5rem;
+    padding: 12px 16px;
+    border-radius: 2px;
+    background-color: rgba(var(--vp-c-brand-rgb), 0.05);
+    line-height: 1.6;
+    font-size: 0.95rem;
+    color: var(--vp-c-text-2);
+    border-left: 4px solid var(--vp-c-brand);
+}
+
+.post-description p {
+    margin: 0;
 }
 
 @media screen and (max-width: 768px) {

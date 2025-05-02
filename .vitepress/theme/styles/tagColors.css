@@ -2,30 +2,30 @@
 /* 可以修改颜色值来自定义标签颜色 */
 
 :root {
-    --tag-1: #4A90E2; /* CSS */
+    --tag-1: #60A5FA; /* CSS */
     --tag-2: #3B82F6; /* Chrome */
-    --tag-3: #F87171; /* Cursor */
-    --tag-4: #06B6D4; /* Electron */
-    --tag-5: #EF4444; /* Error */
-    --tag-6: #F97316; /* Git */
-    --tag-7: #94A3B8; /* Github */
-    --tag-8: #F59E0B; /* HTML */
-    --tag-9: #EAB308; /* JavaScript */
+    --tag-3: #FCA5A5; /* Cursor */
+    --tag-4: #22D3EE; /* Electron */
+    --tag-5: #F87171; /* Error */
+    --tag-6: #FB923C; /* Git */
+    --tag-7: #CBD5E1; /* Github */
+    --tag-8: #FBBF24; /* HTML */
+    --tag-9: #FACC15; /* JavaScript */
     --tag-10: #38BDF8; /* Mermaid */
     --tag-11: #0EA5E9; /* MySQL */
-    --tag-12: #22C55E; /* Node.js */
-    --tag-13: #94A3B8; /* Other */
-    --tag-14: #FB923C; /* Rollup */
-    --tag-15: #0EA5E9; /* Tool */
-    --tag-16: #6366F1; /* TypeScript */
-    --tag-17: #F97316; /* Ubuntu */
-    --tag-18: #10B981; /* Vue */
-    --tag-19: #14B8A6; /* Vue Router */
-    --tag-20: #F43F5E; /* Work */
-    --tag-21: #8B5CF6; /* 工程化 */
-    --tag-22: #FDBA74; /* 心理 */
-    --tag-23: #A78BFF; /* 插件 */
-    --tag-24: #64748B; /* 服务器 */
+    --tag-12: #34D399; /* Node.js */
+    --tag-13: #CBD5E1; /* Other */
+    --tag-14: #FDBA74; /* Rollup */
+    --tag-15: #38BDF8; /* Tool */
+    --tag-16: #818CF8; /* TypeScript */
+    --tag-17: #FB923C; /* Ubuntu */
+    --tag-18: #34D399; /* Vue */
+    --tag-19: #2DD4BF; /* Vue Router */
+    --tag-20: #FB7185; /* Work */
+    --tag-21: #A78BFA; /* 工程化 */
+    --tag-22: #FED7AA; /* 心理 */
+    --tag-23: #C4B5FD; /* 插件 */
+    --tag-24: #94A3B8; /* 服务器 */
 }
 
 .dark {

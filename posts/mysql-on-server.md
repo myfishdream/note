@@ -16,6 +16,8 @@ zoomable: true
 publish: true
 ---
 
+# 服务器上的数据库
+
 ## 安装MySQL
 
 ```bash
@@ -199,4 +201,5 @@ FLUSH PRIVILEGES;
 ```
 
 然后在Vscode中使用**用户名**：`remote_user`，**密码**：`StrongPassword123!`登录即可
+
 

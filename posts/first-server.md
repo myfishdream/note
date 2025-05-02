@@ -568,3 +568,99 @@ sudo certbot renew --dry-run
 http服务(比如nginx、Apache等http服务器软件)需监听80端口，
 这样80端口才能被访问。
 
+## 私有仓库拉取代码
+
+生成 SSH 密钥对，在 **服务器** 上执行：
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+按回车使用默认路径（~/.ssh/id_ed25519）,可选：设置密钥密码（增加安全性）。
+
+**将公钥添加到 GitHub**
+
+查看公钥内容：
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+复制输出的内容（以 `ssh-ed25519` 开头）
+
+1. 登录 GitHub → **Settings** → **SSH and GPG keys** → **New SSH Key**：
+   - Title: 填写服务器标识（如 `My Server`）
+   - Key: 粘贴公钥内容
+
+**测试 SSH 连接**
+
+```bash
+ssh -T git@github.com
+```
+
+看到 **You've successfully authenticated** 表示成功，注意要输入Yes确定
+
+即可克隆私有仓库了，确保使用 **SSH 地址**（非 HTTPS）。
+
+```bash
+git clone git@github.com:your_username/your_private_repo.git
+```
+
+如果你的 GitHub 仓库从公开（Public）转为私有（Private），而本地已经通过 **HTTPS 方式** 克隆过旧版本，需要更新远程连接方式以适配私有仓库权限。
+
+**将远程 URL 从 HTTPS 切换到 SSH**
+
+检查当前远程地址
+
+```bash
+git remote -v
+
+# origin  https://github.com/your_username/your_repo.git (fetch)
+# origin  https://github.com/your_username/your_repo.git (push)
+```
+
+**修改为 SSH 地址**
+
+```bash
+git remote set-url origin git@github.com:your_username/your_repo.git
+
+git remote -v # 验证
+
+git pull origin main  # 拉取即可
+```
+
+## 关于文件覆盖
+
+如果从远程仓库拉取代码后，在代码中新建一个文件，再次拉取代码，此时在本地新建的文件不会变更，因为Git 只跟踪已被 `git add` 的文件，**未纳入版本控制的文件不受影响**
+
+但是，在本地修改已跟踪的文件，导致与远程发生冲突，**git**会先尝试自动合并，如果失败需要手动合并。
+
+> [!TIP]
+>
+> 使用`git pull --rebase`将本地提交变基到远程提交之后，即先拉取远程提交然后把本地的提交挂到远程提交的后面
+
+如果远程提交中删除了某个文件，拉取后，本地的文件也将删除，因为Git将同步远程的状态。
+
+**`git pull` 和 `git fetch` 的区别**
+
+| 命令            | 行为                                                         | 适用场景                                                     |
+| :-------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| **`git fetch`** | 仅从远程仓库**下载最新数据**到本地 `.git` 目录，**不修改工作区文件**。 | 查看远程更新，但不立即合并。通过`git log origin/main`查看远程分支的提交历史 |
+| **`git pull`**  | `git fetch` + `git merge`（默认）或 `git rebase`，**会修改工作区**。 | 快速同步远程更改到本地工作                                   |
+
+为了**避免意外覆盖**，建议**先检查再合并**
+
+```bash
+git fetch origin          # 仅获取远程更新
+git diff origin/main     # 查看远程与本地的差异
+git merge origin/main    # 手动合并
+```
+
+可以使用`git pull --dry-run`模拟拉取操作，但不会真正的执行，只会显示将会发生的操作
+
+**强制放弃本地修改，完全同步远程**
+
+```bash
+git reset --hard origin/main
+```
+
