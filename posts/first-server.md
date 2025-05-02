@@ -5,12 +5,13 @@ category: other
 tags: 
     - 服务器
     - Node.js
-description: 在硅云花了26买了一台服务器
+description: 记录从购买，配置，部署，HTTPS,全过程，踩坑点
 draft: false
 outline: [2,3]
 sticky: false
 done: false
 gridPaper: false
+cbf: false
 ---
 
 # 从购买服务器到部署应用
@@ -299,8 +300,8 @@ pm2 startup
 
 ```bash
 cd ~/仓库名
-git pull origin main  # 假设分支是main
-npm install  # 如果package.json有变更
+git pull origin main  # 假设分支是main / git fetch --all
+npm install --production  # 如果package.json有变更
 pm2 restart my-api
 ```
 
@@ -384,3 +385,151 @@ echo "Deployed at $(date)" >> deploy.log
 **配置Github**
 
 在 GitHub 中配置自动化部署（Webhook），使代码推送时自动触发服务器的 `deploy.sh` 脚本
+
+## 删除
+
+**删除文件**
+
+```bash
+rm 文件名
+```
+
+强制删除
+
+```bash
+rm -f 文件名 
+```
+
+删除前确认
+
+```bash
+rm -i 文件名  
+```
+
+**删除文件夹**
+
+```bash
+rm -r 文件夹名   # -r (recursive，递归删除目录及其内容)
+
+rm -rf dir_name     # 强制删除目录（无确认提示，慎用！）
+```
+
+删除空目录
+
+```bash
+rmdir 空目录名
+```
+
+```bash
+rm *.log          # 删除所有 .log 文件
+rm -r prefix_*    # 删除所有以 prefix_ 开头的目录
+```
+
+| 操作           | 命令示例     | 注意事项       |
+| :------------- | :----------- | :------------- |
+| 删除文件       | `rm file`    | 可加 `-i` 确认 |
+| 强制删除文件   | `rm -f file` | 无提示，慎用   |
+| 删除目录及内容 | `rm -r dir`  | 递归删除       |
+| 强制删除目录   | `rm -rf dir` | **极端危险！** |
+| 删除空目录     | `rmdir dir`  | 仅限空目录     |
+
+## 自定义域名
+
+登录域名注册商控制台，**添加 DNS 记录**，记录类型：A，主机记录：@（主域名）或 www（子域名），**记录值**：你的服务器公网 IP，使用`ping 你的域名`，**验证解析生效**
+
+在**服务器环境准备**，
+
+```bash
+# 安装 Nginx（Ubuntu 示例）
+sudo apt update
+sudo apt install nginx -y
+
+# 安装 Certbot（Let's Encrypt 证书工具）
+sudo apt install certbot python3-certbot-nginx -y
+```
+
+**创建 Nginx 配置文件**
+
+```bash
+sudo nano /etc/nginx/sites-available/api.yumeng.icu
+```
+
+**写入**
+
+```bash
+server {
+    listen 80;
+    server_name api.yumeng.icu;  # 你的域名
+
+    # 访问日志（可选）
+    access_log /var/log/nginx/api.yumeng.icu.access.log;
+    error_log /var/log/nginx/api.yumeng.icu.error.log;
+
+    # 反向代理到你的 Node.js 服务
+    location / {
+        proxy_pass http://localhost:3000;  # 转发到本机 3000 端口
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+**启用配置并测试语法**
+
+```bash
+sudo ln -s /etc/nginx/sites-available/api.yumeng.icu /etc/nginx/sites-enabled/
+sudo nginx -t  # 必须返回 "syntax is ok"
+sudo systemctl reload nginx
+```
+
+> [!tip]
+>
+> 一定要注意查看服务器激活的端口
+>
+> 查看`sudo ufw status`，如果没有则`sudo ufw allow 80/tcp`
+
+**强制 HTTPS**
+
+```bash
+sudo apt install certbot python3-certbot-nginx -y #  安装 Certbot（已安装可跳过）
+```
+
+**获取 SSL 证书并自动配置 Nginx**
+
+```bash
+sudo certbot --nginx -d api.yumeng.icu
+```
+
+按提示输入邮箱并同意条款，选择 2: Redirect（强制所有 HTTP 流量跳转到 HTTPS）。
+
+ **验证证书自动续期**
+
+```bash
+sudo certbot renew --dry-run
+```
+
+> [!TIP]
+>
+> 如果配置了HTTPS后无法访问，可以检查一下防护墙是否激活了443端口，或者查看证书状态
+>
+> ```bash
+> sudo certbot certificates	# 验证证书状态
+> ```
+>
+> **放行443端口**
+>
+> ```bash
+> sudo ufw allow 443/tcp
+> sudo ufw status  # 确认规则已添加
+> ```
+>
+> 硅云安全组补充规则
+>
+> | 协议 | 端口 | 方向 | 源地址    | 操作 |
+> | :--- | :--- | :--- | :-------- | :--- |
+> | TCP  | 443  | 入站 | 0.0.0.0/0 | 允许 |
