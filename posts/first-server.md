@@ -155,7 +155,7 @@ pm2 startup  # 设置开机自启
 
 ## 踩坑
 
-### 防护墙
+### 防火墙
 
 **盲目的开启防护墙可能导致中断SSH连接**
 
@@ -452,12 +452,12 @@ sudo apt install certbot python3-certbot-nginx -y
 **创建 Nginx 配置文件**
 
 ```bash
-sudo nano /etc/nginx/sites-available/api.yumeng.icu
+sudo nano /etc/nginx/sites-available/api.yumeng.icu # 根据实际域名调整
 ```
 
 **写入**
 
-```bash
+```nginx
 server {
     listen 80;
     server_name api.yumeng.icu;  # 你的域名
@@ -480,12 +480,34 @@ server {
 }
 ```
 
+根据实际应用类型调整
+
+```nginx
+server {
+    listen 80;
+    server_name app2.yourdomain.com;
+
+    # 静态应用（如Vue/React）
+    location / {
+        root /var/www/app2/dist;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 动态应用（如Node.js）
+    # location / {
+    #     proxy_pass http://localhost:3001;  # 假设应用运行在3001端口
+    #     proxy_set_header Host $host;
+    # }
+}
+```
+
 **启用配置并测试语法**
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/api.yumeng.icu /etc/nginx/sites-enabled/
 sudo nginx -t  # 必须返回 "syntax is ok"
-sudo systemctl reload nginx
+sudo systemctl reload nginx # sudo systemctl restart nginx
 ```
 
 > [!tip]

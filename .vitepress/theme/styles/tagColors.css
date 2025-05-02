@@ -2,55 +2,57 @@
 /* 可以修改颜色值来自定义标签颜色 */
 
 :root {
-    --tag-1: #42A5F5; /* CSS */
-    --tag-2: #7E57C2; /* Chrome */
-    --tag-3: #FF7043; /* Cursor */
-    --tag-4: #26C6DA; /* Electron */
-    --tag-5: #EF5350; /* Error */
-    --tag-6: #FB8C00; /* Git */
-    --tag-7: #78909C; /* Github */
-    --tag-8: #EC407A; /* HTML */
-    --tag-9: #FDD835; /* JavaScript */
-    --tag-10: #66BB6A; /* Mermaid */
-    --tag-11: #8BC34A; /* Node.js */
-    --tag-12: #BDBDBD; /* Other */
-    --tag-13: #5C6BC0; /* Rollup */
-    --tag-14: #FF5722; /* Tool */
-    --tag-15: #0288D1; /* TypeScript */
-    --tag-16: #4CAF50; /* Ubuntu */
-    --tag-17: #26A69A; /* Vue */
-    --tag-18: #FF9800; /* Vue Router */
-    --tag-19: #00BCD4; /* Work */
-    --tag-20: #E91E63; /* 工程化 */
-    --tag-21: #9C27B0; /* 心理 */
-    --tag-22: #0049ff; /* 插件 */
-    --tag-23: #0048ff; /* 服务器 */
+    --tag-1: #4A90E2; /* CSS */
+    --tag-2: #3B82F6; /* Chrome */
+    --tag-3: #F87171; /* Cursor */
+    --tag-4: #06B6D4; /* Electron */
+    --tag-5: #EF4444; /* Error */
+    --tag-6: #F97316; /* Git */
+    --tag-7: #94A3B8; /* Github */
+    --tag-8: #F59E0B; /* HTML */
+    --tag-9: #EAB308; /* JavaScript */
+    --tag-10: #38BDF8; /* Mermaid */
+    --tag-11: #0EA5E9; /* MySQL */
+    --tag-12: #22C55E; /* Node.js */
+    --tag-13: #94A3B8; /* Other */
+    --tag-14: #FB923C; /* Rollup */
+    --tag-15: #0EA5E9; /* Tool */
+    --tag-16: #6366F1; /* TypeScript */
+    --tag-17: #F97316; /* Ubuntu */
+    --tag-18: #10B981; /* Vue */
+    --tag-19: #14B8A6; /* Vue Router */
+    --tag-20: #F43F5E; /* Work */
+    --tag-21: #8B5CF6; /* 工程化 */
+    --tag-22: #FDBA74; /* 心理 */
+    --tag-23: #A78BFF; /* 插件 */
+    --tag-24: #64748B; /* 服务器 */
 }
 
 .dark {
-    --tag-1: #42A5F5; /* CSS */
-    --tag-2: #7E57C2; /* Chrome */
-    --tag-3: #FF7043; /* Cursor */
-    --tag-4: #26C6DA; /* Electron */
-    --tag-5: #EF5350; /* Error */
-    --tag-6: #FB8C00; /* Git */
-    --tag-7: #78909C; /* Github */
-    --tag-8: #EC407A; /* HTML */
-    --tag-9: #FDD835; /* JavaScript */
-    --tag-10: #66BB6A; /* Mermaid */
-    --tag-11: #8BC34A; /* Node.js */
-    --tag-12: #BDBDBD; /* Other */
-    --tag-13: #5C6BC0; /* Rollup */
-    --tag-14: #FF5722; /* Tool */
-    --tag-15: #0288D1; /* TypeScript */
-    --tag-16: #4CAF50; /* Ubuntu */
-    --tag-17: #26A69A; /* Vue */
-    --tag-18: #FF9800; /* Vue Router */
-    --tag-19: #00BCD4; /* Work */
-    --tag-20: #E91E63; /* 工程化 */
-    --tag-21: #9C27B0; /* 心理 */
-    --tag-22: #0049ff; /* 插件 */
-    --tag-23: #0048ff; /* 服务器 */
+    --tag-1: #60A5FA; /* CSS */
+    --tag-2: #3B82F6; /* Chrome */
+    --tag-3: #FCA5A5; /* Cursor */
+    --tag-4: #22D3EE; /* Electron */
+    --tag-5: #F87171; /* Error */
+    --tag-6: #FB923C; /* Git */
+    --tag-7: #CBD5E1; /* Github */
+    --tag-8: #FBBF24; /* HTML */
+    --tag-9: #FACC15; /* JavaScript */
+    --tag-10: #38BDF8; /* Mermaid */
+    --tag-11: #0EA5E9; /* MySQL */
+    --tag-12: #34D399; /* Node.js */
+    --tag-13: #CBD5E1; /* Other */
+    --tag-14: #FDBA74; /* Rollup */
+    --tag-15: #38BDF8; /* Tool */
+    --tag-16: #818CF8; /* TypeScript */
+    --tag-17: #FB923C; /* Ubuntu */
+    --tag-18: #34D399; /* Vue */
+    --tag-19: #2DD4BF; /* Vue Router */
+    --tag-20: #FB7185; /* Work */
+    --tag-21: #A78BFA; /* 工程化 */
+    --tag-22: #FED7AA; /* 心理 */
+    --tag-23: #C4B5FD; /* 插件 */
+    --tag-24: #94A3B8; /* 服务器 */
 }
 
 /* 标签名称到变量编号的映射 */
@@ -65,17 +67,18 @@
  * HTML -> --tag-8
  * JavaScript -> --tag-9
  * Mermaid -> --tag-10
- * Node.js -> --tag-11
- * Other -> --tag-12
- * Rollup -> --tag-13
- * Tool -> --tag-14
- * TypeScript -> --tag-15
- * Ubuntu -> --tag-16
- * Vue -> --tag-17
- * Vue Router -> --tag-18
- * Work -> --tag-19
- * 工程化 -> --tag-20
- * 心理 -> --tag-21
- * 插件 -> --tag-22
- * 服务器 -> --tag-23
+ * MySQL -> --tag-11
+ * Node.js -> --tag-12
+ * Other -> --tag-13
+ * Rollup -> --tag-14
+ * Tool -> --tag-15
+ * TypeScript -> --tag-16
+ * Ubuntu -> --tag-17
+ * Vue -> --tag-18
+ * Vue Router -> --tag-19
+ * Work -> --tag-20
+ * 工程化 -> --tag-21
+ * 心理 -> --tag-22
+ * 插件 -> --tag-23
+ * 服务器 -> --tag-24
  */
