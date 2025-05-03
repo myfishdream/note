@@ -118,29 +118,29 @@ export function updateErrorImages(isDark) {
 export function setupGridPaperBg(frontmatter, isDark) {
     const mainElement = document.querySelector('.VPContent');
     if (!mainElement) return;
-    
+
     // 检查frontmatter中是否启用格子纸背景
     const gridPaperEnabled = frontmatter.gridPaper === true;
-    
+
     if (gridPaperEnabled) {
         mainElement.classList.add('grid-paper-bg');
         // 设置大纲竖线变量
         document.documentElement.style.setProperty('--content-border-left', 'transparent');
         document.documentElement.style.setProperty('--outline-marker-width', '5px');
-        
+
         // 优化代码块在格子纸背景下的样式
         setupCodeBlockStyleForGridPaper(isDark);
-        
+
         // 设置手写字体
         setupHandwritingFont();
     } else {
         mainElement.classList.remove('grid-paper-bg');
         document.documentElement.style.setProperty('--content-border-left', 'var(--vp-c-divider)');
         document.documentElement.style.setProperty('--outline-marker-width', '2px');
-        
+
         // 恢复默认代码块样式
         resetCodeBlockStyle();
-        
+
         // 恢复默认字体
         resetHandwritingFont();
     }
@@ -158,14 +158,14 @@ export function setupCodeBlockStyleForGridPaper(isDark) {
         document.documentElement.style.setProperty('--vp-code-block-bg', 'rgba(245, 245, 245, 0.6)');
         document.documentElement.style.setProperty('--vp-c-bg-alt', 'rgba(245, 245, 245, 0.8)');
     }
-    
+
     // 设置blockquote样式
     const blockquotes = document.querySelectorAll('.vp-doc blockquote');
     blockquotes.forEach(blockquote => {
         blockquote.style.borderLeft = '5px solid var(--vp-c-brand)';
         blockquote.classList.add('grid-paper-blockquote');
     });
-    
+
     // 为代码块添加纸质感和阴影
     const codeBlocks = document.querySelectorAll('div[class*="language-"]');
     codeBlocks.forEach(block => {
@@ -182,14 +182,14 @@ export function setupCodeBlockStyleForGridPaper(isDark) {
 export function resetCodeBlockStyle() {
     document.documentElement.style.removeProperty('--vp-code-block-bg');
     document.documentElement.style.removeProperty('--vp-c-bg-alt');
-    
+
     // 重置blockquote样式
     const blockquotes = document.querySelectorAll('.vp-doc blockquote');
     blockquotes.forEach(blockquote => {
         blockquote.style.borderLeft = '';
         blockquote.classList.remove('grid-paper-blockquote');
     });
-    
+
     // 移除代码块特殊样式
     const codeBlocks = document.querySelectorAll('div[class*="language-"]');
     codeBlocks.forEach(block => {
@@ -221,8 +221,9 @@ export function setupHandwritingFont() {
         document.head.appendChild(fontFaceStyle);
     }
     
+    // 添加手写字体的类：大纲标题、大纲项、文章描述、文章内容、文章标题、文章副标题、文章正文、文章列表、文章块引用
     // 为文章内容设置手写字体
-    const contentElements = document.querySelectorAll('.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
+    const contentElements = document.querySelectorAll('.outline-title,.VPDocOutlineItem,.post-description,.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
     contentElements.forEach(element => {
         element.style.fontFamily = "'WriteFont', var(--vp-font-family-base)";
         // 增加字间距使手写字体更易读
@@ -235,7 +236,7 @@ export function setupHandwritingFont() {
  */
 export function resetHandwritingFont() {
     // 恢复文章内容的默认字体
-    const contentElements = document.querySelectorAll('.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
+    const contentElements = document.querySelectorAll('.outline-title,.VPDocOutlineItem,.post-description,.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
     contentElements.forEach(element => {
         element.style.fontFamily = '';
         element.style.letterSpacing = '';
@@ -247,11 +248,11 @@ export function resetHandwritingFont() {
  */
 export function initImageTitles() {
     if (typeof window === 'undefined') return;
-    
+
     // 添加全局CSS样式
     function addTitleStyles() {
         if (document.getElementById('img-title-styles')) return;
-            
+
         const styleElement = document.createElement('style');
         styleElement.id = 'img-title-styles';
         styleElement.textContent = `
@@ -272,30 +273,30 @@ export function initImageTitles() {
                 font-weight: 500;
             }
         `;
-        
+
         document.head.appendChild(styleElement);
     }
-    
+
     // 解析图片标题并添加到图片下方
     function parseImageTitle(img) {
         // 检查是否已有标题容器
         if (img.parentNode && img.parentNode.classList.contains('vp-img-with-title')) {
             return;
         }
-        
+
         // 获取title属性
         const title = img.getAttribute('title');
-        
+
         // 如果找到标题，则添加到图片下方
         if (title) {
             // 创建父容器
             const container = document.createElement('div');
             container.className = 'vp-img-with-title';
-            
+
             // 插入容器到DOM
             img.parentNode.insertBefore(container, img);
             container.appendChild(img);
-            
+
             // 创建标题元素
             const titleElement = document.createElement('div');
             titleElement.className = 'vp-img-title';
@@ -303,7 +304,7 @@ export function initImageTitles() {
             container.appendChild(titleElement);
         }
     }
-    
+
     // 处理页面上的所有图片
     function processImages() {
         const images = document.querySelectorAll('.vp-doc img');
@@ -311,12 +312,12 @@ export function initImageTitles() {
             parseImageTitle(img);
         });
     }
-    
+
     // 监听DOM变化，处理新添加的图片
     function observeImages() {
         const observer = new MutationObserver((mutations) => {
             let hasNewImages = false;
-            
+
             mutations.forEach(mutation => {
                 if (mutation.type === 'childList') {
                     const images = mutation.target.querySelectorAll('img');
@@ -325,26 +326,26 @@ export function initImageTitles() {
                     }
                 }
             });
-            
+
             if (hasNewImages) {
                 processImages();
             }
         });
-        
+
         observer.observe(document.body, {
             childList: true,
             subtree: true
         });
     }
-    
+
     // 初始调用
     setTimeout(() => {
         // 添加全局样式
         addTitleStyles();
-        
+
         // 处理页面图片
         processImages();
-        
+
         // 监听DOM变化
         observeImages();
     }, 0);
@@ -363,20 +364,20 @@ export function initImageTitles() {
  */
 export function formatDate(date, format = 'YYYY-MM-DD') {
     if (!date) return '';
-    
+
     // 确保date是Date对象
     const dateObj = date instanceof Date ? date : new Date(date);
-    
+
     // 如果日期无效，返回空字符串
     if (isNaN(dateObj.getTime())) return '';
-    
+
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');
     const hours = String(dateObj.getHours()).padStart(2, '0');
     const minutes = String(dateObj.getMinutes()).padStart(2, '0');
     const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-    
+
     return format
         .replace('YYYY', year)
         .replace('MM', month)
@@ -399,7 +400,7 @@ export function formatDate(date, format = 'YYYY-MM-DD') {
  */
 export function getRelativeTime(date, options = {}) {
     if (!date) return '';
-    
+
     // 默认选项
     const defaultOptions = {
         maxDays: 7,               // 超过7天显示完整日期
@@ -417,21 +418,21 @@ export function getRelativeTime(date, options = {}) {
             year: '年'
         }
     };
-    
+
     // 合并选项
     const opts = { ...defaultOptions, ...options };
-    
+
     // 确保date是Date对象
     const targetDate = date instanceof Date ? date : new Date(date);
-    
+
     // 如果日期无效，返回空字符串
     if (isNaN(targetDate.getTime())) return '';
-    
+
     const now = new Date();
     const diff = now - targetDate; // 毫秒差
     const diffAbs = Math.abs(diff);
     const isPast = diff > 0;  // 是否是过去的时间
-    
+
     // 时间单位（毫秒）
     const second = 1000;
     const minute = 60 * second;
@@ -440,15 +441,15 @@ export function getRelativeTime(date, options = {}) {
     const week = 7 * day;
     const month = 30 * day;
     const year = 365 * day;
-    
+
     // 如果超过最大天数，返回完整日期
     if (diffAbs > opts.maxDays * day) {
         return formatDate(targetDate, opts.format);
     }
-    
+
     // 计算相对时间
     let value, unit;
-    
+
     if (diffAbs < 10 * second) {
         return opts.texts.now;
     } else if (diffAbs < minute) {
@@ -473,14 +474,14 @@ export function getRelativeTime(date, options = {}) {
         value = Math.floor(diffAbs / year);
         unit = opts.texts.year;
     }
-    
+
     // 构建相对时间字符串
     let relativeTime = `${value}${unit}`;
-    
+
     // 添加后缀
     if (opts.suffix) {
         relativeTime += isPast ? '前' : '后';
     }
-    
+
     return relativeTime;
 }
