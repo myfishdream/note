@@ -328,7 +328,7 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 
 /* 导航栏菜单链接 */
 .VPNavBarMenuLink {
-    /* font-weight: bold !important; */
+    /* font-weight: 500 !important; */
 }
 
 .VPNavBarMenuLink.active {

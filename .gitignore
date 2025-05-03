@@ -15,3 +15,8 @@ origin_theme.css
 .assets/
 /assets/
 posts/assets/
+no-uploading-files/
+# Local Netlify folder
+.netlify
+netlify.toml
+netlify/

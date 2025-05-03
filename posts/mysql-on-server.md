@@ -222,3 +222,23 @@ DROP USER 'remote_user'@'%';
 RENAME USER 'remote_user'@'%' TO 'remote_user'@'192.168.1.100';
 ```
 
+## 启停 MySQL 服务
+
+### 关闭
+
+```bash
+sudo systemctl stop mysql
+```
+
+### 启动
+
+```bash
+sudo systemctl start mysql 
+```
+
+### 状态
+
+```bash
+sudo systemctl status mysql  # 查看运行状态
+```
+

@@ -13,3 +13,5 @@
 
 [MIT](https://opensource.org/licenses/MIT)  
 Copyright (c) 2025-present, Airene
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0dab9faf-cf1a-4de4-9d29-c03f3d49c6e4/deploy-status)](https://app.netlify.com/sites/yumobg/deploys)

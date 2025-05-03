@@ -1285,3 +1285,43 @@ str.split(separator, [limit])
 - `\b` 匹配词的边界。
 - `\B` 匹配非词边界，即在词的内部。
 
+```js
+// \s 的例子
+/\s\w*/.exec('hello world') // [" world"]
+
+// \B 的例子
+/\Bworld/.test('hello-world') // false
+/\Bworld/.test('helloworld') // true
+/\bworld/.test('hello world') // true
+/\bworld/.test('hello-world') // true
+/\bworld/.test('helloworld') // false
+
+// \B 的例子
+/\Bworld/.test('hello-world') // false
+/\Bworld/.test('helloworld') // true
+```
+
+`\b`表示词的边界，所以`world`的词首必须独立（词尾是否独立未指定），才会匹配。同理，`\B`表示非词的边界，只有`world`的词首不独立，才会匹配。
+
+> [!TIP]
+>
+> 通常情况下，正则表达式遇到换行符`\n`就会停止匹配。
+>
+> 可以使用`\s`字符类即可匹配包含换行符
+
+### 重复类
+
+用于描述一个字符出现次数，使用大括号`{}`表示，`{n}`表示只能出现`n`次，`{n,}`表示最少出现`n`次，`{n,m}`表示最少`n`次，最多`m`次
+
+```js
+/lo{2}k/.test('look') // true
+/lo{2,5}k/.test('looook') // true
+```
+
+### 量词符
+
+量词符用来设定某个模式出现的次数。
+
+- `?` 问号表示某个模式出现0次或1次，等同于`{0, 1}`。
+- `*` 星号表示某个模式出现0次或多次，等同于`{0,}`。
+- `+` 加号表示某个模式出现1次或多次，等同于`{1,}`。

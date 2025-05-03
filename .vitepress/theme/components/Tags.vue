@@ -146,7 +146,7 @@ onMounted(() => {
     font-size: 0.9375rem;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     border: 1px solid transparent;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
@@ -154,7 +154,7 @@ onMounted(() => {
 .tag:hover {
     opacity: 0.9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .tag sup {
@@ -162,6 +162,16 @@ onMounted(() => {
     font-weight: 600;
     font-size: 0.75rem;
     opacity: 0.8;
+    border-radius: 50%;
+    background-color: inherit;
+    border: 1px solid var(--vp-c-divider);
+    padding: 2px 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+    line-height: 21px;
 }
 
 .tag-header {

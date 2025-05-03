@@ -1,3 +1,4 @@
+
 const badge = {
   new: 'NEW',
   hot: 'HOT',
@@ -106,6 +107,12 @@ export const toolsdata = [
         linktxt:'iconarchive.com'
       },
       {
+        title:'商用免费字体',
+        desc:'Free Font 收录商用免费字体，已收录 861 个全部字体',
+        link:'https://font.ittools.cc/handwriting.html',
+        linktxt:'font.ittools.cc'
+      },
+      {
         title: "iconfont",
         desc: "阿里巴巴矢量图标库",
         link:'https://www.iconfont.cn/',
@@ -202,6 +209,24 @@ export const toolsdata = [
   {
     title: '工具',
     items: [
+      {
+        title: '17ce',
+        desc: '17ce 是一个用于测试网站性能的工具',
+        link: 'https://www.17ce.com/',
+        linktxt: '17ce.com',
+      },
+      {
+        title: 'WebPageTest',
+        desc: 'WebPageTest 是一个用于测试网站性能的工具',
+        link: 'https://www.webpagetest.org/',
+        linktxt: 'webpagetest.org',
+      },
+      {
+        title: 'DNS查询',
+        desc: '检查 DNS 记录是否已在全球范围内传播',
+        link: 'https://dnschecker.org/',
+        linktxt: 'dnschecker.org',
+      },
       {
         title: 'IP地址查询',
         desc: 'IP地址查询',

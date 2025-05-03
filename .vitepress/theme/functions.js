@@ -130,6 +130,9 @@ export function setupGridPaperBg(frontmatter, isDark) {
         
         // 优化代码块在格子纸背景下的样式
         setupCodeBlockStyleForGridPaper(isDark);
+        
+        // 设置手写字体
+        setupHandwritingFont();
     } else {
         mainElement.classList.remove('grid-paper-bg');
         document.documentElement.style.setProperty('--content-border-left', 'var(--vp-c-divider)');
@@ -137,6 +140,9 @@ export function setupGridPaperBg(frontmatter, isDark) {
         
         // 恢复默认代码块样式
         resetCodeBlockStyle();
+        
+        // 恢复默认字体
+        resetHandwritingFont();
     }
 }
 
@@ -191,6 +197,48 @@ export function resetCodeBlockStyle() {
         block.style.boxShadow = '';
         block.style.border = '';
         block.classList.remove('grid-paper-code-block');
+    });
+}
+
+/**
+ * 设置手写字体样式
+ */
+export function setupHandwritingFont() {
+    // 动态添加字体样式
+    const fontFaceId = 'grid-paper-font-face';
+    if (!document.getElementById(fontFaceId)) {
+        const fontFaceStyle = document.createElement('style');
+        fontFaceStyle.id = fontFaceId;
+        fontFaceStyle.textContent = `
+            @font-face {
+                font-family: 'WriteFont';
+                src: url('/static/font/Handwriting.ttf') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+        `;
+        document.head.appendChild(fontFaceStyle);
+    }
+    
+    // 为文章内容设置手写字体
+    const contentElements = document.querySelectorAll('.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
+    contentElements.forEach(element => {
+        element.style.fontFamily = "'WriteFont', var(--vp-font-family-base)";
+        // 增加字间距使手写字体更易读
+        element.style.letterSpacing = '0.03em';
+    });
+}
+
+/**
+ * 重置手写字体样式
+ */
+export function resetHandwritingFont() {
+    // 恢复文章内容的默认字体
+    const contentElements = document.querySelectorAll('.vp-doc p, .vp-doc li, .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6, .vp-doc blockquote');
+    contentElements.forEach(element => {
+        element.style.fontFamily = '';
+        element.style.letterSpacing = '';
     });
 }
 
