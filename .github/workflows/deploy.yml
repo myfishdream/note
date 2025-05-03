@@ -15,55 +15,58 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 1. 打包
+  # 打包并部署到dist分支
   build:
-    name: 打包并部署
+    name: 打包并部署到dist分支
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
       - name: 设置Node环境
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: './package-lock.json'
+      
       - name: 安装依赖项
         run: npm ci
+      
       - name: 使用 VitePress 构建
         run: npm run build
 
-      - name: 配置Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      
       - name: 部署到dist分支
         run: |
-          # 创建一个临时目录存放构建产物
+          # 配置Git
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 将构建产物复制到临时目录
           mkdir -p /tmp/dist
           cp -r .vitepress/dist/* /tmp/dist/
           
-          # 切换到dist分支，如果不存在则创建
+          # 确保有.nojekyll文件
+          touch /tmp/dist/.nojekyll
+          
+          # 切换到dist分支(如果不存在则创建)
           git checkout -B dist
           
           # 清空当前分支内容
           git rm -rf .
           
-          # 复制构建产物到工作目录
+          # 复制构建产物到根目录
           cp -r /tmp/dist/* .
-          
-          # 添加.nojekyll文件以避免GitHub Pages忽略下划线开头的文件
-          touch .nojekyll
+          cp /tmp/dist/.nojekyll .
           
           # 提交并推送
-          git add .
+          git add -A
           git commit -m "部署构建产物 - $(date +'%Y-%m-%d %H:%M:%S')"
           git push -f origin dist
 
-  # GitHub Pages部署（保留以便使用GitHub Pages服务）
+  # GitHub Pages部署
   deploy:
     environment:
       name: github-pages
@@ -76,12 +79,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: dist
-
+      
       - name: 上传构件
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
-          
+      
       - name: 部署到GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
