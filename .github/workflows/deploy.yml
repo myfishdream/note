@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   # 1. 打包
   build:
-    name: 打包
+    name: 打包并部署
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -34,19 +34,54 @@ jobs:
         run: npm ci
       - name: 使用 VitePress 构建
         run: npm run build
-      - name: 上传构件
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .vitepress/dist
-  # 2. 部署
+
+      - name: 配置Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      
+      - name: 部署到dist分支
+        run: |
+          # 创建一个临时目录存放构建产物
+          mkdir -p /tmp/dist
+          cp -r .vitepress/dist/* /tmp/dist/
+          
+          # 切换到dist分支，如果不存在则创建
+          git checkout -B dist
+          
+          # 清空当前分支内容
+          git rm -rf .
+          
+          # 复制构建产物到工作目录
+          cp -r /tmp/dist/* .
+          
+          # 添加.nojekyll文件以避免GitHub Pages忽略下划线开头的文件
+          touch .nojekyll
+          
+          # 提交并推送
+          git add .
+          git commit -m "部署构建产物 - $(date +'%Y-%m-%d %H:%M:%S')"
+          git push -f origin dist
+
+  # GitHub Pages部署（保留以便使用GitHub Pages服务）
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
-    name: 部署
+    name: 部署到GitHub Pages
     steps:
+      - name: 检出dist分支
+        uses: actions/checkout@v4
+        with:
+          ref: dist
+
+      - name: 上传构件
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+          
       - name: 部署到GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
