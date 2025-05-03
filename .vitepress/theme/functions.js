@@ -212,7 +212,7 @@ export function setupHandwritingFont() {
         fontFaceStyle.textContent = `
             @font-face {
                 font-family: 'WriteFont';
-                src: url('/static/font/Handwriting.ttf') format('truetype');
+                src: url('/static/font/Handwriting.woff2') format('woff2');
                 font-weight: normal;
                 font-style: normal;
                 font-display: swap;
