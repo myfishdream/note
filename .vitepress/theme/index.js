@@ -15,6 +15,9 @@ import 'vitepress-plugin-nprogress/lib/css/index.css'
 // 时间轴
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
+// 指令
+// import directives from './utils/directives'
+
 import './custom.css'
 
 // 工具函数导入
@@ -35,6 +38,7 @@ export default {
         vitepressNprogress(ctx)
         ctx.app.component('Tags', Tags)
         ctx.app.component('Page', Page)
+        // ctx.app.use(directives)
     },
     setup() {
         const route = useRoute();
