@@ -1,4 +1,3 @@
-
 const badge = {
   new: 'NEW',
   hot: 'HOT',
@@ -209,6 +208,12 @@ export const toolsdata = [
   {
     title: '工具',
     items: [
+      {
+        title: 'free-for.dev',
+        desc: '给开发者提供的免费套餐，涵盖各领域的工具',
+        link: 'https://free-for.dev/#/',
+        linktxt: 'free-for.dev',
+      },
       {
         title: '17ce',
         desc: '17ce 是一个用于测试网站性能的工具',

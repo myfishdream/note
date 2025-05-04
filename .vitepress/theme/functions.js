@@ -121,6 +121,8 @@ export function setupGridPaperBg(frontmatter, isDark) {
 
     // 检查frontmatter中是否启用格子纸背景
     const gridPaperEnabled = frontmatter.gridPaper === true;
+    // 检查frontmatter中是否启用手写字体
+    const handwritingEnabled = frontmatter.handwriting === true;
 
     if (gridPaperEnabled) {
         mainElement.classList.add('grid-paper-bg');
@@ -131,8 +133,12 @@ export function setupGridPaperBg(frontmatter, isDark) {
         // 优化代码块在格子纸背景下的样式
         setupCodeBlockStyleForGridPaper(isDark);
 
-        // 设置手写字体
-        setupHandwritingFont();
+        // 如果启用了手写字体，则设置手写字体
+        if (handwritingEnabled) {
+            setupHandwritingFont();
+        } else {
+            resetHandwritingFont();
+        }
     } else {
         mainElement.classList.remove('grid-paper-bg');
         document.documentElement.style.setProperty('--content-border-left', 'var(--vp-c-divider)');
@@ -141,8 +147,12 @@ export function setupGridPaperBg(frontmatter, isDark) {
         // 恢复默认代码块样式
         resetCodeBlockStyle();
 
-        // 恢复默认字体
-        resetHandwritingFont();
+        // 如果启用了手写字体，则设置手写字体
+        if (handwritingEnabled) {
+            setupHandwritingFont();
+        } else {
+            resetHandwritingFont();
+        }
     }
 }
 

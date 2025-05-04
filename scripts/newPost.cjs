@@ -23,6 +23,7 @@ outline: [2,3]
 sticky: false
 done: false
 gridPaper: false
+handwriting: false
 cbf: false
 zoomable: true
 publish: true
