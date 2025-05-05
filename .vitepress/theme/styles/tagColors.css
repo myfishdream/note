@@ -2,57 +2,61 @@
 /* 可以修改颜色值来自定义标签颜色 */
 
 :root {
-    --tag-1: #60A5FA; /* CSS */
-    --tag-2: #3B82F6; /* Chrome */
-    --tag-3: #FCA5A5; /* Cursor */
-    --tag-4: #22D3EE; /* Electron */
-    --tag-5: #F87171; /* Error */
-    --tag-6: #FB923C; /* Git */
-    --tag-7: #CBD5E1; /* Github */
-    --tag-8: #FBBF24; /* HTML */
-    --tag-9: #FACC15; /* JavaScript */
-    --tag-10: #38BDF8; /* Mermaid */
-    --tag-11: #0EA5E9; /* MySQL */
-    --tag-12: #34D399; /* Node.js */
-    --tag-13: #CBD5E1; /* Other */
-    --tag-14: #FDBA74; /* Rollup */
-    --tag-15: #38BDF8; /* Tool */
-    --tag-16: #818CF8; /* TypeScript */
-    --tag-17: #FB923C; /* Ubuntu */
-    --tag-18: #34D399; /* Vue */
-    --tag-19: #2DD4BF; /* Vue Router */
-    --tag-20: #FB7185; /* Work */
-    --tag-21: #A78BFA; /* 工程化 */
-    --tag-22: #FED7AA; /* 心理 */
-    --tag-23: #C4B5FD; /* 插件 */
-    --tag-24: #94A3B8; /* 服务器 */
+    --tag-1: #FF7F50; /* CSS */
+    --tag-2: #FF6347; /* Chrome */
+    --tag-3: #FFD700; /* Cursor */
+    --tag-4: #ADFF2F; /* Electron */
+    --tag-5: #20B2AA; /* Error */
+    --tag-6: #87CEFA; /* Git */
+    --tag-7: #9370DB; /* Github */
+    --tag-8: #FF69B4; /* HTML */
+    --tag-9: #BA55D3; /* JavaScript */
+    --tag-10: #40E0D0; /* Mermaid */
+    --tag-11: #FF4500; /* MySQL */
+    --tag-12: #DA70D6; /* Node.js */
+    --tag-13: #32CD32; /* Other */
+    --tag-14: #4682B4; /* Rollup */
+    --tag-15: #6A5ACD; /* Tool */
+    --tag-16: #FF8C00; /* TypeScript */
+    --tag-17: #8A2BE2; /* Ubuntu */
+    --tag-18: #5F9EA0; /* Vue */
+    --tag-19: #D2691E; /* Vue Router */
+    --tag-20: #FF1493; /* Work */
+    --tag-21: #7B68EE; /* 工程化 */
+    --tag-22: #3CB371; /* 心理 */
+    --tag-23: #B8860B; /* 手搓 */
+    --tag-24: #8B4513; /* 插件 */
+    --tag-25: #2E8B57; /* 服务器 */
+    --tag-26: #FF6347; /* 路由 */
 }
 
 .dark {
-    --tag-1: #60A5FA; /* CSS */
-    --tag-2: #3B82F6; /* Chrome */
-    --tag-3: #FCA5A5; /* Cursor */
-    --tag-4: #22D3EE; /* Electron */
-    --tag-5: #F87171; /* Error */
-    --tag-6: #FB923C; /* Git */
-    --tag-7: #CBD5E1; /* Github */
-    --tag-8: #FBBF24; /* HTML */
-    --tag-9: #FACC15; /* JavaScript */
-    --tag-10: #38BDF8; /* Mermaid */
-    --tag-11: #0EA5E9; /* MySQL */
-    --tag-12: #34D399; /* Node.js */
-    --tag-13: #CBD5E1; /* Other */
-    --tag-14: #FDBA74; /* Rollup */
-    --tag-15: #38BDF8; /* Tool */
-    --tag-16: #818CF8; /* TypeScript */
-    --tag-17: #FB923C; /* Ubuntu */
-    --tag-18: #34D399; /* Vue */
-    --tag-19: #2DD4BF; /* Vue Router */
-    --tag-20: #FB7185; /* Work */
-    --tag-21: #A78BFA; /* 工程化 */
-    --tag-22: #FED7AA; /* 心理 */
-    --tag-23: #C4B5FD; /* 插件 */
-    --tag-24: #94A3B8; /* 服务器 */
+    --tag-1: #FF7F50; /* CSS */
+    --tag-2: #FF6347; /* Chrome */
+    --tag-3: #FFD700; /* Cursor */
+    --tag-4: #ADFF2F; /* Electron */
+    --tag-5: #20B2AA; /* Error */
+    --tag-6: #87CEFA; /* Git */
+    --tag-7: #9370DB; /* Github */
+    --tag-8: #FF69B4; /* HTML */
+    --tag-9: #BA55D3; /* JavaScript */
+    --tag-10: #40E0D0; /* Mermaid */
+    --tag-11: #FF4500; /* MySQL */
+    --tag-12: #DA70D6; /* Node.js */
+    --tag-13: #32CD32; /* Other */
+    --tag-14: #4682B4; /* Rollup */
+    --tag-15: #6A5ACD; /* Tool */
+    --tag-16: #FF8C00; /* TypeScript */
+    --tag-17: #8A2BE2; /* Ubuntu */
+    --tag-18: #5F9EA0; /* Vue */
+    --tag-19: #D2691E; /* Vue Router */
+    --tag-20: #FF1493; /* Work */
+    --tag-21: #7B68EE; /* 工程化 */
+    --tag-22: #3CB371; /* 心理 */
+    --tag-23: #B8860B; /* 手搓 */
+    --tag-24: #8B4513; /* 插件 */
+    --tag-25: #2E8B57; /* 服务器 */
+    --tag-26: #FF6347; /* 路由 */
 }
 
 /* 标签名称到变量编号的映射 */
@@ -79,6 +83,8 @@
  * Work -> --tag-20
  * 工程化 -> --tag-21
  * 心理 -> --tag-22
- * 插件 -> --tag-23
- * 服务器 -> --tag-24
+ * 手搓 -> --tag-23
+ * 插件 -> --tag-24
+ * 服务器 -> --tag-25
+ * 路由 -> --tag-26
  */

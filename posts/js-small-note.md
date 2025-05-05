@@ -11,7 +11,7 @@ sticky: false
 done: false   
 gridPaper: false 
 cbf: false 
-handwriting: true
+handwriting: false
 ---
 
 # JavaScript 核心知识点小记
@@ -1565,3 +1565,978 @@ m // ['b']
 上面的代码使用了先行否定断言，`b`不在`c`前面所以被匹配，而且括号对应的`d`不会被返回。
 
 ## JSON 格式
+
+json格式是一种数据交换的文本格式，目的就是取代繁琐笨重的XML格式。
+
+每个json对象的就是一个值，可能是一个数组或者对象，也可能是一个原始类型的值。总是，**只能是一个值，不能是两个值。**
+
+### 类型和格式
+
+json对类型和格式有严格要求：
+
+复合类型的值**只能是数组或者对象**，不能是函数，正则表达式对象，日期对象
+
+原始类型的值只有四种：字符串，数值（十进制），布尔值和`null`，不能使用`NaN`, `Infinity`, `-Infinity`和`undefined`
+
+字符串必须使用双引号表示，不能使用单引号。
+
+对象的键名必须放在**双引号**里面
+
+数组或对象最后一个成员的后面，不能加逗号。
+
+### JSON 对象
+
+`JSON`对象是 JavaScript 的原生对象，用来处理 JSON 格式数据。它有两个静态方法：`JSON.stringify()`和`JSON.parse()`。
+
+### JSON.stringify()
+
+#### 基本用法
+
+`JSON.stringify()`方法用于将一个值转为 JSON 字符串。该字符串符合 JSON 格式，并且可以被`JSON.parse()`方法还原。
+
+**注意**，对于原始类型的字符串，转换结果会带双引号。
+
+如果对象的属性是`undefined`、函数或 XML 对象，该属性会被`JSON.stringify()`过滤。
+
+```js
+var obj = {
+  a: undefined,
+  b: function () {}
+};
+
+JSON.stringify(obj) // "{}"
+```
+
+如果数组的成员是`undefined`、函数或 XML 对象，则这些值被转成`null`。
+
+正则对象会被转成空对象。
+
+`JSON.stringify()`方法会忽略对象的**不可遍历的属性**。
+
+#### 第二个参数
+
+`JSON.stringify()`方法还可以接受一个数组，作为第二个参数，指定参数对象的哪些属性需要转成字符串。
+
+```js
+var obj = {
+  'prop1': 'value1',
+  'prop2': 'value2',
+  'prop3': 'value3'
+};
+
+var selectedProperties = ['prop1', 'prop2'];
+
+JSON.stringify(obj, selectedProperties)
+// "{"prop1":"value1","prop2":"value2"}"
+```
+
+这个类似**白名单**的数组，**只对对象的属性有效，对数组无效**。
+
+第二个参数还可以是一个函数，用来更改`JSON.stringify()`的返回值。
+
+```js
+function f(key, value) {
+  if (typeof value === "number") {
+    value = 2 * value;
+  }
+  return value;
+}
+
+JSON.stringify({ a: 1, b: 2 }, f)
+// '{"a": 2,"b": 4}'
+```
+
+上面代码中的`f`函数，接受两个参数，分别是被转换的对象的键名和键值。如果键值是数值，就将它乘以`2`，否则就原样返回。
+
+**注意**，这个处理函数是递归处理所有的键。
+
+#### 第三个参数
+
+`JSON.stringify()`还可以接受第三个参数，用于增加返回的 JSON 字符串的可读性。
+
+默认返回的是单行字符串，对于大型的 JSON 对象，可读性非常差。第三个参数使得每个属性单独占据一行，并且将每个属性前面添加指定的前缀（不超过10个字符）。
+
+```js
+// 默认输出
+JSON.stringify({ p1: 1, p2: 2 })
+// JSON.stringify({ p1: 1, p2: 2 })
+
+// 分行输出
+JSON.stringify({ p1: 1, p2: 2 }, null, '\t')
+// {
+// 	"p1": 1,
+// 	"p2": 2
+// }
+```
+
+上面例子中，第三个属性`\t`在每个属性前面添加一个制表符，然后分行显示。
+
+第三个属性如果是一个数字，则表示每个属性前面添加的空格（最多不超过10个）。
+
+```js
+JSON.stringify({ p1: 1, p2: 2 }, null, 2);
+/*
+"{
+  "p1": 1,
+  "p2": 2
+}"
+*/
+```
+
+### toJSON()
+
+如果参数对象有自定义的`toJSON()`方法，那么`JSON.stringify()`会使用这个方法的返回值作为参数，而忽略原对象的其他属性。
+
+::: code-group
+```js [有toJSON]
+var user = {
+  firstName: '三',
+  lastName: '张',
+
+  get fullName(){
+    return this.lastName + this.firstName;
+  }
+};
+
+JSON.stringify(user)
+// "{"firstName":"三","lastName":"张","fullName":"张三"}"
+```
+
+```js [无toJSON]
+var user = {
+  firstName: '三',
+  lastName: '张',
+
+  get fullName(){
+    return this.lastName + this.firstName;
+  },
+
+  toJSON: function () {
+    return {
+      name: this.lastName + this.firstName
+    };
+  }
+};
+
+JSON.stringify(user)
+// "{"name":"张三"}"
+```
+:::
+
+`Date`对象就有一个自己的`toJSON()`方法。
+
+```js
+var date = new Date('2015-01-01');
+date.toJSON() // "2015-01-01T00:00:00.000Z"
+JSON.stringify(date) // ""2015-01-01T00:00:00.000Z""
+```
+
+`toJSON()`方法的一个应用是，将正则对象自动转为字符串。因为`JSON.stringify()`默认不能转换正则对象，但是设置了`toJSON()`方法以后，就可以转换正则对象了。
+
+```js
+var obj = {
+  reg: /foo/
+};
+
+// 不设置 toJSON 方法时
+JSON.stringify(obj) // "{"reg":{}}"
+
+// 设置 toJSON 方法时
+RegExp.prototype.toJSON = RegExp.prototype.toString;
+JSON.stringify(/foo/) // ""/foo/""
+```
+
+### JSON.parse()
+
+`JSON.parse()`方法用于将 JSON 字符串转换成对应的值。
+
+```js
+var o = JSON.parse('{"name": "张三"}');
+o.name // 张三
+```
+
+如果传入的字符串不是有效的 JSON 格式，`JSON.parse()`方法将报错。
+
+`JSON.parse()`方法可以接受一个处理函数，作为第二个参数，用法与`JSON.stringify()`方法类似。
+
+```js
+function f(key, value) {
+  if (key === 'a') {
+    return value + 10;
+  }
+  return value;
+}
+
+JSON.parse('{"a": 1, "b": 2}', f)
+// {a: 11, b: 2}
+```
+
+### 深拷贝
+
+`JSON.parse()`和`JSON.stringify()`可以结合使用，像下面这样写，实现对象的深拷贝。
+
+```js
+JSON.parse(JSON.stringify(obj))
+```
+
+上面这种写法，可以深度克隆一个对象，但是对象内部不能有 JSON
+不允许的数据类型，比如函数、正则对象、日期对象等。
+
+## 面向对象编程
+
+**面向对象编程**是目前主流的编程范式。它将真实世界各种复杂的关系，抽象为一个个对象，然后由对象之间的分工与合作，完成对真实世界的模拟。
+
+每一个对象都是功能中心，具有明确分工，可以完成接受信息、处理数据、发出信息等任务。对象可以复用，通过继承机制还可以定制。
+
+因此，面向对象编程具有灵活、代码可复用、高度模块化等特点，容易维护和开发，比起由一系列函数或指令组成的传统的**过程式编程**，更适合多人合作的大型软件项目。
+
+那么，**对象**（object）到底是什么？我们从两个层次来理解。
+
+**（1）对象是单个实物的抽象。**
+
+一本书、一辆汽车、一个人都可以是对象，一个数据库、一张网页、一个远程服务器连接也可以是对象。当实物被抽象成对象，实物之间的关系就变成了对象之间的关系，从而就可以模拟现实情况，针对对象进行编程。
+
+**（2）对象是一个容器，封装了属性（property）和方法（method）。**
+
+属性是对象的状态，方法是对象的行为（完成某种任务）。比如，我们可以把动物抽象为`animal`对象，使用“属性”记录具体是哪一种动物，使用“方法”表示动物的某种行为（奔跑、捕猎、休息等等）。
+
+### 构造函数
+
+面向对象编程的第一步，就是要生成对象。前面说过，对象是**单个实物的抽象**。
+
+通常需要一个模板，表示某一类实物的共同特征，然后对象根据这个模板生成。
+
+典型的面向对象编程语言（比如 C++ 和 Java），都有“类”（class）这个概念。所谓“类”就是对象的模板，对象就是“类”的实例。
+
+但是，JavaScript 语言的对象体系，不是基于“类”的，而是基于构造函数（constructor）和原型链（prototype）。
+
+JavaScript 语言使用**构造函数**（constructor）作为**对象的模板**。
+
+所谓”**构造函数**”，就是专门用来生成实例对象的函数。它就是对象的模板，描述实例对象的基本结构。一个构造函数，可以生成多个实例对象，这些实例对象都有相同的结构。
+
+构造函数就是一个普通的函数，**但具有自己的特征和用法**。
+
+```js
+var Vehicle = function () {
+  this.price = 1000;
+};
+```
+
+上面代码中，`Vehicle`就是构造函数。为了与普通函数区别，构造函数名字的**第一个字母通常大写。**
+
+构造函数的特点有两个。
+
+- 函数体内部使用了`this`关键字，代表了所要生成的对象实例（可以往生成的实例对象上挂载属性）。
+- 生成对象的时候，必须使用`new`命令。
+
+### new 命令
+
+`new`命令的作用，就是执行构造函数，返回一个实例对象。
+
+```js
+var Vehicle = function () {
+  this.price = 1000;
+};
+
+var v = new Vehicle();
+v.price // 1000
+```
+
+上面代码通过`new`命令，让构造函数`Vehicle`生成一个实例对象，保存在变量`v`中。这个新生成的实例对象，从构造函数`Vehicle`得到了`price`属性。
+
+`new`命令执行时，构造函数内部的`this`，就代表了新生成的实例对象，`this.price`表示实例对象有一个`price`属性，值是1000。
+
+使用`new`命令时，根据需要，构造函数也可以接受参数。
+
+```js
+var Vehicle = function (p) {
+  this.price = p;
+};
+
+var v = new Vehicle(500);
+```
+
+`new`命令本身就可以执行构造函数，所以后面的构造函数可以带括号，也可以不带括号。
+
+如果忘了使用`new`命令，直接调用构造函数，此时构造函数就变成了普通函数，并不会生成实例对象。而且由于后面会说到的原因，`this`这时代表**全局对象**，将造成一些意想不到的结果。
+
+```js
+console.log(this);
+// Window {window: Window, self: Window, document: document, name: '', location: Location, …}
+```
+
+```js
+var Vehicle = function (){
+  this.price = 1000;
+};
+
+var v = Vehicle();
+v // undefined
+price // 1000
+```
+
+上面代码中，调用`Vehicle`构造函数时，忘了加上`new`命令。结果，变量`v`变成了`undefined`，而`price`属性变成了全局变量。
+
+为了保证构造函数必须与`new`命令一起使用，一个解决办法是，构造函数内部使用**严格模式**，即第一行加上`use strict`。这样的话，一旦忘了使用`new`命令，直接调用构造函数就会报错。
+
+```js
+function Fubar(foo, bar){
+  'use strict';
+  this._foo = foo;
+  this._bar = bar;
+}
+
+Fubar()
+// TypeError: Cannot set property '_foo' of undefined
+```
+
+上面代码的`Fubar`为构造函数，`use strict`命令保证了该函数在严格模式下运行。
+
+由于严格模式中，函数内部的`this`不能指向全局对象，默认等于`undefined`，导致不加`new`调用会报错（JavaScript 不允许对`undefined`添加属性）。
+
+另一个解决办法，构造函数内部判断是否使用`new`命令，如果发现没有使用，则直接返回一个实例对象。
+
+```js
+function Fubar(foo, bar) {
+  if (!(this instanceof Fubar)) {
+    return new Fubar(foo, bar);
+  }
+
+  this._foo = foo;
+  this._bar = bar;
+}
+
+Fubar(1, 2)._foo // 1
+(new Fubar(1, 2))._foo // 1
+```
+
+上面代码中的构造函数，不管加不加`new`命令，都会得到同样的结果。
+
+### new 命令的原理
+
+使用`new`命令时，它后面的函数依次执行下面的步骤。
+
+1. 创建一个空对象，作为将要返回的对象实例。
+2. 将这个空对象的原型，指向构造函数的`prototype`属性。
+3. 将这个空对象赋值给函数内部的`this`关键字。
+4. 开始执行构造函数内部的代码。
+
+也就是说，构造函数内部，`this`指的是一个新生成的空对象，所有针对`this`的操作，都会发生在这个空对象上。
+
+构造函数之所以叫“构造函数”，就是说这个函数的目的，就是操作一个空对象（即`this`对象），将其“构造”为需要的样子。
+
+如果构造函数内部有`return`语句，而且`return`后面跟着一个**对象**，`new`命令会返回`return`语句指定的对象；否则，就会不管`return`语句，返回`this`对象。
+
+```js
+var Vehicle = function () {
+  this.price = 1000;
+  return 1000;	// 非对象
+};
+
+(new Vehicle()) === 1000
+// false
+```
+
+上面代码中，构造函数`Vehicle`的`return`语句返回一个数值。这时，`new`命令就会忽略这个`return`语句，返回“构造”后的`this`对象。
+
+但是，如果`return`语句返回的是一个跟`this`无关的新对象，`new`命令会返回这个新对象，而不是`this`对象。这一点需要特别引起注意。
+
+```js
+var Vehicle = function (){
+  this.price = 1000;
+  return { price: 2000 };
+};
+
+(new Vehicle()).price
+// 2000
+```
+
+另一方面，如果对普通函数（内部没有`this`关键字的函数）使用`new`命令，则会返回一个空对象。
+
+```js
+function getMessage() {
+  return 'this is a message';
+}
+
+var msg = new getMessage();
+
+msg // {}
+typeof msg // "object"
+```
+
+上面代码中，`getMessage`是一个普通函数，返回一个字符串。对它使用`new`命令，会得到一个空对象。这是因为`new`命令总是返回一个对象，要么是实例对象，要么是`return`语句指定的对象。本例中，`return`语句返回的是字符串，所以`new`命令就忽略了该语句。
+
+### 手搓简化new命令
+
+```js
+function _new(/* 构造函数 */ constructor, /* 构造函数参数 */ params) {
+  // 将 arguments 对象转为数组
+  var args = [].slice.call(arguments);
+  // 取出构造函数
+  var constructor = args.shift();
+  // 创建一个空对象，继承构造函数的 prototype 属性
+  var context = Object.create(constructor.prototype);
+  // 执行构造函数
+  var result = constructor.apply(context, args);
+  // 如果返回结果是对象，就直接返回，否则返回 context 对象
+  return (typeof result === 'object' && result != null) ? result : context;
+}
+
+// 实例
+var actor = _new(Person, '张三', 28);
+```
+
+### new.target
+
+函数内部可以使用`new.target`属性。如果当前函数是`new`命令调用，`new.target`指向当前函数，否则为`undefined`。
+
+```js
+function f() {
+  console.log(new.target === f);
+}
+
+f() // false
+new f() // true
+```
+
+使用这个属性，可以判断函数调用的时候，是否使用`new`命令。
+
+```js
+function f() {
+  if (!new.target) {
+    throw new Error('请使用 new 命令调用！');
+  }
+  // ...
+}
+
+f() // Uncaught Error: 请使用 new 命令调用！
+```
+
+### Object.create()
+
+构造函数作为模板，可以生成实例对象。但是，有时拿不到构造函数，只能拿到一个现有的对象。我们希望以这个现有的对象作为模板，生成新的实例对象，这时就可以使用`Object.create()`方法。
+
+```js
+var person1 = {
+  name: '张三',
+  age: 38,
+  greeting: function() {
+    console.log('Hi! I\'m ' + this.name + '.');
+  }
+};
+
+var person2 = Object.create(person1);
+
+person2.name // 张三
+person2.greeting() // Hi! I'm 张三.
+```
+
+上面代码中，对象`person1`是`person2`的模板，后者继承了前者的属性和方法。
+
+### this关键字
+
+前一章已经提到，`this`可以用在构造函数之中，表示实例对象。
+
+除此之外，`this`还可以用在别的场合。但不管是什么场合，`this`都有一个共同点：它总是返回一个对象。
+
+简单说，`this`**就是属性或方法当前所在的对象**。
+
+```js
+var person = {
+  name: '张三',
+  describe: function () {
+    return '姓名：'+ this.name;
+  }
+};
+
+person.describe()
+// "姓名：张三"
+```
+
+上面代码中，`this.name`表示`name`属性所在的那个对象。
+
+由于`this.name`是在`describe`方法中调用，而`describe`方法所在的当前对象是`person`，因此`this`指向`person`，`this.name`就是`person.name`。
+
+由于对象的属性可以赋给另一个对象，所以属性所在的当前对象是可变的，即`this`的指向是可变的。
+
+```js
+var A = {
+  name: '张三',
+  describe: function () {
+    return '姓名：'+ this.name;
+  }
+};
+
+var B = {
+  name: '李四'
+};
+
+B.describe = A.describe;
+B.describe()
+// "姓名：李四"
+```
+
+上面代码中，`A.describe`属性被赋给`B`，于是`B.describe`就表示`describe`方法所在的当前对象是`B`，所以`this.name`就指向`B.name`。
+
+稍稍重构这个例子，`this`的动态指向就能看得更清楚。
+
+```js
+function f() {
+  return '姓名：'+ this.name;
+}
+
+var A = {
+  name: '张三',
+  describe: f
+};
+
+var B = {
+  name: '李四',
+  describe: f
+};
+
+A.describe() // "姓名：张三"
+B.describe() // "姓名：李四"
+```
+
+上面代码中，函数`f`内部使用了`this`关键字，随着`f`所在的对象不同，`this`的指向也不同。
+
+**只要函数被赋给另一个变量，`this`的指向就会变**。
+
+```js
+var A = {
+  name: '张三',
+  describe: function () {
+    return '姓名：'+ this.name;
+  }
+};
+
+var name = '李四';	// 顶层属性（window对象）
+var f = A.describe;
+f() // "姓名：李四"
+```
+
+上面代码中，`A.describe`被赋值给变量`f`，内部的`this`就会指向`f`运行时所在的对象（本例是顶层对象）
+
+**网页编程的例子**
+
+```html
+<input type="text" name="age" size=3 onChange="validate(this, 18, 99);">
+
+<script>
+function validate(obj, lowval, hival){
+  if ((obj.value < lowval) || (obj.value > hival))
+    console.log('Invalid Value!');
+}
+</script>
+```
+
+每当用户输入一个值，就会调用`onChange`回调函数，验证这个值是否在指定范围。**浏览器会向回调函数传入当前对象**，因此`this`就代表传入当前对象（即文本框），然后就可以从`this.value`上面读到用户的输入值。
+
+总结一下，JavaScript 语言之中，一切皆对象，运行环境也是对象，所以函数都是在某个对象之中运行，`this`就是函数运行时所在的对象（环境）。
+
+这本来并不会让用户糊涂，但是 JavaScript 支持运行环境动态切换，也就是说，`this`的指向是动态的，没有办法事先确定到底指向哪个对象。
+
+### this实质
+
+JavaScript 语言之所以有 this 的设计，跟内存里面的数据结构有关系。
+
+```js
+var obj = { foo:  5 };
+```
+
+上面的代码将一个对象赋值给变量`obj`。JavaScript 引擎会先在内存里面，生成一个对象`{ foo: 5 }`，然后把这个对象的内存地址赋值给变量`obj`。
+
+也就是说，变量`obj`是一个地址（reference）。
+
+后面如果要读取`obj.foo`，引擎先从`obj`拿到内存地址，然后再从该地址读出原始的对象，返回它的`foo`属性。
+
+原始的对象以字典结构保存，每一个属性名都对应一个属性描述对象。
+
+举例来说，上面例子的`foo`属性，实际上是以下面的形式保存的。
+
+```js
+{
+  foo: {
+    [[value]]: 5
+    [[writable]]: true
+    [[enumerable]]: true
+    [[configurable]]: true
+  }
+}
+```
+
+注意，`foo`属性的值保存在属性描述对象的`value`属性里面。
+
+这样的结构是很清晰的，问题在于属性的值可能是一个函数。
+
+```js
+var obj = { foo: function () {} };
+```
+
+这时，引擎会将函数单独保存在内存中，然后再将函数的地址赋值给`foo`属性的`value`属性。
+
+```js
+{
+  foo: {
+    [[value]]: 函数的地址
+    ...
+  }
+}
+```
+
+由于函数是一个单独的值，所以它可以在不同的环境（上下文）执行。
+
+```js
+var f = function () {};
+var obj = { f: f };
+
+// 单独执行
+f()
+
+// obj 环境执行
+obj.f()
+```
+
+JavaScript 允许在函数体内部，引用当前环境的其他变量。
+
+```js
+var f = function () {
+  console.log(x);
+};
+```
+
+上面代码中，函数体里面使用了变量`x`。该变量由运行环境提供。
+
+现在问题就来了，由于函数可以在不同的运行环境执行，所以需要有一种机制，能够在函数体内部获得当前的运行环境（context）。
+
+所以，`this`就出现了，它的设计目的就是在函数体内部，指代函数当前的运行环境。
+
+```js
+var f = function () {
+  console.log(this.x);
+}
+```
+
+上面代码中，函数体里面的`this.x`就是指当前运行环境的`x`。
+
+```js
+var f = function () {
+  console.log(this.x);
+}
+
+var x = 1;
+var obj = {
+  f: f,
+  x: 2,
+};
+
+// 单独执行
+f() // 1
+
+// obj 环境执行
+obj.f() // 2
+```
+
+上面代码中，函数`f`在全局环境执行，`this.x`指向全局环境的`x`；在`obj`环境执行，`this.x`指向`obj.x`。
+
+### this场景
+
+`this`主要有以下几个使用场合。
+
+#### 全局环境
+
+全局环境使用`this`，它指的就是顶层对象`window`。
+
+```js
+this === window // true
+```
+
+#### 构造函数
+
+构造函数中的`this`，指的是实例对象。
+
+```js
+var Obj = function (p) {
+  this.p = p;
+};
+```
+
+上面代码定义了一个构造函数`Obj`。由于`this`指向实例对象，所以在构造函数内部定义`this.p`，就相当于定义实例对象有一个`p`属性。
+
+```js
+var o = new Obj('Hello World!');
+o.p // "Hello World!"
+```
+
+#### 对象的方法
+
+如果**对象**的**方法**里面包含`this`，`this`的指向就是方法运行时所在的对象。该方法赋值给另一个对象，就会改变`this`的指向。
+
+```js
+var obj ={
+  foo: function () {
+    console.log(this);
+  }
+};
+
+obj.foo() // obj
+```
+
+上面代码中，`obj.foo`方法执行时，它内部的`this`指向`obj`。
+
+下面这几种用法，都会改变`this`的指向。
+
+```js
+// 情况一
+(obj.foo = obj.foo)() // window
+// 情况二
+(false || obj.foo)() // window
+// 情况三
+(1, obj.foo)() // window
+```
+
+上面代码中，`obj.foo`就是一个值。这个值真正调用的时候，运行环境已经不是`obj`了，而是全局环境，所以`this`不再指向`obj`。
+
+可以这样理解，JavaScript 引擎内部，`obj`和`obj.foo`储存在两个内存地址，称为地址一和地址二。
+
+`obj.foo()`这样调用时，是从地址一调用地址二，因此地址二的运行环境是地址一，`this`指向`obj`。
+
+但是，上面三种情况，都是直接取出地址二进行调用，这样的话，运行环境就是全局环境，因此`this`指向全局环境。上面三种情况等同于下面的代码。
+
+```js
+// 情况一
+(obj.foo = function () {
+  console.log(this);
+})()
+// 等同于
+(function () {
+  console.log(this);
+})()
+
+// 情况二
+(false || function () {
+  console.log(this);
+})()
+
+// 情况三
+(1, function () {
+  console.log(this);
+})()
+```
+
+如果`this`所在的方法不在对象的**第一层**，这时`this`只是指向**当前一层的对象**，而不会继承更上面的层。
+
+```js
+var a = {
+  p: 'Hello',
+  b: {
+    m: function() {
+      console.log(this.p);
+    }
+  }
+};
+
+a.b.m() // undefined
+```
+
+上面代码中，`a.b.m`方法在`a`对象的第二层，该方法内部的`this`不是指向`a`，而是指向`a.b`，因为实际执行的是下面的代码。
+
+```js
+var b = {
+  m: function() {
+   console.log(this.p);
+  }
+};
+
+var a = {
+  p: 'Hello',
+  b: b
+};
+
+(a.b).m() // 等同于 b.m()
+```
+
+如果要达到预期效果，只有写成下面这样。
+
+```js
+var a = {
+  b: {
+    m: function() {
+      console.log(this.p);
+    },
+    p: 'Hello'
+  }
+};
+```
+
+如果这时将嵌套对象内部的方法赋值给一个变量，`this`依然会指向全局对象。
+
+```js
+var a = {
+  b: {
+    m: function() {
+      console.log(this.p);
+    },
+    p: 'Hello'
+  }
+};
+
+var hello = a.b.m;
+hello() // undefined
+```
+
+上面代码中，`m`是多层对象内部的一个方法。为求简便，将其赋值给`hello`变量，结果调用时，`this`指向了顶层对象。为了避免这个问题，可以只将`m`所在的对象赋值给`hello`，这样调用时，`this`的指向就不会变。
+
+```js
+var hello = a.b;
+hello.m() // Hello
+```
+
+### this注意点
+
+#### 避免多层 this
+
+由于`this`的指向是不确定的，所以切勿在函数中包含多层的`this`。
+
+```js
+var o = {
+  f1: function () {
+    console.log(this);
+    var f2 = function () {
+      console.log(this);
+    }();
+  }
+}
+
+o.f1()
+// Object
+// Window
+```
+
+上面代码包含两层`this`，结果运行后，第一层指向对象`o`，第二层指向全局对象，因为实际执行的是下面的代码。
+
+```
+var temp = function () {
+  console.log(this);
+};
+
+var o = {
+  f1: function () {
+    console.log(this);
+    var f2 = temp();
+  }
+}
+```
+
+一个解决方法是在第二层改用一个指向外层`this`的变量。
+
+```js
+var o = {
+  f1: function() {
+    console.log(this);
+    var that = this;
+    var f2 = function() {
+      console.log(that);
+    }();
+  }
+}
+
+o.f1()
+// Object
+// Object
+```
+
+上面代码定义了变量`that`，固定指向外层的`this`，然后在内层使用`that`，就不会发生`this`指向的改变。
+
+**事实上，使用一个变量固定`this`的值，然后内层函数调用这个变量，是非常常见的做法，请务必掌握。**
+
+JavaScript 提供了严格模式，也可以硬性避免这种问题。严格模式下，如果函数内部的`this`指向顶层对象，就会报错。
+
+```js
+var counter = {
+  count: 0
+};
+counter.inc = function () {
+  'use strict';
+  this.count++
+};
+var f = counter.inc;
+f()
+// TypeError: Cannot read property 'count' of undefined
+```
+
+上面代码中，`inc`方法通过`'use strict'`声明采用严格模式，这时内部的`this`一旦指向顶层对象，就会报错。
+
+#### 数组this
+
+避免数组处理方法中的 this，数组的`map`和`foreach`方法，允许提供一个函数作为参数。这个函数内部不应该使用`this`。
+
+```js
+var o = {
+  v: 'hello',
+  p: [ 'a1', 'a2' ],
+  f: function f() {
+    this.p.forEach(function (item) {
+      console.log(this.v + ' ' + item);
+    });
+  }
+}
+
+o.f()
+// undefined a1
+// undefined a2
+```
+
+上面代码中，`foreach`方法的回调函数中的`this`，其实是指向`window`对象，因此取不到`o.v`的值。原因跟上一段的多层`this`是一样的，**就是内层的`this`不指向外部，而指向顶层对象**。
+
+解决这个问题的一种方法，就是前面提到的，使用中间变量固定`this`。
+
+```js
+var o = {
+  v: 'hello',
+  p: [ 'a1', 'a2' ],
+  f: function f() {
+    var that = this;
+    this.p.forEach(function (item) {
+      console.log(that.v+' '+item);
+    });
+  }
+}
+
+o.f()
+// hello a1
+// hello a2
+```
+
+另一种方法是将`this`当作`foreach`方法的第二个参数，固定它的运行环境。
+
+#### 回调函数this
+
+回调函数中的`this`往往会改变指向，最好避免使用。
+
+```js
+var o = new Object();
+o.f = function () {
+  console.log(this === o);
+}
+
+// jQuery 的写法
+$('#button').on('click', o.f);
+```
+
+上面代码中，点击按钮以后，控制台会显示`false`。原因是此时`this`不再指向`o`对象，而是指向按钮的 DOM 对象，因为`f`方法是在按钮对象的环境中被调用的。这种细微的差别，很容易在编程中忽视，导致难以察觉的错误。
+
+为了解决这个问题，可以采用下面的一些方法对`this`进行绑定，也就是使得`this`固定指向某个对象，减少不确定性。
+
+### this绑定
+
+`this`的动态切换，固然为 JavaScript 创造了巨大的灵活性，但也使得编程变得困难和模糊。
+
+有时，需要把`this`固定下来，避免出现意想不到的情况。
+
+JavaScript 提供了`call`、`apply`、`bind`这三个方法，来切换/固定`this`的指向。
+
+#### call()
+
+`Function.prototype.call()`，函数实例的`call`方法，可以指定函数内部`this`的指向（即函数执行时所在的作用域），然后在所指定的作用域中，调用该函数。

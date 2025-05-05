@@ -239,6 +239,12 @@ export const toolsdata = [
         linktxt: 'ipinfo.io',
       },
       {
+        title: 'HTML压缩',
+        desc: 'HTML压缩',
+        link: 'https://kangax.github.io/html-minifier/',
+        linktxt: 'kangax.github.io',
+      },
+      {
         title: '密码生成器',
         desc: '密码生成器',
         link: 'https://mima.3gifs.com/',
@@ -459,6 +465,12 @@ export const toolsdata = [
         linktxt: 'cn.vitejs.dev',
         badge: badge.hot,
         badgeType: badgeType.hot
+      },
+      {
+        title: 'Rollup',
+        desc: 'Rollup 是一个用于构建 JavaScript 库的工具',
+        link: 'https://cn.rollupjs.org/',
+        linktxt: 'rollupjs.org',
       },
       {
         title: 'React',
