@@ -162,7 +162,7 @@ const getYearStyle = (date) => {
     const year = date.substring(0, 4)
     return {
         color: `var(--year-${year})`,
-        backgroundColor: `color-mix(in srgb, var(--year-${year}) 15%, transparent)`
+        borderBottom: `2px solid var(--year-${year})`
     }
 }
 </script>
@@ -232,13 +232,13 @@ const getYearStyle = (date) => {
 .post-tag,
 .post-date {
     padding: 2px 8px;
-    border-radius: 5px;
 }
 
 .post-tag {
     text-decoration: none;
     color: var(--vp-c-text-1);
     transition: opacity 0.2s;
+    border-radius: 5px;
 }
 
 .post-tag:hover {
@@ -248,6 +248,7 @@ const getYearStyle = (date) => {
 .post-date {
     font-weight: 500;
 }
+
 
 .pagination {
     margin-top: 16px;
@@ -352,6 +353,9 @@ const getYearStyle = (date) => {
 
     .more-tag {
         font-size: 0.75rem;
+    }
+    .doc-icon{
+        display: none;
     }
 }
 </style>
