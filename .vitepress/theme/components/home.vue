@@ -49,7 +49,7 @@ const { theme } = useData();
 const router = useRouter();
 
 // 导航栏状态管理
-const isNavVisible = ref(true);
+const isNavVisible = ref(false);
 const isClient = typeof window !== 'undefined';
 
 function navigateToFirstPage(url) {

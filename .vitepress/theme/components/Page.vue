@@ -170,7 +170,7 @@ const getYearStyle = (date) => {
 <style scoped>
 .post-list {
     padding: 14px 0;
-    border-bottom: 2px solid var(--vp-c-divider);
+    border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .post-header {

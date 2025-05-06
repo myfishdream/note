@@ -3008,3 +3008,175 @@ Animal.prototype.walk = function () {
 ```
 
 上面代码中，`Animal.prototype`对象上面定义了一个`walk`方法，这个方法将可以在所有`Animal`实例对象上面调用。
+
+#### 原型链
+
+JavaScript规定，所有对象都有自己的原型对象（**prototype**）。
+
+一方面，任何一个对象，都可以充当其他对象的原型；
+
+另一方面，由于原型对象也是对象，所以它也有自己的原型。
+
+因此，就会形成一个“原型链”（prototype chain）：对象到原型，再到原型的原型……
+
+如果一层层地上溯，所有对象的原型最终都可以上溯到`Object.prototype`，即`Object`构造函数的`prototype`属性。
+
+也就是说，所有对象都继承了`Object.prototype`的属性。这就是所有对象都有`valueOf`和`toString`方法的原因，因为这是从`Object.prototype`继承的。
+
+`Object.prototype`对象有没有它的原型呢？回答是`Object.prototype`的原型是`null`。`null`没有任何属性和方法，也没有自己的原型。因此，原型链的尽头就是`null`。
+
+```js
+Object.getPrototypeOf(Object.prototype)
+// null
+```
+
+上面代码表示，`Object.prototype`对象的原型是`null`，由于`null`没有任何属性，所以原型链到此为止。
+
+`Object.getPrototypeOf`方法返回参数对象的原型。
+
+读取对象的某个属性时，JavaScript 引擎先寻找对象本身的属性，如果找不到，就到它的原型去找，如果还是找不到，就到原型的原型去找。
+
+`Object.prototype`还是找不到，则返回`undefined`，如果对象自身和它的原型，都定义了一个同名属性，那么优先读取对象自身的属性，这叫做“覆盖”（overriding）。
+
+**注意**：一级级向上，在整个原型链上寻找某个属性，对性能是有影响的。所寻找的属性在越上层的原型对象，对性能的影响越大。如果寻找某个不存在的属性，将会遍历整个原型链。
+
+举例来说，如果让构造函数的`prototype`属性指向一个数组，就意味着实例对象可以调用数组方法。
+
+```js
+var MyArray = function () {};
+
+MyArray.prototype = new Array();
+
+var mine = new MyArray();
+mine.push(1, 2, 3);
+mine.length // 3
+mine instanceof Array // true
+```
+
+上面代码中，`mine`是构造函数`MyArray`的实例对象，由于`MyArray.prototype`指向一个数组实例，使得`mine`可以调用数组方法（这些方法定义在数组实例的`prototype`对象上面）。
+
+`instanceof`表达式用来比较一个对象是否为某个构造函数的实例（结果就是证明`mine`为`Array`的实例）。
+
+#### constructor 属性
+
+`prototype`对象有一个`constructor`属性，**默认指向`prototype`对象所在的构造函数。**
+
+```js
+function P() {}
+P.prototype.constructor === P // true
+```
+
+由于`constructor`属性定义在`prototype`对象上面，意味着可以被所有实例对象继承。
+
+```js
+function P() {}
+var p = new P();
+
+p.constructor === P // true
+p.constructor === P.prototype.constructor // true
+p.hasOwnProperty('constructor') // false
+```
+
+`Object.prototype.hasOwnProperty()`方法接受一个字符串作为参数，返回一个布尔值，表示该实例对象**自身**是否具有该属性，不包括继承的
+
+上面代码中，`p`是构造函数`P`的实例对象，但是`p`自身没有`constructor`属性，该属性其实是读取原型链上面的`P.prototype.constructor`属性。
+
+`constructor`属性的作用是，可以得知某个实例对象，到底是哪一个构造函数产生的。
+
+```js
+function F() {};
+var f = new F();
+
+f.constructor === F // true
+f.constructor === RegExp // false
+```
+
+另一方面，有了`constructor`属性，就可以从一个实例对象新建另一个实例。
+
+```js
+function Constr() {}
+var x = new Constr();
+
+var y = new x.constructor();
+y instanceof Constr // true
+```
+
+上面代码中，`x`是构造函数`Constr`的实例，可以从`x.constructor`间接调用构造函数。
+
+这使得在实例方法中，调用自身的构造函数成为可能。
+
+```js
+Constr.prototype.createCopy = function () {
+  return new this.constructor();
+};
+```
+
+上面代码中，`createCopy`方法调用构造函数，新建另一个实例。
+
+`constructor`属性表示原型对象与构造函数之间的关联关系，如果修改了原型对象，一般会同时修改`constructor`属性，防止引用的时候出错。
+
+```js
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.constructor === Person // true
+
+Person.prototype = {
+  method: function () {}
+};
+
+Person.prototype.constructor === Person // false
+Person.prototype.constructor === Object // true
+```
+
+上面代码中，构造函数`Person`的原型对象改掉了，但是没有修改`constructor`属性，导致这个属性不再指向`Person`。由于`Person`的新原型是一个普通对象，而普通对象的`constructor`属性指向`Object`构造函数，导致`Person.prototype.constructor`变成了`Object`。
+
+> [!IMPORTANT] 记住
+>
+> 普通对象的`constructor`属性指向`Object`构造函数，原型对象则指向`prototype`对象所在的构造函数
+
+> [!tip]  
+>
+> 所以，修改原型对象时，一般要同时修改`constructor`属性的指向。
+
+```js
+// 坏的写法
+C.prototype = {
+  method1: function (...) { ... },
+  // ...
+};
+
+// 好的写法
+C.prototype = {
+  constructor: C,
+  method1: function (...) { ... },
+  // ...
+};
+
+// 更好的写法
+C.prototype.method1 = function (...) { ... };
+```
+
+上面代码中，要么将`constructor`属性重新指向原来的构造函数，要么只在原型对象上添加方法，这样可以保证`instanceof`运算符不会失真。
+
+如果不能确定`constructor`属性是什么函数，还有一个办法：通过`name`属性，从实例得到构造函数的名称。
+
+```js
+function Foo() {}
+var f = new Foo();
+f.constructor.name // "Foo"
+```
+
+#### instanceof 运算符
+
+`instanceof`运算符返回一个布尔值，表示对象是否为某个构造函数的实例。
+
+```js
+var v = new Vehicle();
+v instanceof Vehicle // true
+```
+
+`instanceof`运算符的左边是实例对象，右边是构造函数。
+
+它会检查右边构造函数的原型对象（prototype），是否在左边对象的原型链上。
