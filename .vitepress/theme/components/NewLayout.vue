@@ -8,13 +8,13 @@
             <!-- 文档内容前 - 文章日期、标签和更新时间 -->
             <div class="post-info" v-if="!$frontmatter.page">
                 <div class="post-info-left">
-                    <span class="post-date" :style="getYearStyle($frontmatter.date)">
+                    <span class="post-date round-border" :style="getYearStyle($frontmatter.date)">
                         {{ $frontmatter.date?.substring(0,10) }}
                     </span>
                     <div class="post-tags">
                         <a v-for="item in $frontmatter.tags" 
                            :key="item"
-                           class="post-tag"
+                           class="post-tag round-border"
                            :style="getTagStyle(item)"
                            :href="withBase(`/pages/tags.html?tag=${item}`)">
                             {{ item }}
@@ -130,9 +130,15 @@ const getYearStyle = (date) => {
     font-family: var(--date-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-weight: 500;
     font-size: 0.875rem;
-    padding: 2px 10px;
-    border-radius: 6px;
     white-space: nowrap;
+}
+
+.round-border{
+    border-radius: 16px;
+    padding: 2px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .post-tags {
@@ -144,8 +150,6 @@ const getYearStyle = (date) => {
 
 .post-tag {
     text-decoration: none;
-    padding: 2px 10px;
-    border-radius: 6px;
     font-size: 0.875rem;
     transition: opacity 0.2s;
 }

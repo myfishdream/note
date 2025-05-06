@@ -170,7 +170,7 @@ const getYearStyle = (date) => {
 <style scoped>
 .post-list {
     padding: 14px 0;
-    border-bottom: 1px dashed var(--vp-c-divider);
+    border-bottom: 2px solid var(--vp-c-divider);
 }
 
 .post-header {
@@ -218,7 +218,7 @@ const getYearStyle = (date) => {
 .post-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     font-size: 0.875rem;
     flex-shrink: 0;
 }
@@ -226,13 +226,16 @@ const getYearStyle = (date) => {
 .post-tags {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
 }
 
 .post-tag,
 .post-date {
-    padding: 2px 8px;
-    border-radius: 5px;
+    border-radius: 16px;
+    padding: 2px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .post-tag {
@@ -337,7 +340,7 @@ const getYearStyle = (date) => {
     }
 
     .post-tag {
-        padding: 2px 4px;
+        padding: 0px 8px;
         font-size: 0.75rem;
     }
 
@@ -352,6 +355,9 @@ const getYearStyle = (date) => {
 
     .more-tag {
         font-size: 0.75rem;
+    }
+    .doc-icon{
+        display: none;
     }
 }
 </style>
