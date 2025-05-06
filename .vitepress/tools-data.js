@@ -575,12 +575,6 @@ export const toolsdata = [
         link: 'https://www.bootcss.com/',
         linktxt: 'bootcss.com',
       },
-      {
-        title: 'Docker',
-        desc: 'Docker 是个划时代的开源项目，它彻底释放了计算虚拟化的威力',
-        link: 'https://yeasy.gitbook.io/docker_practice/',
-        linktxt: 'yeasy.gitbook.io',
-      }
 
     ]
   }
