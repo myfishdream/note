@@ -1,5 +1,5 @@
 ---
-title: JavaScript 核心知识点小记
+title: JavaScript 核心知识点小记 (上)
 date: 2025-04-27
 category: Note
 tags: 
@@ -14,7 +14,7 @@ cbf: false
 handwriting: false
 ---
 
-# JavaScript 核心知识点小记
+# JavaScript 核心知识点小记 (上)
 
 ## 闭包
 
@@ -4451,7 +4451,3 @@ function package(protected) { // 语法错误
   var implements; // 语法错误
 }
 ```
-
-## 异步操作
-
-### 
