@@ -12,6 +12,7 @@ outline: [2,3]
 done: false
 gridPaper: true
 handwriting: true
+aside: false
 ---
 
 # 我的一天

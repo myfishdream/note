@@ -5,7 +5,9 @@
     /* 主题配置 */
     --date-font-family: Georgia, sans-serif;
     --yu-theme-title: #000;
-    --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif;
+    /* --vp-font-family-base: 'PingFang SC', 'Microsoft Yahei', sans-serif; */
+    --vp-font-family-base: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --vp-font-family-mono: "Fira Code", monospace;
     /* 容器自定义 */
     --vp-custom-block-tip-border: #747bff;
     --vp-custom-block-warning-border: #b36b00;
@@ -34,7 +36,7 @@
     --vp-custom-block-info-border: #0059b3;
     --vp-custom-block-details-border: #868686;
     --vp-custom-block-important-border: #8250df;
-    --vp-c-blue-dimm-2: #004080;    
+    --vp-c-blue-dimm-2: #004080;
     --vp-custom-block-caution-border: var(--vp-custom-block-danger-border);
     --grid-color-rgb: 255, 255, 255;
 }
@@ -325,6 +327,7 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 
 .outline-marker {
     width: var(--outline-marker-width) !important;
+    background-color: var(--vp-c-text-1) !important;
 }
 
 /* 导航栏菜单链接 */
@@ -341,16 +344,27 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
     color: inherit !important;
 }
 
-/* 顶部导航 */
-
-.VPNav{
-    border: none;
-}
-
+/* 移动端导航 */
 @media (max-width: 767px) {
     .content-body {
         column-gap: 0rem !important;
     }
 }
 
+/* 顶部导航模糊背景 */
+.VPNav {
+    border: none;
+    background-color: transparent !important;
+}
+
+.VPNavBar {
+    background-color: transparent !important;
+    backdrop-filter: blur(2px);
+}
+
+/* 搜索框透明 */
+.DocSearch-Button{
+    background-color: transparent !important;
+    border: var(--vp-c-divider) 1px solid !important;
+}
 /* #endregion 其他配置 */

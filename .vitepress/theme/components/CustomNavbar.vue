@@ -43,5 +43,9 @@ onBeforeUnmount(() => {
     text-decoration: none;
 }
 
+svg {
+    fill: var(--vp-c-text-1);
+}
+
 
 </style>

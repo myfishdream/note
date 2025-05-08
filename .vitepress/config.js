@@ -33,6 +33,10 @@ export default defineConfig({
     lastUpdated: true,
     cleanUrls: true,
     markdown: {
+        theme: {
+            light: 'vitesse-light',      // 浅色模式用的主题
+            dark: 'vitesse-dark'        // 深色模式用的主题
+        },
         // lineNumbers: true,
         config: (md) => {
             // use more markdown-it plugins!
