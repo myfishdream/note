@@ -2,7 +2,7 @@ import { globby } from 'globby'     // globby 是一个用于文件路径匹配�
 import matter from 'gray-matter'     // gray-matter 是一个用于解析markdown文件的库，可以用于解析markdown文件的frontmatter
 import fs from 'fs-extra'            // fs-extra 是一个用于文件操作的库，可以用于读取和写入文件
 import { resolve } from 'path'        // resolve 是一个用于解析文件路径的库，可以用于解析文件路径
-import { generateTagColors } from './utils/generateTagColors.js'
+// import { generateTagColors } from './utils/generateTagColors.js'
 
 // 待发布文档的标识
 const DRAFT_FLAG = 'draft: true'
@@ -41,7 +41,7 @@ async function getPosts(pageSize) {
     posts.sort(_compareDate)
 
     // 生成标签颜色文件
-    generateTagColors(posts)
+    // generateTagColors(posts)
 
     return posts
 }

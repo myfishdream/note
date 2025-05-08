@@ -1,6 +1,7 @@
 :root {
     /* 覆盖配置 */
     --vp-code-color: #3451b2;
+    --vp-c-gutter: transparent;
     /* 主题配置 */
     --date-font-family: Georgia, sans-serif;
     --yu-theme-title: #000;
@@ -338,6 +339,18 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
 
 .VPNavBarMenuLink:hover {
     color: inherit !important;
+}
+
+/* 顶部导航 */
+
+.VPNav{
+    border: none;
+}
+
+@media (max-width: 767px) {
+    .content-body {
+        column-gap: 0rem !important;
+    }
 }
 
 /* #endregion 其他配置 */

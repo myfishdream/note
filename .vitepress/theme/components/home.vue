@@ -1,209 +1,191 @@
 <template>
-  <div class="head">
-    <h1 class="title" v-slide-up="{ delay: 0 }">Blog</h1>
-    <span class="btn">
-      <button @click="navigateToFirstPage('/page_1')" v-slide-up="{ delay: 0 }">
-        Read More
-      </button>
-      &nbsp;
-      <button @click="navigateToFirstPage('/changelog')" v-slide-up="{ delay: 0 }">
-        Change log
-      </button>
-      &nbsp;
-      <button @click="toggleNavbar" v-slide-up="{ delay: 0 }">
-        {{ isNavVisible ? 'Hide Menu' : 'Show Menu' }}
-      </button>
-    </span>
+  <div class="home-intro">
+    <div class="avatar-box">
+      <img class="avatar" src="/favicon.ico" alt="avatar" no-zoomable />
+    </div>
+    <div class="intro-main">
+      <div class="intro-title">
+        <span class="emoji">(•_•)</span>
+        <span class="nickname">你好</span>
+        <span class="identity">学生 · Student · Developer</span>
+      </div>
+      <div class="intro-desc">
+        欢迎来到 <span class="highlight">YuMeng</span> 的个人空间！这里是我分享技术见解、生活感悟和创作灵感的天地。你可以探索我的 
+        <span class="link">技术博客</span>，欣赏我的 <span class="link">摄影作品</span>，或者了解我的 <span class="link">开发工具</span>。
+        期待与你在这里相遇，一起交流成长。
+      </div>
+    </div>
   </div>
-  <p v-slide-up="{ delay: 100 }" style="border-bottom: 1px solid var(--vp-c-divider);">
-
-  </p>
-  <div class="introduce">
-    <p v-slide-up="{ delay: 200 }" style="font-size: 2rem;">
-      Hi, I'm YuMeng.
-    </p>
-    <p v-slide-up="{ delay: 300 }" style="font-size: 1.2rem;">
-      I'm a Student from China. My hobby is to learn new things.
-    </p>
-    <p v-slide-up="{ delay: 400 }" style="font-size: 1rem; font-weight: normal;">
-      Currently living in <a href="https://s21.ax1x.com/2025/04/26/pETA0gK.webp">Zhuhai</a> — possibly the most
-      comfortable city in the world.
-    </p>
-    <p v-slide-up="{ delay: 500 }" style="font-size: 1rem; font-weight: normal;">
-      I write some articles about my learning and life.
-    </p>
-    <p v-slide-up="{ delay: 600 }" style="font-size: 1rem; font-weight: normal;">
-      I hope you like my articles.
-    </p>
-  </div>
-
-
-
 </template>
+
 <script setup>
-import { useData, useRouter, withBase } from "vitepress";
-import { toolsdata } from "../../tools-data";
-import { ref, onMounted, onUnmounted, watch } from "vue";
-
-const { theme } = useData();
-const router = useRouter();
-
-// 导航栏状态管理
-const isNavVisible = ref(false);
-const isClient = typeof window !== 'undefined';
-
-function navigateToFirstPage(url) {
-  router.go(url);
-}
-
-// 切换导航栏显示/隐藏
-function toggleNavbar() {
-  isNavVisible.value = !isNavVisible.value;
-  updateNavbarVisibility();
-}
-
-// 更新导航栏可见性
-function updateNavbarVisibility() {
-  if (!isClient) return;
-  const content = document.querySelector('.VPContent');
-  const nav = document.querySelector('.VPNav');
-  if (!nav) return;
-  content.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-  if (isNavVisible.value) {
-    // 显示导航栏
-    nav.classList.remove('nav-hidden');
-    nav.classList.add('nav-visible');
-    // 添加transform: translateY(0);
-    content.style.transform = 'translateY(0)';
-  } else {
-    // 隐藏导航栏
-    nav.classList.add('nav-hidden');
-    nav.classList.remove('nav-visible');
-    // 添加transform: translateY(-60px);
-    content.style.transform = 'translateY(-60px)';
-  }
-}
-
-// 恢复导航栏显示状态
-function showNavBar() {
-  if (!isClient) return;
-  
-  isNavVisible.value = true;
-  const nav = document.querySelector('.VPNav');
-  if (nav) {
-    nav.classList.remove('nav-hidden');
-    nav.classList.add('nav-visible');
-  }
-}
+import { onMounted, onUnmounted } from 'vue'
 
 onMounted(() => {
-  if (!isClient) return;
-  
-  // 添加样式到文档头部
-  const style = document.createElement('style');
-  style.textContent = `
-    .VPNav {
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .VPNav.nav-hidden {
-      transform: translateY(-100%);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .VPNav.nav-visible {
-      transform: translateY(0);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // 初始显示导航栏
-  setTimeout(() => {
-    updateNavbarVisibility();
-  }, 100);
-});
+  // 头像旋转
+  const heroImg = document.querySelector('.avatar')
+  let rotationAngle = 0
+  let rotationSpeed = 0
+  let isHovering = false
+  let lastTimestamp = 0
+  let animationFrameId = null
 
-onUnmounted(() => {
-  if (!isClient) return;
-  
-  // 确保组件卸载时恢复导航栏状态
-  showNavBar();
-});
+  function updateRotation(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp
+    const deltaTime = timestamp - lastTimestamp
+    lastTimestamp = timestamp
+
+    if (isHovering) {
+      // 鼠标悬浮时，速度逐渐增加
+      rotationSpeed = Math.min(rotationSpeed + 0.01, 1.5) // 限制最大速度
+    } else {
+      // 鼠标离开时，速度逐渐减小
+      rotationSpeed = Math.max(rotationSpeed - 0.01, 0)
+    }
+
+    if (rotationSpeed > 0) {
+      rotationAngle += rotationSpeed * deltaTime
+      heroImg.style.transform = `rotate(${rotationAngle}deg)`
+      animationFrameId = requestAnimationFrame(updateRotation)
+    } else {
+      lastTimestamp = 0
+      animationFrameId = null
+    }
+  }
+
+  function onEnter() {
+    isHovering = true
+    if (!animationFrameId) {
+      lastTimestamp = 0
+      animationFrameId = requestAnimationFrame(updateRotation)
+    }
+  }
+  function onLeave() {
+    isHovering = false
+  }
+
+  heroImg.addEventListener('mouseenter', onEnter)
+  heroImg.addEventListener('mouseleave', onLeave)
+
+  onUnmounted(() => {
+    heroImg.removeEventListener('mouseenter', onEnter)
+    heroImg.removeEventListener('mouseleave', onLeave)
+    if (animationFrameId) cancelAnimationFrame(animationFrameId)
+  })
+})
 </script>
 
 <style scoped>
-.post {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-
-}
-
-.introduce p {
-  font-family: Verdana, sans-serif;
-  font-weight: bold;
-}
-.head{
+.home-intro {
   display: flex;
-  justify-content: space-between;
+  align-items: flex-start;
+  margin: 2.5rem 0 2rem 0;
+}
+.avatar-box {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  margin-right: 2rem;
 }
-
-.title {
-  /* margin-top: 10px; */
-  font-size: 1.5rem;
-  font-weight: bold !important;
-  font-family: Verdana, sans-serif;
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  image-rendering: pixelated;
+}
+.intro-main {
+  flex: 1;
+  min-width: 0;
+}
+.intro-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.emoji {
+  font-size: 2.1rem;
+  margin-right: 0.1em;
+}
+.nickname {
   color: var(--vp-c-text-1);
+  font-weight: normal;
 }
-
-button {
-  font-size: 18px;
+.identity {
+  font-size: 1rem;
+  font-weight: normal;
   color: var(--vp-c-text-2);
-  font-family: inherit;
-  font-weight: 800;
+  background: var(--vp-c-bg-alt);
+  border-radius: 8px;
+  padding: 0.1em 0.7em;
+  margin-left: 0.7em;
+  letter-spacing: 0.05em;
+}
+.intro-desc {
+  font-size: 1.1rem;
+  color: var(--vp-c-text-2);
+  line-height: 2;
+  margin-top: 0.5em;
+  word-break: break-all;
+  padding-right: 0.5em;
+}
+.highlight {
+  color: var(--vp-c-brand);
+}
+.link {
+  font-weight: 500;
   cursor: pointer;
-  position: relative;
-  border: none;
-  background: none;
-  /* text-transform: uppercase; */
-  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
-  transition-duration: 400ms;
-  transition-property: color;
+  text-decoration: underline
 }
-
-button:focus,
-button:hover {
-  color: var(--vp-c-text-1);
+.link:hover {
+  color: var(--vp-c-brand);
+  text-decoration: underline;
 }
-
-button:focus:after,
-button:hover:after {
-  width: 100%;
-  left: 0%;
-}
-
-button:after {
-  content: "";
-  pointer-events: none;
-  bottom: -2px;
-  left: 50%;
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  background-color: var(--vp-c-text-1);
-  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
-  transition-duration: 400ms;
-  transition-property: width, left;
-}
-
-/* 移动端适配 */
-@media (max-width: 768px) {
-  .head {
+@media (max-width: 600px) {
+  .home-intro {
     flex-direction: column;
     align-items: flex-start;
+    margin: 1.5rem 0 1rem 0;
+    padding: 0 1rem;
   }
-  
-  .btn {
-    margin-top: 1rem;
+  .avatar-box {
+    margin-right: 0;
+    margin-bottom: 1.2rem;
+    width: 64px;
+    height: 64px;
+  }
+  .avatar {
+    width: 48px;
+    height: 48px;
+  }
+  .intro-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.3em;
+  }
+  .emoji {
+    font-size: 1.3rem;
+  }
+  .identity {
+    font-size: 0.9rem;
+    padding: 0.1em 0.5em;
+    margin-left: 0.5em;
+  }
+  .intro-desc {
+    font-size: 0.95rem;
+    margin-top: 0.3em;
+    padding-right: 0;
+  }
+  .avatar-box {
+    display: none;
   }
 }
 </style>
+

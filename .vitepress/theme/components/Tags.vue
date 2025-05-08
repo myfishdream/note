@@ -5,12 +5,11 @@
             v-for="(_, key) in data" 
             class="tag"
             :class="{ 'tag-active': selectTag === key }"
-            :style="getTagStyle(key)"
         >
             {{ key }} <sup>{{ data[key].length }}</sup>
         </span>
     </div>
-    <div class="tag-header" :style="getTagStyle(selectTag)">{{ selectTag }}</div>
+    <div class="tag-header">{{ selectTag }}</div>
     <div class="posts-container">
         <a
             :href="withBase(article.regularPath)"
@@ -21,7 +20,7 @@
             <div class="post-container">
                 <span class="post-title">{{ article.frontMatter.title }}</span>
             </div>
-            <div class="date" :style="getYearStyle(article.frontMatter.date)">{{ article.frontMatter.date }}</div>
+            <div class="date">{{ article.frontMatter.date }}</div>
         </a>
     </div>
 </template>
@@ -30,33 +29,10 @@
 import { computed, ref, onMounted } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { initTags } from '../functions'
-import '../styles/tagColors.css'
-import '../styles/yearColors.css'
-import tagMap from '../styles/tagMap.json'
 
 const { theme } = useData()
 const data = computed(() => initTags(theme.value.posts || []))
 let selectTag = ref('')
-
-// 获取标签的样式
-const getTagStyle = (tag) => {
-    const index = tagMap[tag]
-    if (!index) return {}
-    
-    return {
-        color: `var(--tag-${index})`,
-        backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
-    }
-}
-
-// 获取年份的样式
-const getYearStyle = (date) => {
-    if (!date) return {}
-    const year = date.substring(0, 4)
-    return {
-        color: `var(--year-${year})`
-    }
-}
 
 // 从URL中获取tag参数
 function getTagFromUrl() {
@@ -92,7 +68,7 @@ onMounted(() => {
 
 <style scoped>
 .posts-container {
-    margin-top: 1rem;
+    margin-top: 0rem !important;
 }
 
 .posts {
@@ -130,6 +106,7 @@ onMounted(() => {
     font-weight: 500;
     font-size: 1rem;
     opacity: 0.8;
+    color: var(--vp-c-text-2);
 }
 
 .tags {
@@ -144,11 +121,9 @@ onMounted(() => {
     align-items: center;
     padding: 6px 14px;
     font-size: 0.9375rem;
-    border-radius: 6px;
     cursor: pointer;
     transition: all 0.1s ease;
-    border: 1px solid transparent;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--vp-c-divider);
 }
 
 .tag:hover {
@@ -175,7 +150,7 @@ onMounted(() => {
 }
 
 .tag-header {
-    margin: 2rem 0 1.5rem;
+    margin: 2rem 0 0.5rem;
     padding-bottom: 1rem;
     font-size: 1.75rem;
     font-weight: 600;

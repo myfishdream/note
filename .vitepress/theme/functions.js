@@ -495,3 +495,31 @@ export function getRelativeTime(date, options = {}) {
 
     return relativeTime;
 }
+
+/**
+ * 移动元素到目标元素的指定位置
+ * @param {string} sourceSelector - 要移动的元素选择器
+ * @param {string} targetSelector - 目标元素选择器
+ * @param {string} [position='before'] - 插入方式：before(前面), after(后面), replace(替换), append(作为子元素)
+ */
+export function moveElement(sourceSelector, targetSelector, position = 'before') {
+    const source = document.querySelector(sourceSelector)
+    const target = document.querySelector(targetSelector)
+    if (!source || !target) return
+    switch (position) {
+        case 'before':
+            if (target.parentNode) target.parentNode.insertBefore(source, target)
+            break
+        case 'after':
+            if (target.parentNode) target.parentNode.insertBefore(source, target.nextSibling)
+            break
+        case 'replace':
+            if (target.parentNode) target.parentNode.replaceChild(source, target)
+            break
+        case 'append':
+            target.appendChild(source)
+            break
+        default:
+            if (target.parentNode) target.parentNode.insertBefore(source, target)
+    }
+}

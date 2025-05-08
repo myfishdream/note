@@ -2,27 +2,26 @@
     <Layout>
         <template #nav-bar-content-after>
             <!-- 导航栏内容后 -->
-             <!-- <CustomNavbar /> -->
+             <CustomNavbar />
         </template>
         <template #doc-before>
             <!-- 文档内容前 - 文章日期、标签和更新时间 -->
             <div class="post-info" v-if="!$frontmatter.page">
                 <div class="post-info-left">
-                    <span class="post-date round-border" :style="getYearStyle($frontmatter.date)">
+                    <span class="post-date meta-bg">
                         {{ $frontmatter.date?.substring(0,10) }}
                     </span>
                     <div class="post-tags">
                         <a v-for="item in $frontmatter.tags" 
                            :key="item"
-                           class="post-tag round-border"
-                           :style="getTagStyle(item)"
+                           class="post-tag meta-bg"
                            :href="withBase(`/pages/tags.html?tag=${item}`)">
                             {{ item }}
                         </a>
                     </div>
                 </div>
                 <div class="post-info-right" v-if="lastUpdated && $frontmatter.date">
-                    <span class="post-updated" :title="formatDate(lastUpdated, 'YYYY-MM-DD HH:mm:ss')">
+                    <span class="post-updated meta-bg" :title="formatDate(lastUpdated, 'YYYY-MM-DD HH:mm:ss')">
                         更新: {{ displayUpdatedTime }}
                     </span>
                 </div>
@@ -48,14 +47,11 @@
 <script setup>
 import DefaultTheme from 'vitepress/theme'
 import Copyright from './Copyright.vue'
-// import CustomNavbar from './CustomNavbar.vue'
+import CustomNavbar from './CustomNavbar.vue'
 // import NotFound from './notfound.vue'
 // import Giscus from './giscus.vue'
 import { withBase, useData } from "vitepress"
 import { computed } from 'vue'
-import '../styles/tagColors.css'
-import '../styles/yearColors.css'
-import tagMap from '../styles/tagMap.json'
 import { getRelativeTime, formatDate } from '../functions'
 const { Layout } = DefaultTheme
 
@@ -81,26 +77,6 @@ const displayUpdatedTime = computed(() => {
         }
     })
 })
-// 获取标签的样式
-const getTagStyle = (tag) => {
-    const index = tagMap[tag]
-    if (!index) return {}
-    
-    return {
-        color: `var(--tag-${index})`,
-        backgroundColor: `color-mix(in srgb, var(--tag-${index}) 15%, transparent)`
-    }
-}
-
-// 获取年份的样式
-const getYearStyle = (date) => {
-    if (!date) return {}
-    const year = date.substring(0, 4)
-    return {
-        color: `var(--year-${year})`,
-        backgroundColor: `color-mix(in srgb, var(--year-${year}) 15%, transparent)`
-    }
-}
 </script>
 
 <style scoped>
@@ -126,19 +102,17 @@ const getYearStyle = (date) => {
     flex-shrink: 0;
 }
 
+.meta-bg{
+    background: var(--vp-c-bg-alt);
+    padding: 1px 5px;
+    border-radius: 5px;
+}
+
 .post-date {
     font-family: var(--date-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-weight: 500;
     font-size: 0.875rem;
     white-space: nowrap;
-}
-
-.round-border{
-    border-radius: 16px;
-    padding: 2px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .post-tags {
@@ -160,12 +134,8 @@ const getYearStyle = (date) => {
 
 .post-updated {
     font-family: var(--date-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
-    font-size: 0.875rem;
-    padding: 2px 10px;
     white-space: nowrap;
-    color: var(--vp-c-text-dark-1);
-    border-bottom: 2px solid var(--vp-c-brand);
+    font-size: 0.875rem;
 }
 
 /* 文章简介样式 */
@@ -173,11 +143,10 @@ const getYearStyle = (date) => {
     margin: 1rem 0 1.5rem;
     padding: 12px 16px;
     border-radius: 2px;
-    background-color: rgba(var(--vp-c-brand-rgb), 0.05);
     line-height: 1.6;
     font-size: 0.95rem;
     color: var(--vp-c-text-2);
-    border-left: 4px solid var(--vp-c-brand);
+    border-left: 4px solid var(--vp-c-border);
 }
 
 .post-description p {
