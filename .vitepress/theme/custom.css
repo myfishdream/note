@@ -367,4 +367,11 @@ img[class="medium-zoom-image"]:not([no-style]):not([loading-error]) {
     background-color: transparent !important;
     border: var(--vp-c-divider) 1px solid !important;
 }
+
+@media (max-width: 767px) {
+    .DocSearch-Button {
+        border: none !important;
+    }
+}
+
 /* #endregion 其他配置 */

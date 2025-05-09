@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = ".vitepress/dist"  # 替换为你的实际输出目录（如 VitePress 默认是 .vitepress/dist）
+  functions = "netlify/functions"  # 指定 functions 目录
+
+[dev]
+  framework = "vite"  # 明确指定框架
+  publish = ".vitepress/dist"         # 开发时服务的目录
+  targetPort = 5000        # 本地开发服务器端口（与你的项目一致）
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+

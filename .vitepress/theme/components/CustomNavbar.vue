@@ -23,7 +23,7 @@ const checkScreenSize = () => {
 onMounted(() => {
   checkScreenSize() // 初始化检查
   window.addEventListener('resize', checkScreenSize) // 监听窗口变化
-  console.log(isMobile.value)
+//   console.log(isMobile.value)
 })
 
 onBeforeUnmount(() => {

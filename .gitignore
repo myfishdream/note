@@ -18,5 +18,3 @@ posts/assets/
 no-uploading-files/
 # Local Netlify folder
 .netlify
-netlify.toml
-netlify/
