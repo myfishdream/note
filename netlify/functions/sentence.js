@@ -31,7 +31,32 @@ const sentences = [
     "(๑•̀ㅂ•́)و✧ 好运正在路上，保持期待吧！"
 ];
 
+// 用于存储上次请求的时间戳
+let lastRequestTime = 0;
+const DEBOUNCE_TIME = 1000; // 1秒的防抖时间
+
 exports.handler = async function(event, context) {
+    const currentTime = Date.now();
+    
+    // 检查是否在防抖时间内
+    if (currentTime - lastRequestTime < DEBOUNCE_TIME) {
+        return {
+            statusCode: 429, // Too Many Requests
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Retry-After': '1'
+            },
+            body: JSON.stringify({
+                error: '请求过于频繁，请稍后再试',
+                retryAfter: 1
+            })
+        };
+    }
+    
+    // 更新最后请求时间
+    lastRequestTime = currentTime;
+    
     const randomIndex = Math.floor(Math.random() * sentences.length);
     const randomSentence = sentences[randomIndex];
     

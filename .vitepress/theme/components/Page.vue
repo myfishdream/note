@@ -2,7 +2,7 @@
   <div>
     <div class="head">
       <h2>近期文章</h2>
-      <div>{{ sentence }}</div>
+      <div @click="getSentence">{{ sentence }}</div>
     </div>
     <div v-for="(article, index) in posts" :key="index" class="post-row">
       <a class="post-title-link" :href="withBase(article.regularPath)" :title="article.frontMatter.description">{{
@@ -27,21 +27,38 @@
 
 <script setup>
 import { withBase, useData } from 'vitepress'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 let sentence = ref('(¬‿¬)今天也要加油鸭');
-fetch('/api/sentence')
-  .then(response => response.json())
-  .then(data => {
-    sentence.value = data.sentence;
-  })
-  .catch(error => {
-    console.error('获取句子失败:', error);
-  });
+
+const getSentence = () => {
+  const defaultSentence = '(¬‿¬)今天也要加油鸭';
+  fetch('/api/sentence')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('网络请求失败');
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data && data.sentence) {
+        sentence.value = data.sentence;
+      } else {
+        throw new Error('返回数据格式错误');
+      }
+    })
+    .catch(error => {
+      console.error('获取句子失败:', error);
+      sentence.value = defaultSentence;
+    });
+}
 const { theme } = useData()
 const props = defineProps({
   posts: Array,
   pageCurrent: Number,
   pagesNum: Number
+})
+onMounted(() => {
+  getSentence();
 })
 </script>
 
