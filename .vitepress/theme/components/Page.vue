@@ -69,6 +69,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 
   h2 {
     border-bottom: none !important;
