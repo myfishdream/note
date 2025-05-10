@@ -23,6 +23,9 @@
       </template>
     </div>
   </div>
+  <div class="footer">
+    <img no-zoomable src="https://count.getloli.com/@yumeng?name=yumeng&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" alt=":name" />
+  </div>
 </template>
 
 <script setup>
@@ -139,6 +142,13 @@ onMounted(() => {
 .page-btn:hover {
   color: var(--vp-c-text-2);
 }
+
+.footer {
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+}
+
 
 @media (max-width: 768px) {
   .post-row {

@@ -18,3 +18,4 @@ posts/assets/
 no-uploading-files/
 # Local Netlify folder
 .netlify
+.cursor/
