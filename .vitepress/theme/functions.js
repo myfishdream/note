@@ -523,3 +523,47 @@ export function moveElement(sourceSelector, targetSelector, position = 'before')
             if (target.parentNode) target.parentNode.insertBefore(source, target)
     }
 }
+
+// 节流函数
+function throttle(fn, delay) {
+    let last = 0;
+    return function (...args) {
+        const now = Date.now();
+        if (now - last > delay) {
+            last = now;
+            fn.apply(this, args);
+        }
+    };
+}
+
+/**
+ * 滚动时自动将最近的标题id同步到URL hash（节流优化+首次加载同步）
+ * 只有 frontmatter.AutoAnchor === true 时才启用
+ */
+export function setupAutoAnchorOnScroll(frontmatter) {
+    if (typeof window === 'undefined' || frontmatter.AutoAnchor !== true) return;
+
+    const headingsSelector = '.vp-doc h2[id], .vp-doc h3[id]';
+    const offset = 150; // 顶部导航栏高度
+
+    // 滚动时同步 hash
+    const syncHash = throttle(() => {
+        const headings = Array.from(document.querySelectorAll(headingsSelector));
+        if (!headings.length) return;
+        const scrollY = window.scrollY || window.pageYOffset;
+        let currentId = '';
+        for (let i = 0; i < headings.length; i++) {
+            const el = headings[i];
+            if (el.getBoundingClientRect().top + window.scrollY - offset <= scrollY) {
+                currentId = el.id;
+            } else {
+                break;
+            }
+        }
+        if (currentId && location.hash !== '#' + currentId) {
+            history.replaceState(null, '', '#' + currentId);
+        }
+    }, 100); // 100ms 节流
+
+    window.addEventListener('scroll', syncHash);
+}

@@ -18,8 +18,8 @@ category: other
 tags: 
     - ${tags.split(',').join('\n    - ')}
 description: ${description}
-draft: false
 outline: [2,3]
+draft: false
 sticky: false
 done: false
 gridPaper: false
@@ -27,6 +27,7 @@ handwriting: false
 cbf: false
 zoomable: true
 publish: true
+AutoAnchor: false
 ---
 
 `

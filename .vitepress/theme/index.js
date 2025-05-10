@@ -18,6 +18,8 @@ import "vitepress-markdown-timeline/dist/theme/index.css";
 // 指令
 // import directives from './utils/directives'
 
+// 自动锚点
+import { setupAutoAnchorOnScroll } from './functions'
 import './custom.css'
 
 // 工具函数导入
@@ -69,6 +71,9 @@ export default {
             
             // 初始化图片标题显示
             initImageTitles();
+
+            // 自动锚点
+            setupAutoAnchorOnScroll(frontmatter.value);
         });
         
         // 路由变化监听

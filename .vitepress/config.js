@@ -70,6 +70,10 @@ export default defineConfig({
             { text: '首页', link: '/' },
             { text: '标签', link: '/pages/tags' },
             { text: '工具', link: '/pages/site' },
+            { text: '回顾', items:[
+                { text: '2024', link: '/pages/2024' },
+                { text: '2023', link: '/pages/2023' },
+            ] },
             { text: '关于我', link: '/pages/about' },
         ],
         search: {
@@ -93,7 +97,8 @@ export default defineConfig({
             }
         },
         outline: {
-            label: '本页目录'
+            label: '本页目录',
+            level: [2, 3]
         },
         socialLinks: [
             { icon: 'github', link: 'https://github.com/yumengjh' },

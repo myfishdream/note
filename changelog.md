@@ -5,6 +5,11 @@ title: 更新历史
 # 更新历史
 
 ---
+::: timeline 2025-05-10
+- **自动锚点**
+- 添加自动锚点功能
+- 通过 `AutoAnchor: true` 在 frontmatter 中设置文章为自动锚点
+:::
 
 ::: timeline 2025-04-29
 - **全新主页样式**
