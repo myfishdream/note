@@ -6,13 +6,9 @@ tags:
     - JavaScript
 description: 从闭包到对象属性描述符，涵盖函数作用域、内存管理、对象属性控制等关键知识点。
 draft: false  
-outline: [2,3] 
 sticky: false 
-done: false   
 gridPaper: false 
 cbf: false 
-handwriting: false
-AutoAnchor: true
 ---
 
 # JavaScript 核心知识点小记 (上)

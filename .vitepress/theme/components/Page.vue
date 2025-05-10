@@ -35,7 +35,7 @@ let sentence = ref('(¬‿¬)今天也要加油鸭');
 
 const getSentence = () => {
   const defaultSentence = '(¬‿¬)今天也要加油鸭';
-  fetch('/api/sentence')
+  fetch('https://blog.yumeng.icu/api/sentence')
     .then(response => {
       if (!response.ok) {
         throw new Error('网络请求失败');

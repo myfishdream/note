@@ -543,6 +543,11 @@ function throttle(fn, delay) {
 export function setupAutoAnchorOnScroll(frontmatter) {
     if (typeof window === 'undefined' || frontmatter.AutoAnchor !== true) return () => {};
 
+    // 只在PC端生效
+    const isPC = () => {
+        return !/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
+    if (!isPC()) return () => {};
     const headingsSelector = '.vp-doc h2[id], .vp-doc h3[id]';
     const offset = 150; // 顶部导航栏高度
 
