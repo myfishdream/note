@@ -3,6 +3,18 @@ export default {
   defaultExpanded: false,
   items: [
     {
+      title: 'Cocos Creator',
+      desc: 'Cocos Creator 是一个开源的 2D/3D 游戏开发框架（引擎）',
+      link: 'https://www.cocos.com/creator',
+      linktxt: 'cocos.com',
+    },
+    {
+      title: 'Cocos Creator 文档',
+      desc: 'Cocos Creator 文档',
+      link: 'https://docs.cocos.com/creator/manual/zh/',
+      linktxt: 'docs.cocos.com',
+    },
+    {
       title:'Three.js',
       desc:'Three.js 是一个用于创建 3D 图形的 JavaScript 库',
       link:'https://threejs.org/',

@@ -3,10 +3,16 @@ export default {
   defaultExpanded: false,
   items: [
     {
-      title:'开发者路线图',
-      desc:'交互式路线图、指南和其他教育内容可帮助开发人员在职业生涯中成长。',
-      link:'https://github.com/kamranahmedse/developer-roadmap',
-      linktxt:'github.com/kamranahmedse/developer-roadmap',
+      title: 'Cocos Creator 论坛',
+      desc: 'Cocos Creator 论坛',
+      link: 'https://forum.cocos.org/',
+      linktxt: 'forum.cocos.org',
+    },
+    {
+      title: '开发者路线图',
+      desc: '交互式路线图、指南和其他教育内容可帮助开发人员在职业生涯中成长。',
+      link: 'https://github.com/kamranahmedse/developer-roadmap',
+      linktxt: 'github.com/kamranahmedse/developer-roadmap',
     },
     {
       title: 'Rust 语言圣经',
