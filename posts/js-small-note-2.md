@@ -13,6 +13,10 @@ AutoAnchor: true
 
 # JavaScript 核心知识点小记 (下)
 
+::: details 目录
+[[toc]]
+:::
+
 ## 异步操作
 
 ### 单线程模型

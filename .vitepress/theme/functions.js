@@ -537,7 +537,7 @@ function throttle(fn, delay) {
 }
 
 /**
- * 滚动时自动将最近的标题id同步到URL hash（节流优化+首次加载同步）
+ * 滚动时自动将最近的标题id同步到URL hash（节流优化）
  * 只有 frontmatter.AutoAnchor === true 时才启用
  */
 export function setupAutoAnchorOnScroll(frontmatter) {

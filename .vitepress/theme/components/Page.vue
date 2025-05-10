@@ -2,7 +2,7 @@
   <div>
     <div class="head">
       <h2>近期文章</h2>
-      <div @click="getSentence">{{ sentence }}</div>
+      <div @click="getSentence" class="sentence">{{ sentence }}</div>
     </div>
     <div v-for="(article, index) in posts" :key="index" class="post-row">
       <a class="post-title-link" :href="withBase(article.regularPath)" :title="article.frontMatter.description">{{
@@ -24,7 +24,9 @@
     </div>
   </div>
   <div class="footer">
-    <img no-zoomable src="https://count.getloli.com/@yumeng?name=yumeng&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" alt=":name" />
+    <img no-zoomable
+      src="https://count.getloli.com/@yumeng?name=yumeng&theme=rule34&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto"
+      alt="计数器" />
   </div>
 </template>
 
@@ -167,6 +169,10 @@ onMounted(() => {
 
   .head {
     font-size: 0.8rem;
+  }
+
+  .sentence {
+    display: none;
   }
 }
 </style>

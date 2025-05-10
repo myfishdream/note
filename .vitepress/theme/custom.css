@@ -85,6 +85,10 @@
 .custom-block.details {
     border-color: transparent !important;
     color: var(--vp-custom-block-details-border) !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid var(--vp-custom-block-details-border) !important;
+    border-top: 1px solid var(--vp-custom-block-details-border) !important;
 }
 
 .custom-block.important {
