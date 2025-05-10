@@ -12,6 +12,7 @@ done: false
 gridPaper: false 
 cbf: false 
 handwriting: false
+AutoAnchor: true
 ---
 
 # JavaScript 核心知识点小记 (上)

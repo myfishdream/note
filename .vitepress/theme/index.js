@@ -24,7 +24,7 @@ import './custom.css'
 
 // 工具函数导入
 import { useRoute, useData } from 'vitepress';
-import { onMounted, watch, nextTick } from 'vue';
+import { onMounted, watch, nextTick, onUnmounted } from 'vue';
 import { 
     initImages, 
     initZoom, 
@@ -45,6 +45,7 @@ export default {
     setup() {
         const route = useRoute();
         const { isDark, frontmatter } = useData();  // 使用 useData 获取主题状态和frontmatter
+        let removeAutoAnchor = null;    // 自动锚点解绑函数
         
         // 初始化代码块折叠功能
         codeblocksFold({ route, frontmatter }, true, 200);
@@ -57,6 +58,11 @@ export default {
             // 检查并更新格子纸背景相关样式
             setupGridPaperBg(frontmatter.value, isDark.value);
         });
+        
+        const initAutoAnchor = () => {
+            if (removeAutoAnchor) removeAutoAnchor();
+            removeAutoAnchor = setupAutoAnchorOnScroll(frontmatter.value);
+        };
         
         // 组件挂载后执行
         onMounted(() => {
@@ -73,7 +79,7 @@ export default {
             initImageTitles();
 
             // 自动锚点
-            setupAutoAnchorOnScroll(frontmatter.value);
+            initAutoAnchor();
         });
         
         // 路由变化监听
@@ -87,6 +93,7 @@ export default {
                 
                 // 重新初始化图片标题显示
                 initImageTitles();
+                initAutoAnchor();
             })
         );
         
@@ -95,8 +102,14 @@ export default {
             () => frontmatter.value,
             () => {
                 setupGridPaperBg(frontmatter.value, isDark.value);
+                initAutoAnchor();
             }
         );
+
+        // 离开页面时解绑
+        onUnmounted(() => {
+            if (removeAutoAnchor) removeAutoAnchor();
+        });
     }
 }
 

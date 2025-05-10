@@ -541,12 +541,11 @@ function throttle(fn, delay) {
  * 只有 frontmatter.AutoAnchor === true 时才启用
  */
 export function setupAutoAnchorOnScroll(frontmatter) {
-    if (typeof window === 'undefined' || frontmatter.AutoAnchor !== true) return;
+    if (typeof window === 'undefined' || frontmatter.AutoAnchor !== true) return () => {};
 
     const headingsSelector = '.vp-doc h2[id], .vp-doc h3[id]';
     const offset = 150; // 顶部导航栏高度
 
-    // 滚动时同步 hash
     const syncHash = throttle(() => {
         const headings = Array.from(document.querySelectorAll(headingsSelector));
         if (!headings.length) return;
@@ -563,7 +562,13 @@ export function setupAutoAnchorOnScroll(frontmatter) {
         if (currentId && location.hash !== '#' + currentId) {
             history.replaceState(null, '', '#' + currentId);
         }
-    }, 100); // 100ms 节流
+    }, 100);
 
     window.addEventListener('scroll', syncHash);
+
+    // 返回解绑函数
+    return () => {
+        window.removeEventListener('scroll', syncHash);
+    };
 }
+
