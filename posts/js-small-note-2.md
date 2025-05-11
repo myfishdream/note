@@ -9,7 +9,6 @@ draft: false
 sticky: false
 done: false
 AutoAnchor: true
-
 ---
 
 # JavaScript 核心知识点小记 (下)
@@ -1714,3 +1713,18 @@ el.replaceWith(span);
 上面代码中，`el`节点将被`span`节点替换。
 
 ### Document 节点
+
+#### 概述
+
+##### 快捷方式
+
+以下属性是指向文档内部的某个节点的快捷方式。
+
+**（1）document.defaultView**
+
+`document.defaultView`属性返回`document`对象所属的`window`对象。如果当前文档不属于`window`对象，该属性返回`null`。
+
+```js
+document.defaultView === window // true
+```
+

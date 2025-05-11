@@ -33,6 +33,10 @@ export default defineConfig({
     ignoreDeadLinks: true,
     lastUpdated: true,
     cleanUrls: true,
+    rewrites: {
+        // 'posts/:name': ':name',
+        'pages/:page': ':page',
+    },
     markdown: {
         theme: {
             light: 'vitesse-light',      // 浅色模式用的主题
@@ -52,12 +56,21 @@ export default defineConfig({
     },
     head: [
         ["link", { rel: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/feed.xml" }],  // 使浏览器能够自动发现 RSS 源
+        ['link', { rel: 'icon', href: '/favicon.ico' }],
+        ['meta', { name: 'author', content: 'YuMeng' }],
+        ['meta', { name: 'keywords', content: '博客,前端,JavaScript' }],
     ],
     themeConfig: {
         darkModeSwitchLabel: '主题',
         lightModeSwitchTitle: '浅色模式',
         darkModeSwitchTitle: '深色模式',
         returnToTopLabel: '返回顶部',
+        notFound: {
+            code: 404,
+            title: '页面不存在',
+            quote: '迷路了吗？让我们回到首页吧',
+            linkText: '返回首页',
+        },
         externalLinkIcon: false,
         lastUpdated: {
             text: '最后更新时间',
@@ -71,10 +84,12 @@ export default defineConfig({
             { text: '首页', link: '/' },
             { text: '标签', link: '/pages/tags' },
             { text: '工具', link: '/pages/site' },
-            { text: '回顾', items:[
-                { text: '2024', link: '/pages/2024' },
-                { text: '2023', link: '/pages/2023' },
-            ] },
+            {
+                text: '回顾', items: [
+                    { text: '2024', link: '/pages/2024' },
+                    { text: '2023', link: '/pages/2023' },
+                ]
+            },
             { text: '关于我', link: '/pages/about' },
         ],
         search: {
@@ -114,6 +129,16 @@ export default defineConfig({
     vite: {
         server: { port: 5000 },
         plugins: [RssPlugin(RSS)],
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks: {
+                        'vue': ['vue'],
+                        'vitepress': ['vitepress']
+                    }
+                }
+            }
+        },
         optimizeDeps: {
             exclude: [
                 'vitepress-plugin-rss'

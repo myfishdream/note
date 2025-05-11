@@ -30,7 +30,9 @@ export default {
       title:'商用免费字体',
       desc:'Free Font 收录商用免费字体，已收录 861 个全部字体',
       link:'https://font.ittools.cc/handwriting.html',
-      linktxt:'font.ittools.cc'
+      linktxt:'font.ittools.cc',
+      badge: '已失效',
+      badgeType: 'hot'
     },
     {
       title: "iconfont",
