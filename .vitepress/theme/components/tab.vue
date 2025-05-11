@@ -137,6 +137,7 @@ onMounted(async () => {
     sections.value = [
         { id: 'recent', title: '最近访问' },
         { id: 'common', title: '常用库' },
+        { id: 'blog', title: '博客' },
         { id: 'design', title: '设计' },
         { id: 'tools', title: '工具' },
         { id: 'dev', title: '开发' },
