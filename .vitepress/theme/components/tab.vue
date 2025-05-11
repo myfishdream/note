@@ -169,8 +169,8 @@ a {
 
 .tools {
     font-family: 'PingFang SC', 'Microsoft Yahei', sans-serif;
-    margin-bottom: 1rem;
-
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--vp-c-gray-soft);
     .h2 {
         margin: 24px 0 8px;
         padding: 24px 32px 0 0;
