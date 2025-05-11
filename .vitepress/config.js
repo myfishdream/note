@@ -129,16 +129,6 @@ export default defineConfig({
     vite: {
         server: { port: 5000 },
         plugins: [RssPlugin(RSS)],
-        build: {
-            rollupOptions: {
-                output: {
-                    manualChunks: {
-                        'vue': ['vue'],
-                        'vitepress': ['vitepress']
-                    }
-                }
-            }
-        },
         optimizeDeps: {
             exclude: [
                 'vitepress-plugin-rss'
