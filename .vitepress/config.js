@@ -24,6 +24,7 @@ const RSS = {
 }
 
 export default defineConfig({
+    lang: 'zh-CN',
     title: 'YuMeng',
     titleTemplate: ":title",
     base: '/',

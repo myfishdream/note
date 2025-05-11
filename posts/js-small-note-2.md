@@ -9,6 +9,7 @@ draft: false
 sticky: false
 done: false
 AutoAnchor: true
+
 ---
 
 # JavaScript 核心知识点小记 (下)
@@ -1409,6 +1410,307 @@ wrapper.childNodes.length // 1
 
 `Node.prototype.getRootNode()`方法返回当前节点所在文档的根节点`document`，与`ownerDocument`属性的作用相同。
 
-### NodeList 接口
+**NodeList 接口，HTMLCollection 接口**：
 
 节点都是单个对象，有时需要一种数据结构，能够容纳多个节点。DOM 提供两种节点集合，用于容纳多个节点：`NodeList`和`HTMLCollection`。
+
+这两种集合都属于接口规范。许多DOM属性和方法，返回的结果是`NodeList`实例或者`HTMLCollection`实例。
+
+主要区别是，`NodeList`可以包含各种类型的节点，`HTMLCollection`只能包含HTML元素节点。
+
+### NodeList 接口
+
+#### 概述
+
+`NodeList`实例是一个类似数组的对象，它的成员是节点对象。通过以下方法可以得到`NodeList`实例。
+
+- `Node.childNodes`
+- `document.querySelectorAll()`等节点搜索方法
+
+```js
+document.body.childNodes instanceof NodeList // true
+```
+
+`NodeList`实例很像数组，可以使用`length`属性和`forEach`方法。但是，它不是数组，不能使用`pop`或`push`之类数组特有的方法。
+
+如果`NodeList`实例要使用数组方法，可以将其转为真正的数组。
+
+```js
+var children = document.body.childNodes;
+var nodeArr = Array.prototype.slice.call(children);
+```
+
+除了使用`forEach`方法遍历 NodeList 实例，还可以使用`for`循环。
+
+```js
+var children = document.body.childNodes;
+
+for (var i = 0; i < children.length; i++) {
+  var item = children[i];
+}
+```
+
+注意，NodeList 实例可能是动态集合，也可能是静态集合。所谓动态集合就是一个活的集合，DOM 删除或新增一个相关节点，都会立刻反映在 NodeList 实例。
+
+目前，只有`Node.childNodes`返回的是一个动态集合，其他的 NodeList 都是静态集合。
+
+```js
+var children = document.body.childNodes;
+children.length // 18
+document.body.appendChild(document.createElement('p'));
+children.length // 19
+```
+
+上面代码中，文档增加一个子节点，NodeList 实例`children`的`length`属性就增加了1。
+
+#### length 
+
+`NodeList.prototype.length`属性返回 NodeList 实例包含的节点数量。
+
+#### forEach()
+
+`NodeList.prototype.forEach()`方法用于遍历 NodeList 的所有成员。它接受一个回调函数作为参数，每一轮遍历就执行一次这个回调函数，用法与数组实例的`forEach`方法完全一致。
+
+```js
+var children = document.body.childNodes;
+children.forEach(function f(item, i, list) {
+  // ...
+}, this);
+```
+
+上面代码中，回调函数`f`的三个参数依次是当前成员、位置和当前 NodeList 实例。`forEach`方法的第二个参数，用于绑定回调函数内部的`this`，该参数可省略。
+
+#### item()
+
+`NodeList.prototype.item()`方法接受一个整数值作为参数，表示成员的位置，返回该位置上的成员。
+
+```js
+document.body.childNodes.item(0)
+```
+
+如果参数值大于实际长度，或者索引不合法（比如负数），`item`方法返回`null`。如果省略参数，`item`方法会报错。
+
+所有类似数组的对象，都可以使用方括号运算符取出成员。一般情况下，都是使用方括号运算符，而不使用`item`方法。
+
+```js
+document.body.childNodes[0]
+```
+
+#### keys()
+
+#### values()
+
+#### entries()
+
+这三个方法都返回一个 ES6 的遍历器对象，可以通过`for...of`循环遍历获取每一个成员的信息。
+
+区别在于，`keys()`返回键名的遍历器，`values()`返回键值的遍历器，`entries()`返回的遍历器同时包含键名和键值的信息。
+
+```js
+var children = document.body.childNodes;
+
+for (var key of children.keys()) {
+  console.log(key);
+}
+// 0
+// 1
+// 2
+// ...
+
+for (var value of children.values()) {
+  console.log(value);
+}
+// #text
+// <script>
+// ...
+
+for (var entry of children.entries()) {
+  console.log(entry);
+}
+// Array [ 0, #text ]
+// Array [ 1, <script> ]
+// ...
+```
+
+### HTMLCollection 接口
+
+#### 概述
+
+`HTMLCollection`是一个节点对象的集合，只能包含元素节点（element），不能包含其他类型的节点。
+
+它的返回值是一个类似数组的对象，但是与`NodeList`接口不同，`HTMLCollection`没有`forEach`方法，只能使用`for`循环遍历。
+
+返回`HTMLCollection`实例的，主要是一些`Document`对象的集合属性，比如`document.links`、`document.forms`、`document.images`等。
+
+```js
+document.links instanceof HTMLCollection // true
+```
+
+`HTMLCollection`实例都是动态集合，节点的变化会实时反映在集合中。
+
+如果元素节点有`id`或`name`属性，那么`HTMLCollection`实例上面，可以使用`id`属性或`name`属性引用该节点元素。如果没有对应的节点，则返回`null`。
+
+```js
+// HTML 代码如下
+// <img id="pic" src="http://example.com/foo.jpg">
+
+var pic = document.getElementById('pic');
+document.images.pic === pic // true
+```
+
+上面代码中，`document.images`是一个`HTMLCollection`实例，可以通过`<img>`元素的`id`属性值，从`HTMLCollection`实例上取到这个元素。
+
+#### length()
+
+`HTMLCollection.prototype.length`属性返回`HTMLCollection`实例包含的成员数量。
+
+#### item()
+
+`HTMLCollection.prototype.item()`方法接受一个整数值作为参数，表示成员的位置，返回该位置上的成员。
+
+#### namedItem()
+
+`HTMLCollection.prototype.namedItem()`方法的参数是一个字符串，表示`id`属性或`name`属性的值，返回当前集合中对应的元素节点。如果没有对应的节点，则返回`null`。
+
+```js
+// HTML 代码如下
+// <img id="pic" src="http://example.com/foo.jpg">
+
+var pic = document.getElementById('pic');
+document.images.namedItem('pic') === pic // true
+```
+
+**ParentNode 接口，ChildNode 接口**：
+
+节点对象除了继承 Node 接口以外，还拥有其他接口。
+
+`ParentNode`接口表示当前节点是一个父节点，提供一些处理子节点的方法。`ChildNode`接口表示当前节点是一个子节点，提供一些相关方法。
+
+### ParentNode 接口
+
+如果当前节点是父节点，就会混入了（mixin）`ParentNode`接口。
+
+由于只有元素节点（element）、文档节点（document）和文档片段节点（documentFragment）拥有子节点，因此只有这三类节点会拥有`ParentNode`接口。
+
+#### ParentNode.children
+
+`children`属性返回一个`HTMLCollection`实例，成员是当前节点的**所有元素子节点**。该属性只读。
+
+下面是遍历某个节点的所有元素子节点的示例。
+
+```js
+for (var i = 0; i < el.children.length; i++) {
+  // ...
+}
+```
+
+注意，`children`属性只包括元素子节点，不包括其他类型的子节点（比如文本子节点）。如果没有元素类型的子节点，返回值`HTMLCollection`实例的`length`属性为`0`。
+
+另外，`HTMLCollection`是动态集合，会实时反映 DOM 的任何变化。
+
+#### ParentNode.firstElementChild
+
+`firstElementChild`属性返回当前节点的第一个元素子节点。如果没有任何元素子节点，则返回`null`。
+
+```js
+document.firstElementChild.nodeName
+// "HTML"
+```
+
+#### ParentNode.lastElementChild
+
+`lastElementChild`属性返回当前节点的最后一个元素子节点，如果不存在任何元素子节点，则返回`null`。
+
+#### ParentNode.childElementCount
+
+`childElementCount`属性返回一个整数，表示当前节点的所有元素子节点的数目。如果不包含任何元素子节点，则返回`0`。
+
+#### ParentNode.append()
+
+`append()`方法为当前节点追加一个或多个子节点，位置是最后一个元素子节点的后面，该方法没有返回值。
+
+该方法不仅可以添加元素子节点（参数为元素节点），还可以添加文本子节点（参数为字符串）。
+
+```js
+var parent = document.body;
+
+// 添加元素子节点
+var p = document.createElement('p');
+parent.append(p);
+
+// 添加文本子节点
+parent.append('Hello');
+
+// 添加多个元素子节点
+var p1 = document.createElement('p');
+var p2 = document.createElement('p');
+parent.append(p1, p2);
+
+// 添加元素子节点和文本子节点
+var p = document.createElement('p');
+parent.append('Hello', p);
+```
+
+注意，该方法与`Node.prototype.appendChild()`方法有三点不同。
+
+- `append()`允许字符串作为参数，`appendChild()`只允许子节点作为参数。
+- `append()`没有返回值，而`appendChild()`返回添加的子节点。
+- `append()`可以添加多个子节点和字符串（即允许多个参数），`appendChild()`只能添加一个节点（即只允许一个参数）。
+
+#### ParentNode.prepend()
+
+`prepend()`方法为当前节点追加一个或多个子节点，位置是第一个元素子节点的前面。它的用法与`append()`方法完全一致，也是没有返回值。
+
+### ChildNode 接口
+
+如果一个节点有父节点，那么该节点就拥有了ChildNode接口。
+
+#### ChildNode.remove()
+
+`remove()`方法用于从父节点移除当前节点。
+
+```js
+el.remove()
+```
+
+上面代码在 DOM 里面移除了`el`节点。
+
+#### ChildNode.before()
+
+`before()`方法用于在当前节点的前面，插入一个或多个同级节点。两者拥有相同的父节点。
+
+注意，该方法不仅可以插入元素节点，还可以插入文本节点。
+
+```js
+var p = document.createElement('p');
+var p1 = document.createElement('p');
+
+// 插入元素节点
+el.before(p);
+
+// 插入文本节点
+el.before('Hello');
+
+// 插入多个元素节点
+el.before(p, p1);
+
+// 插入元素节点和文本节点
+el.before(p, 'Hello');
+```
+
+#### ChildNode.after()
+
+`after()`方法用于在当前节点的后面，插入一个或多个同级节点，两者拥有相同的父节点。用法与`before`方法完全相同。
+
+#### ChildNode.replaceWith()
+
+`replaceWith()`方法使用参数节点，替换当前节点。参数可以是元素节点，也可以是文本节点。
+
+```js
+var span = document.createElement('span');
+el.replaceWith(span);
+```
+
+上面代码中，`el`节点将被`span`节点替换。
+
+### Document 节点
