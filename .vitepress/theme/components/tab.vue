@@ -140,7 +140,8 @@ onMounted(async () => {
         { id: 'tools', title: '工具' },
         { id: 'dev', title: '开发' },
         { id: 'ai', title: '大厂AI' },
-        { id: 'official', title: '常用官网' }
+        { id: 'official', title: '常用官网' },
+        { id: 'diversion', title: '娱乐' }
     ]
 
     // 设置初始折叠状态
