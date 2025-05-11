@@ -35,7 +35,7 @@ export default defineConfig({
     cleanUrls: true,
     rewrites: {
         // 'posts/:name': ':name',
-        'pages/:page': ':page',
+        // 'pages/:page': ':page',
     },
     markdown: {
         theme: {

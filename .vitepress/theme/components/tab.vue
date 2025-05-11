@@ -82,7 +82,8 @@ const loadSection = async (index) => {
     
     loadingSections.value[index] = true
     try {
-        const module = await import(`../../tools/${sections.value[index].id}.js`)
+        const modules = import.meta.glob('../../data/*.json')
+        const module = await modules[`../../data/${sections.value[index].id}.json`]()
         sections.value[index] = {
             ...sections.value[index],
             ...module.default

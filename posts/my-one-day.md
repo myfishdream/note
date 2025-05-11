@@ -28,3 +28,6 @@ aside: false
 ## 晚上
 晚上8点，终于把新需求搞定了。正准备收拾东西回家，突然发现测试环境崩了。我盯着屏幕看了半天，发现是数据库连接超时。重启服务后，一切恢复正常。回家的路上，我一直在想："今天是不是应该去买张彩票？"
 
+
+
+![author's logo](https://s21.ax1x.com/2025/02/15/pEKJAwF.png){title="作者的Logo" width="100" height="100" no-zoomable}
