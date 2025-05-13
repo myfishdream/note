@@ -3840,3 +3840,1395 @@ docFrag.appendChild(li);
 document.querySelector('ul').appendChild(docFrag);
 ```
 
+上面代码创建了一个`DocumentFragment`节点，然后将一个`li`节点添加在它里面，最后将`DocumentFragment`节点移动到原文档。
+
+**注意**，`DocumentFragment`节点本身不能被插入当前文档。当它作为`appendChild()`、`insertBefore()`、`replaceChild()`等方法的参数时，是它的所有子节点插入当前文档，而不是它自身。一旦`DocumentFragment`节点被添加进当前文档，它自身就变成了空节点（`textContent`属性为空字符串），可以被再次使用。
+
+如果想要保存`DocumentFragment`节点的内容，可以使用`cloneNode`方法。
+
+```js
+document
+  .querySelector('ul')
+  .appendChild(docFrag.cloneNode(true));
+```
+
+上面这样添加`DocumentFragment`节点进入当前文档，不会清空`DocumentFragment`节点。
+
+下面是一个例子，使用`DocumentFragment`反转一个指定节点的所有子节点的顺序。
+
+```js
+function reverse(n) {
+  var f = document.createDocumentFragment();
+  while(n.lastChild) f.appendChild(n.lastChild);
+  n.appendChild(f);
+}
+```
+
+`DocumentFragment`节点对象没有自己的属性和方法，全部继承自`Node`节点和`ParentNode`接口。也就是说，`DocumentFragment`节点比`Node`节点多出以下四个属性。
+
+- `children`：返回一个动态的`HTMLCollection`集合对象，包括当前`DocumentFragment`对象的所有子元素节点。
+- `firstElementChild`：返回当前`DocumentFragment`对象的第一个子元素节点，如果没有则返回`null`。
+- `lastElementChild`：返回当前`DocumentFragment`对象的最后一个子元素节点，如果没有则返回`null`。
+- `childElementCount`：返回当前`DocumentFragment`对象的所有子元素数量。
+
+### CSS 操作
+
+CSS 与 JavaScript 是两个有着明确分工的领域，前者负责页面的视觉效果，后者负责与用户的行为互动。但是，它们毕竟同属网页开发的前端，因此不可避免有着交叉和互相配合。
+
+#### HTML 元素的 style 属性
+
+操作 CSS 样式最简单的方法，就是使用网页元素节点的`getAttribute()`方法、`setAttribute()`方法和`removeAttribute()`方法，直接读写或删除网页元素的`style`属性。
+
+```js
+div.setAttribute(
+  'style',
+  'background-color:red;' + 'border:1px solid black;'
+);
+```
+
+上面的代码相当于下面的 HTML 代码。
+
+```js
+<div style="background-color:red; border:1px solid black;" />
+```
+
+#### CSSStyleDeclaration 接口
+
+##### 简介
+
+CSSStyleDeclaration 接口用来操作元素的样式。三个地方部署了这个接口。
+
+- 元素节点的`style`属性（`Element.style`）
+- `CSSStyle`实例的`style`属性
+- `window.getComputedStyle()`的返回值
+
+CSSStyleDeclaration 接口可以直接读写 CSS 的样式属性，不过，连词号需要变成骆驼拼写法。
+
+```js
+var divStyle = document.querySelector('div').style;
+
+divStyle.backgroundColor = 'red';
+divStyle.border = '1px solid black';
+divStyle.width = '100px';
+divStyle.height = '100px';
+divStyle.fontSize = '10em';
+
+divStyle.backgroundColor // red
+divStyle.border // 1px solid black
+divStyle.height // 100px
+divStyle.width // 100px
+```
+
+上面代码中，`style`属性的值是一个 CSSStyleDeclaration 实例。
+
+这个对象所包含的属性与 CSS 规则一一对应，但是名字需要改写，比如`background-color`写成`backgroundColor`。
+
+改写的规则是将横杠从 CSS 属性名中去除，然后将横杠后的第一个字母大写。如果 CSS 属性名是 JavaScript 保留字，则规则名之前需要加上字符串`css`，比如`float`写成`cssFloat`。
+
+注意，该对象的属性值都是字符串，设置时必须包括单位，但是不含规则结尾的分号。比如，`divStyle.width`不能写为`100`，而要写为`100px`。
+
+另外，`Element.style`返回的只是行内样式，并不是该元素的全部样式。
+
+通过样式表设置的样式，或者从父元素继承的样式，无法通过这个属性得到。元素的全部样式要通过`window.getComputedStyle()`得到。
+
+##### 实例属性
+
+###### **（1）CSSStyleDeclaration.cssText**
+
+`CSSStyleDeclaration.cssText`属性用来读写当前规则的所有样式声明文本。
+
+```js
+var divStyle = document.querySelector('div').style;
+
+divStyle.cssText = 'background-color: red;'
+  + 'border: 1px solid black;'
+  + 'height: 100px;'
+  + 'width: 100px;';
+```
+
+注意，`cssText`的属性值不用改写 CSS 属性名。
+
+删除一个元素的所有行内样式，最简便的方法就是设置`cssText`为空字符串。
+
+```js
+divStyle.cssText = '';
+```
+
+###### （2）CSSStyleDeclaration.length
+
+`CSSStyleDeclaration.length`属性返回一个整数值，表示当前规则包含多少条样式声明。
+
+```js
+// HTML 代码如下
+// <div id="myDiv"
+//   style="height: 1px;width: 100%;background-color: #CA1;"
+// ></div>
+var myDiv = document.getElementById('myDiv');
+var divStyle = myDiv.style;
+divStyle.length // 3
+```
+
+###### （3）CSSStyleDeclaration.parentRule
+
+CSSStyleDeclaration.parentRule属性返回当前规则所属的那个样式块（CSSRule 实例）。如果不存在所属的样式块，该属性返回null。
+
+该属性只读，且只在使用 CSSRule 接口时有意义。
+
+##### 实例方法
+
+###### **（1）CSSStyleDeclaration.getPropertyPriority()**
+
+`CSSStyleDeclaration.getPropertyPriority`方法接受 CSS 样式的属性名作为参数，返回一个字符串，表示有没有设置`important`优先级。如果有就返回`important`，否则返回空字符串。
+
+```js
+// HTML 代码为
+// <div id="myDiv" style="margin: 10px!important; color: red;"/>
+var style = document.getElementById('myDiv').style;
+style.margin // "10px"
+style.getPropertyPriority('margin') // "important"
+style.getPropertyPriority('color') // ""
+```
+
+###### （2）CSSStyleDeclaration.getPropertyValue()
+
+`CSSStyleDeclaration.getPropertyValue`方法接受 CSS 样式属性名作为参数，返回一个字符串，表示该属性的属性值。
+
+```js
+// HTML 代码为
+// <div id="myDiv" style="margin: 10px!important; color: red;"/>
+var style = document.getElementById('myDiv').style;
+style.margin // "10px"
+style.getPropertyValue("margin") // "10px"
+```
+
+###### **（3）CSSStyleDeclaration.item()**
+
+`CSSStyleDeclaration.item`方法接受一个整数值作为参数，返回该位置的 CSS 属性名。
+
+```js
+// HTML 代码为
+// <div id="myDiv" style="color: red; background-color: white;"/>
+var style = document.getElementById('myDiv').style;
+style.item(0) // "color"
+style.item(1) // "background-color"
+```
+
+###### （4）CSSStyleDeclaration.removeProperty()
+
+`CSSStyleDeclaration.removeProperty`方法接受一个属性名作为参数，在 CSS 规则里面移除这个属性，返回这个属性原来的值。
+
+```js
+// HTML 代码为
+// <div id="myDiv" style="color: red; background-color: white;">
+//   111
+// </div>
+var style = document.getElementById('myDiv').style;
+style.removeProperty('color') // 'red'
+// HTML 代码变为
+// <div id="myDiv" style="background-color: white;">
+```
+
+###### （5）CSSStyleDeclaration.setProperty()
+
+`CSSStyleDeclaration.setProperty`方法用来设置新的 CSS 属性。该方法没有返回值。
+
+该方法可以接受三个参数。
+
+- 第一个参数：属性名，该参数是必需的。
+- 第二个参数：属性值，该参数可选。如果省略，则参数值默认为空字符串。
+- 第三个参数：优先级，该参数可选。如果设置，唯一的合法值是`important`，表示 CSS 规则里面的`!important`。
+
+```js
+// HTML 代码为
+// <div id="myDiv" style="color: red; background-color: white;">
+//   111
+// </div>
+var style = document.getElementById('myDiv').style;
+style.setProperty('border', '1px solid blue');
+```
+
+#### CSS 模块的侦测
+
+CSS 的规格发展太快，新的模块层出不穷。不同浏览器的不同版本，对 CSS 模块的支持情况都不一样。有时候，需要知道**当前浏览器是否支持某个模块，这就叫做“CSS模块的侦测”。**
+
+一个比较普遍适用的方法是，判断元素的`style`对象的某个属性值是否为字符串。
+
+```js
+typeof element.style.animationName === 'string';
+typeof element.style.transform === 'string';
+```
+
+如果该 CSS 属性确实存在，会返回一个字符串。即使该属性实际上并未设置，也会返回一个空字符串。如果该属性不存在，则会返回`undefined`。
+
+```js
+document.body.style['maxWidth'] // ""
+document.body.style['maximumWidth'] // undefined
+```
+
+另外，使用的时候，需要把不同浏览器的 CSS 前缀也考虑进去。
+
+```js
+var content = document.getElementById('content');
+typeof content.style['webkitAnimation'] === 'string'
+```
+
+封装函数
+
+```js
+function isPropertySupported(property) {
+  if (property in document.body.style) return true;
+  var prefixes = ['Moz', 'Webkit', 'O', 'ms', 'Khtml'];
+  var prefProperty = property.charAt(0).toUpperCase() + property.substr(1);
+
+  for(var i = 0; i < prefixes.length; i++){
+    if((prefixes[i] + prefProperty) in document.body.style) return true;
+  }
+
+  return false;
+}
+
+isPropertySupported('background-clip')
+// true
+```
+
+### CSS 对象
+
+浏览器原生提供 CSS 对象，为 JavaScript 操作 CSS 提供一些工具方法。
+
+这个对象目前有两个静态方法。
+
+#### CSS.escape()
+
+`CSS.escape`方法用于转义 CSS 选择器里面的特殊字符。
+
+```html
+<div id="foo#bar">
+```
+
+上面代码中，该元素的`id`属性包含一个`#`号，该字符在 CSS 选择器里面有特殊含义。不能直接写成`document.querySelector('#foo#bar')`，只能写成`document.querySelector('#foo\\#bar')`。这里必须使用双斜杠的原因是，单引号字符串本身会转义一次斜杠。
+
+`CSS.escape`方法就用来转义那些特殊字符。
+
+```js
+document.querySelector('#' + CSS.escape('foo#bar'))
+```
+
+#### CSS.supports()
+
+`CSS.supports`方法返回一个布尔值，表示当前环境是否支持某一句 CSS 规则。
+
+它的参数有两种写法，一种是第一个参数是属性名，第二个参数是属性值；另一种是整个参数就是一行完整的 CSS 语句。
+
+```js
+// 第一种写法
+CSS.supports('transform-origin', '5px') // true
+
+// 第二种写法
+CSS.supports('display: table-cell') // true
+```
+
+注意，第二种写法的参数结尾不能带有分号，否则结果不准确。
+
+```js
+CSS.supports('display: table-cell;') // false
+```
+
+### window.getComputedStyle()
+
+行内样式（inline style）具有最高的优先级，改变行内样式，通常会立即反映出来。
+
+但是，网页元素最终的样式是综合各种规则计算出来的。因此，如果想得到元素实际的样式，只读取行内样式是不够的，需要得到浏览器最终计算出来的样式规则。
+
+`window.getComputedStyle()`方法，就用来返回浏览器计算后得到的最终规则。
+
+它接受一个节点对象作为参数，返回一个 CSSStyleDeclaration 实例，包含了指定节点的最终样式信息。所谓“最终样式信息”，指的是各种 CSS 规则叠加后的结果。
+
+```js
+var div = document.querySelector('div');
+var styleObj = window.getComputedStyle(div);
+styleObj.backgroundColor
+```
+
+上面代码中，得到的背景色就是`div`元素真正的背景色。
+
+注意，CSSStyleDeclaration 实例是一个活的对象，任何对于样式的修改，会实时反映到这个实例上面。另外，这个实例是只读的。
+
+`getComputedStyle`方法还可以接受第二个参数，表示当前元素的伪元素（比如`:before`、`:after`、`:first-line`、`:first-letter`等）。
+
+```js
+var result = window.getComputedStyle(div, ':before');
+```
+
+下面的例子是如何获取元素的高度。
+
+```js
+var elem = document.getElementById('elem-container');
+var styleObj = window.getComputedStyle(elem, null)
+var height = styleObj.height;
+// 等同于
+var height = styleObj['height'];
+var height = styleObj.getPropertyValue('height');
+```
+
+上面代码得到的`height`属性，是浏览器最终渲染出来的高度，比其他方法得到的高度更可靠。
+
+由于`styleObj`是 CSSStyleDeclaration 实例，所以可以使用各种 CSSStyleDeclaration 的实例属性和方法。
+
+有几点需要注意。
+
+- CSSStyleDeclaration 实例返回的 CSS 值都是绝对单位。比如，长度都是像素单位（返回值包括`px`后缀），颜色是`rgb(#, #, #)`或`rgba(#, #, #, #)`格式。
+- CSS 规则的简写形式无效。比如，想读取`margin`属性的值，不能直接读，只能读`marginLeft`、`marginTop`等属性；再比如，`font`属性也是不能直接读的，只能读`font-size`等单个属性。
+- 如果读取 CSS 原始的属性名，要用方括号运算符，比如`styleObj['z-index']`；如果读取骆驼拼写法的 CSS 属性名，可以直接读取`styleObj.zIndex`。
+- 该方法返回的 CSSStyleDeclaration 实例的`cssText`属性总是返回空字符串。
+
+### CSS 伪元素
+
+CSS 伪元素是通过 CSS 向 DOM 添加的元素，主要是通过`:before`和`:after`选择器生成，然后用`content`属性指定伪元素的内容。
+
+```html
+<div id="test">Test content</div>
+```
+
+```css
+#test:before {
+    content: 'Before ';
+    color: #FF0;
+}
+```
+
+节点元素的`style`对象无法读写伪元素的样式，这时就要用到`window.getComputedStyle()`。JavaScript 获取伪元素，可以使用下面的方法。
+
+```js
+var test = document.querySelector('#test');
+
+var result = window.getComputedStyle(test, ':before').content;
+var color = window.getComputedStyle(test, ':before').color;
+```
+
+此外，也可以使用 CSSStyleDeclaration 实例的`getPropertyValue`方法，获取伪元素的属性
+
+```js
+var result = window.getComputedStyle(test, ':before')
+.getPropertyValue('content');
+var color = window.getComputedStyle(test, ':before')
+.getPropertyValue('color');
+```
+
+### StyleSheet 接口
+
+#### 概述
+
+`StyleSheet`接口代表网页的一张样式表，包括`<link>`元素加载的样式表和`<style>`元素内嵌的样式表。
+
+`document`对象的`styleSheets`属性，可以返回当前页面的所有`StyleSheet`实例（即所有样式表）。它是一个类似数组的对象。
+
+```js
+var sheets = document.styleSheets;
+var sheet = document.styleSheets[0];
+sheet instanceof StyleSheet // true
+```
+
+如果是`<style>`元素嵌入的样式表，还有另一种获取`StyleSheet`实例的方法，就是这个节点元素的`sheet`属性。
+
+```js
+// HTML 代码为 <style id="myStyle"></style>
+var myStyleSheet = document.getElementById('myStyle').sheet;
+myStyleSheet instanceof StyleSheet // true
+```
+
+严格地说，`StyleSheet`接口不仅包括网页样式表，还包括 XML 文档的样式表。
+
+所以，它有一个子类`CSSStyleSheet`表示网页的 CSS 样式表。我们在网页里面拿到的样式表实例，实际上是`CSSStyleSheet`的实例。
+
+这个子接口继承了`StyleSheet`的所有属性和方法，并且定义了几个自己的属性，下面把这两个接口放在一起介绍。
+
+#### 实例属性
+
+`StyleSheet`实例有以下属性。
+
+##### （1）StyleSheet.disabled
+
+`StyleSheet.disabled`返回一个布尔值，表示该样式表是否处于禁用状态。手动设置`disabled`属性为`true`，等同于在`<link>`元素里面，将这张样式表设为`alternate stylesheet`，即该样式表将不会生效。
+
+##### （2）StyleSheet.href
+
+`StyleSheet.href`返回样式表的网址。对于内嵌样式表，该属性返回`null`。该属性只读。
+
+```js
+document.styleSheets[0].href
+```
+
+##### （3）StyleSheet.media
+
+`StyleSheet.media`属性返回一个类似数组的对象（`MediaList`实例），成员是表示适用媒介的字符串。
+
+表示当前样式表是用于屏幕（screen），还是用于打印（print）或手持设备（handheld），或各种媒介都适用（all）。该属性只读，默认值是`screen`。
+
+```js
+document.styleSheets[0].media.mediaText
+// "all"
+```
+
+`MediaList`实例的`appendMedium`方法，用于增加媒介；`deleteMedium`方法用于删除媒介。
+
+```js
+document.styleSheets[0].media.appendMedium('handheld');
+document.styleSheets[0].media.deleteMedium('print');
+```
+
+##### （4）StyleSheet.title
+
+`StyleSheet.title`属性返回样式表的`title`属性。
+
+##### （5）StyleSheet.type
+
+`StyleSheet.type`属性返回样式表的`type`属性，通常是`text/css`。
+
+```js
+document.styleSheets[0].type  // "text/css"
+```
+
+##### （6）StyleSheet.parentStyleSheet
+
+CSS 的`@import`命令允许在样式表中加载其他样式表。`StyleSheet.parentStyleSheet`属性返回包含了当前样式表的那张样式表。如果当前样式表是顶层样式表，则该属性返回`null`。
+
+```js
+if (stylesheet.parentStyleSheet) {
+  sheet = stylesheet.parentStyleSheet;
+} else {
+  sheet = stylesheet;
+}
+```
+
+##### （7）StyleSheet.ownerNode
+
+`StyleSheet.ownerNode`属性返回`StyleSheet`对象所在的 DOM 节点，通常是`<link>`或`<style>`。对于那些由其他样式表引用的样式表，该属性为`null`。
+
+```js
+// HTML代码为
+// <link rel="StyleSheet" href="example.css" type="text/css" />
+document.styleSheets[0].ownerNode
+// <link rel="stylesheet" href="xxx.css">
+```
+
+##### （8）CSSStyleSheet.cssRules
+
+`CSSStyleSheet.cssRules`属性指向一个类似数组的对象（`CSSRuleList`实例），里面每一个成员就是当前样式表的一条 CSS 规则。使用该规则的`cssText`属性，可以得到 CSS 规则对应的字符串。
+
+```js
+var sheet = document.querySelector('#styleElement').sheet;
+
+sheet.cssRules[0].cssText
+// "body { background-color: red; margin: 20px; }"
+
+sheet.cssRules[1].cssText
+// "p { line-height: 1.4em; color: blue; }"
+```
+
+每条 CSS 规则还有一个`style`属性，指向一个对象，用来读写具体的 CSS 命令。
+
+```js
+cssStyleSheet.cssRules[0].style.color = 'red';
+cssStyleSheet.cssRules[1].style.color = 'purple';
+```
+
+##### （9）CSSStyleSheet.ownerRule
+
+有些样式表是通过`@import`规则输入的，它的`ownerRule`属性会返回一个`CSSRule`实例，代表那行`@import`规则。如果当前样式表不是通过`@import`引入的，`ownerRule`属性返回`null`。
+
+#### 实例方法
+
+##### **（1）CSSStyleSheet.insertRule()**
+
+`CSSStyleSheet.insertRule`方法用于在当前样式表的插入一个新的 CSS 规则。
+
+```js
+var sheet = document.querySelector('#styleElement').sheet;
+sheet.insertRule('#block { color: white }', 0);
+sheet.insertRule('p { color: red }', 1);
+```
+
+该方法可以接受两个参数，第一个参数是表示 CSS 规则的字符串，这里只能有一条规则，否则会报错。第二个参数是该规则在样式表的插入位置（从0开始），该参数可选，默认为0（即默认插在样式表的头部）。注意，如果插入位置大于现有规则的数目，会报错。
+
+该方法的返回值是新插入规则的位置序号。
+
+**注意**，浏览器对脚本在样式表里面插入规则有很多[限制](https://drafts.csswg.org/cssom/#insert-a-css-rule)。所以，这个方法最好放在`try...catch`里使用。
+
+##### （2）CSSStyleSheet.deleteRule()
+
+`CSSStyleSheet.deleteRule`方法用来在样式表里面移除一条规则，它的参数是该条规则在`cssRules`对象中的位置。该方法没有返回值。
+
+```js
+document.styleSheets[0].deleteRule(1);
+```
+
+### 实例：添加样式表
+
+网页添加样式表有两种方式。一种是添加一张内置样式表，即在文档中添加一个`<style>`节点。
+
+```js
+// 写法一
+var style = document.createElement('style');
+style.setAttribute('media', 'screen');
+style.innerHTML = 'body{color:red}';
+document.head.appendChild(style);
+
+// 写法二
+var style = (function () {
+  var style = document.createElement('style');
+  document.head.appendChild(style);
+  return style;
+})();
+style.sheet.insertRule('.foo{color:red;}', 0);
+```
+
+另一种是添加外部样式表，即在文档中添加一个`<link>`节点，然后将`href`属性指向外部样式表的 URL。
+
+```js
+var linkElm = document.createElement('link');
+linkElm.setAttribute('rel', 'stylesheet');
+linkElm.setAttribute('type', 'text/css');
+linkElm.setAttribute('href', 'reset-min.css');
+
+document.head.appendChild(linkElm);
+```
+
+### CSSRuleList 接口
+
+CSSRuleList 接口是一个类似数组的对象，表示一组 CSS 规则，成员都是 CSSRule 实例。
+
+获取 CSSRuleList 实例，一般是通过`StyleSheet.cssRules`属性。
+
+```js
+// HTML 代码如下
+// <style id="myStyle">
+//   h1 { color: red; }
+//   p { color: blue; }
+// </style>
+var myStyleSheet = document.getElementById('myStyle').sheet;
+var crl = myStyleSheet.cssRules;
+crl instanceof CSSRuleList // true
+```
+
+CSSRuleList 实例里面，每一条规则（CSSRule 实例）可以通过`rules.item(index)`或者`rules[index]`拿到。CSS 规则的条数通过`rules.length`拿到。还是用上面的例子。
+
+```js
+crl[0] instanceof CSSRule // true
+crl.length // 2
+```
+
+注意，添加规则和删除规则不能在 CSSRuleList 实例操作，而要在它的父元素 StyleSheet 实例上，通过`StyleSheet.insertRule()`和`StyleSheet.deleteRule()`操作。
+
+### CSSRule 接口
+
+#### 概述
+
+一条 CSS 规则包括两个部分：CSS 选择器和样式声明。下面就是一条典型的 CSS 规则。
+
+```css
+.myClass {
+  color: red;
+  background-color: yellow;
+}
+```
+
+JavaScript 通过 CSSRule 接口操作 CSS 规则。一般通过 CSSRuleList 接口（`StyleSheet.cssRules`）获取 CSSRule 实例。
+
+```js
+// HTML 代码如下
+// <style id="myStyle">
+//   .myClass {
+//     color: red;
+//     background-color: yellow;
+//   }
+// </style>
+var myStyleSheet = document.getElementById('myStyle').sheet;
+var ruleList = myStyleSheet.cssRules;
+var rule = ruleList[0];
+rule instanceof CSSRule // true
+```
+
+#### CSSRule 实例的属性
+
+##### （1）CSSRule.cssText
+
+`CSSRule.cssText`属性返回当前规则的文本，还是使用上面的例子。
+
+```js
+rule.cssText
+// ".myClass { color: red; background-color: yellow; }"
+```
+
+如果规则是加载（`@import`）其他样式表，`cssText`属性返回`@import 'url'`。
+
+##### （2）CSSRule.parentStyleSheet
+
+`CSSRule.parentStyleSheet`属性返回当前规则所在的样式表对象（StyleSheet 实例），还是使用上面的例子。
+
+```js
+rule.parentStyleSheet === myStyleSheet // true
+```
+
+##### **（3）CSSRule.parentRule**
+
+`CSSRule.parentRule`属性返回包含当前规则的父规则，如果不存在父规则（即当前规则是顶层规则），则返回`null`。
+
+父规则最常见的情况是，当前规则包含在`@media`规则代码块之中。
+
+```js
+// HTML 代码如下
+// <style id="myStyle">
+//   @supports (display: flex) {
+//     @media screen and (min-width: 900px) {
+//       article {
+//         display: flex;
+//       }
+//     }
+//  }
+// </style>
+var myStyleSheet = document.getElementById('myStyle').sheet;
+var ruleList = myStyleSheet.cssRules;
+
+var rule0 = ruleList[0];
+rule0.cssText
+// "@supports (display: flex) {
+//    @media screen and (min-width: 900px) {
+//      article { display: flex; }
+//    }
+// }"
+
+// 由于这条规则内嵌其他规则，
+// 所以它有 cssRules 属性，且该属性是 CSSRuleList 实例
+rule0.cssRules instanceof CSSRuleList // true
+
+var rule1 = rule0.cssRules[0];
+rule1.cssText
+// "@media screen and (min-width: 900px) {
+//   article { display: flex; }
+// }"
+
+var rule2 = rule1.cssRules[0];
+rule2.cssText
+// "article { display: flex; }"
+
+rule1.parentRule === rule0 // true
+rule2.parentRule === rule1 // true
+```
+
+##### **（4）CSSRule.type**
+
+`CSSRule.type`属性返回一个整数值，表示当前规则的类型。
+
+最常见的类型有以下几种。
+
+- 1：普通样式规则（CSSStyleRule 实例）
+- 3：`@import`规则
+- 4：`@media`规则（CSSMediaRule 实例）
+- 5：`@font-face`规则
+
+#### CSSStyleRule 接口
+
+如果一条 CSS 规则是普通的样式规则（不含特殊的 CSS 命令），那么除了 CSSRule 接口，它还部署了 CSSStyleRule 接口。
+
+CSSStyleRule 接口有以下两个属性。
+
+##### **（1）CSSStyleRule.selectorText**
+
+`CSSStyleRule.selectorText`属性返回当前规则的选择器（可写）。
+
+```js
+var stylesheet = document.styleSheets[0];
+stylesheet.cssRules[0].selectorText // ".myClass"
+```
+
+##### **（2）CSSStyleRule.style**
+
+`CSSStyleRule.style`属性返回一个对象（CSSStyleDeclaration 实例），代表当前规则的样式声明，也就是选择器后面的大括号里面的部分。
+
+```js
+// HTML 代码为
+// <style id="myStyle">
+//   p { color: red; }
+// </style>
+var styleSheet = document.getElementById('myStyle').sheet;
+styleSheet.cssRules[0].style instanceof CSSStyleDeclaration
+// true
+```
+
+CSSStyleDeclaration 实例的`cssText`属性，可以返回所有样式声明，格式为字符串。
+
+```js
+styleSheet.cssRules[0].style.cssText
+// "color: red;"
+styleSheet.cssRules[0].selectorText
+// "p"
+```
+
+#### CSSMediaRule 接口
+
+如果一条 CSS 规则是`@media`代码块，那么它除了 CSSRule 接口，还部署了 CSSMediaRule 接口。
+
+该接口主要提供`media`属性和`conditionText`属性。前者返回代表`@media`规则的一个对象（MediaList 实例），后者返回`@media`规则的生效条件。
+
+### window.matchMedia()
+
+#### 基本用法 
+
+`window.matchMedia()`方法用来将 CSS 的[`Media Query`](https://developer.mozilla.org/en-US/docs/DOM/Using_media_queries_from_code)条件语句，转换成一个 MediaQueryList 实例。
+
+```js
+var mdl = window.matchMedia('(min-width: 400px)');
+mdl instanceof MediaQueryList // true
+```
+
+上面代码中，变量`mdl`就是 mediaQueryList 的实例。
+
+注意，如果参数不是有效的`MediaQuery`条件语句，`window.matchMedia`不会报错，依然返回一个 MediaQueryList 实例。
+
+```js
+window.matchMedia('bad string') instanceof MediaQueryList // true
+```
+
+#### MediaQueryList 接口的实例属性
+
+##### **（1）MediaQueryList.media**
+
+`MediaQueryList.media`属性返回一个字符串，表示对应的 MediaQuery 条件语句。
+
+```js
+var mql = window.matchMedia('(min-width: 400px)');
+mql.media // "(min-width: 400px)"
+```
+
+##### **（2）MediaQueryList.matches**
+
+`MediaQueryList.matches`属性返回一个布尔值，表示当前页面是否符合指定的 MediaQuery 条件语句。
+
+```js
+if (window.matchMedia('(min-width: 400px)').matches) {
+  /* 当前视口不小于 400 像素 */
+} else {
+  /* 当前视口小于 400 像素 */
+}
+```
+
+下面的例子根据`mediaQuery`是否匹配当前环境，加载相应的 CSS 样式表。
+
+```js
+var result = window.matchMedia("(max-width: 700px)");
+
+if (result.matches){
+  var linkElm = document.createElement('link');
+  linkElm.setAttribute('rel', 'stylesheet');
+  linkElm.setAttribute('type', 'text/css');
+  linkElm.setAttribute('href', 'small.css');
+
+  document.head.appendChild(linkElm);
+}
+```
+
+##### **（3）MediaQueryList.onchange**
+
+如果 MediaQuery 条件语句的适配环境发生变化，会触发`change`事件。`MediaQueryList.onchange`属性用来指定`change`事件的监听函数。
+
+该函数的参数是`change`事件对象（MediaQueryListEvent 实例），该对象与 MediaQueryList 实例类似，也有`media`和`matches`属性。
+
+```js
+var mql = window.matchMedia('(max-width: 600px)');
+
+mql.onchange = function(e) {
+  if (e.matches) {
+    /* 视口不超过 600 像素 */
+  } else {
+    /* 视口超过 600 像素 */
+  }
+}
+```
+
+上面代码中，`change`事件发生后，存在两种可能。一种是显示宽度从600像素以上变为以下，另一种是从600像素以下变为以上，所以在监听函数内部要判断一下当前是哪一种情况。
+
+#### MediaQueryList 接口的实例方法
+
+MediaQueryList 实例有两个方法`MediaQueryList.addListener()`和`MediaQueryList.removeListener()`，用来为`change`事件添加或撤销监听函数。
+
+```js
+var mql = window.matchMedia('(max-width: 600px)');
+
+// 指定监听函数
+mql.addListener(mqCallback);
+
+// 撤销监听函数
+mql.removeListener(mqCallback);
+
+function mqCallback(e) {
+  if (e.matches) {
+    /* 视口不超过 600 像素 */
+  } else {
+    /* 视口超过 600 像素 */
+  }
+}
+```
+
+**注意**，`MediaQueryList.removeListener()`方法不能撤销`MediaQueryList.onchange`属性指定的监听函数。
+
+### Mutation Observer API
+
+#### 概述
+
+Mutation Observer API 用来监视 DOM 变动。DOM 的任何变动，比如节点的增减、属性的变动、文本内容的变动，这个 API 都可以得到通知。
+
+概念上，它很接近事件，可以理解为 DOM 发生变动就会触发 Mutation Observer 事件。但是，它与事件有一个本质不同：**事件是同步触发**，也就是说，DOM 的变动立刻会触发相应的事件；**Mutation Observer 则是异步触发**，DOM 的变动并不会马上触发，而是要等到当前所有 DOM 操作都结束才触发。
+
+这样设计是为了应付 DOM 变动频繁的特点。举例来说，如果文档中连续插入1000个`<p>`元素，就会连续触发1000个插入事件，执行每个事件的回调函数，这很可能造成浏览器的卡顿；
+
+而 Mutation Observer 完全不同，只在1000个段落都插入结束后才会触发，而且只触发一次。
+
+Mutation Observer 有以下特点。
+
+- 它等待所有脚本任务完成后，才会运行（即异步触发方式）。
+- 它把 DOM 变动记录封装成一个数组进行处理，而不是一条条个别处理 DOM 变动。
+- 它既可以观察 DOM 的所有类型变动，也可以指定只观察某一类变动。
+
+#### 构造函数
+
+使用时，首先使用`MutationObserver`构造函数，新建一个观察器实例，同时指定这个实例的回调函数。
+
+```js
+var observer = new MutationObserver(callback);
+```
+
+上面代码中的回调函数，会在每次 DOM 变动后调用。该回调函数接受两个参数，第一个是变动数组，第二个是观察器实例，下面是一个例子。
+
+```js
+var observer = new MutationObserver(function (mutations, observer) {
+  mutations.forEach(function(mutation) {
+    console.log(mutation);
+  });
+});
+```
+
+#### 实例方法
+
+##### observe()
+
+`observe()`方法用来启动监听，它接受两个参数。
+
+- 第一个参数：所要观察的 DOM 节点
+- 第二个参数：一个配置对象，指定所要观察的特定变动
+
+```js
+var article = document.querySelector('article');
+
+var options = {
+  'childList': true,
+  'attributes':true
+} ;
+
+observer.observe(article, options);
+```
+
+上面代码中，`observe()`方法接受两个参数，第一个是所要观察的DOM元素是`article`，第二个是所要观察的变动类型（子节点变动和属性变动）。
+
+观察器所能观察的 DOM 变动类型（即上面代码的`options`对象），有以下几种。
+
+- **childList**：子节点的变动（指新增，删除或者更改）。
+- **attributes**：属性的变动。
+- **characterData**：节点内容或节点文本的变动。
+
+想要观察哪一种变动类型，就在`option`对象中指定它的值为`true`。需要注意的是，至少必须同时指定这三种观察的一种，若均未指定将报错。
+
+除了变动类型，`options`对象还可以设定以下属性：
+
+- `subtree`：布尔值，表示是否将该观察器应用于该节点的所有后代节点。
+- `attributeOldValue`：布尔值，表示观察`attributes`变动时，是否需要记录变动前的属性值。
+- `characterDataOldValue`：布尔值，表示观察`characterData`变动时，是否需要记录变动前的值。
+- `attributeFilter`：数组，表示需要观察的特定属性（比如`['class','src']`）。
+
+```js
+// 开始监听文档根节点（即<html>标签）的变动
+mutationObserver.observe(document.documentElement, {
+  attributes: true,
+  characterData: true,
+  childList: true,
+  subtree: true,
+  attributeOldValue: true,
+  characterDataOldValue: true
+});
+```
+
+对一个节点添加观察器，就像使用`addEventListener()`方法一样，多次添加同一个观察器是无效的，回调函数依然只会触发一次。如果指定不同的`options`对象，以后面添加的那个为准，类似覆盖。
+
+下面的例子是观察新增的子节点。
+
+```js
+var insertedNodes = [];
+var observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    for (var i = 0; i < mutation.addedNodes.length; i++) {
+      insertedNodes.push(mutation.addedNodes[i]);
+    }
+  });
+  console.log(insertedNodes);
+});
+observer.observe(document, { childList: true, subtree: true });
+```
+
+##### disconnect()
+
+`disconnect()`方法用来停止观察。调用该方法后，DOM 再发生变动，也不会触发观察器。
+
+```js
+observer.disconnect();
+```
+
+##### takeRecords()
+
+`takeRecords()`方法用来清除变动记录，即不再处理未处理的变动。该方法返回变动记录的数组。
+
+```js
+observer.takeRecords();
+```
+
+下面是一个例子。
+
+```js
+// 保存所有没有被观察器处理的变动
+var changes = mutationObserver.takeRecords();
+
+// 停止观察
+mutationObserver.disconnect();
+```
+
+#### 对象
+
+DOM 每次发生变化，就会生成一条变动记录（MutationRecord 实例）。
+
+该实例包含了与变动相关的所有信息。Mutation Observer 处理的就是一个个`MutationRecord`实例所组成的数组。
+
+`MutationRecord`对象包含了DOM的相关信息，有如下属性：
+
+- `type`：观察的变动类型（`attributes`、`characterData`或者`childList`）。
+- `target`：发生变动的DOM节点。
+- `addedNodes`：新增的DOM节点。
+- `removedNodes`：删除的DOM节点。
+- `previousSibling`：前一个同级节点，如果没有则返回`null`。
+- `nextSibling`：下一个同级节点，如果没有则返回`null`。
+- `attributeName`：发生变动的属性。如果设置了`attributeFilter`，则只返回预先指定的属性。
+- `oldValue`：变动前的值。这个属性只对`attribute`和`characterData`变动有效，如果发生`childList`变动，则返回`null`。
+
+#### 应用示例
+
+##### 子元素的变动
+
+下面的例子说明如何读取变动记录。
+
+```js
+var callback = function (records){
+  records.map(function(record){
+    console.log('Mutation type: ' + record.type);
+    console.log('Mutation target: ' + record.target);
+  });
+};
+
+var mo = new MutationObserver(callback);
+
+var option = {
+  'childList': true,
+  'subtree': true
+};
+
+mo.observe(document.body, option);
+```
+
+上面代码的观察器，观察`<body>`的所有下级节点（`childList`表示观察子节点，`subtree`表示观察后代节点）的变动。回调函数会在控制台显示所有变动的类型和目标节点。
+
+##### 属性的变动
+
+下面的例子说明如何追踪属性的变动。
+
+```js
+var callback = function (records) {
+  records.map(function (record) {
+    console.log('Previous attribute value: ' + record.oldValue);
+  });
+};
+
+var mo = new MutationObserver(callback);
+
+var element = document.getElementById('#my_element');
+
+var options = {
+  'attributes': true,
+  'attributeOldValue': true
+}
+
+mo.observe(element, options);
+```
+
+上面代码先设定追踪属性变动（`'attributes': true`），然后设定记录变动前的值。实际发生变动时，会将变动前的值显示在控制台。
+
+#### 取代 DOMContentLoaded 事件
+
+网页加载的时候，DOM 节点的生成会产生变动记录，因此只要观察 DOM 的变动，就能在第一时间触发相关事件，也就没有必要使用`DOMContentLoaded`事件。
+
+```js
+var observer = new MutationObserver(callback);
+observer.observe(document.documentElement, {
+  childList: true,
+  subtree: true
+});
+```
+
+上面代码中，监听`document.documentElement`（即网页的`<html>`HTML 节点）的子节点的变动，`subtree`属性指定监听还包括后代节点。因此，任意一个网页元素一旦生成，就能立刻被监听到。
+
+下面的代码，使用`MutationObserver`对象封装一个监听 DOM 生成的函数。
+
+```js
+(function(win){
+  'use strict';
+
+  var listeners = [];
+  var doc = win.document;
+  var MutationObserver = win.MutationObserver || win.WebKitMutationObserver;
+  var observer;
+
+  function ready(selector, fn){
+    // 储存选择器和回调函数
+    listeners.push({
+      selector: selector,
+      fn: fn
+    });
+    if(!observer){
+      // 监听document变化
+      observer = new MutationObserver(check);
+      observer.observe(doc.documentElement, {
+        childList: true,
+        subtree: true
+      });
+    }
+    // 检查该节点是否已经在DOM中
+    check();
+  }
+
+  function check(){
+  // 检查是否匹配已储存的节点
+    for(var i = 0; i < listeners.length; i++){
+      var listener = listeners[i];
+      // 检查指定节点是否有匹配
+      var elements = doc.querySelectorAll(listener.selector);
+      for(var j = 0; j < elements.length; j++){
+        var element = elements[j];
+        // 确保回调函数只会对该元素调用一次
+        if(!element.ready){
+          element.ready = true;
+          // 对该节点调用回调函数
+          listener.fn.call(element, element);
+        }
+      }
+    }
+  }
+
+  // 对外暴露ready
+  win.ready = ready;
+
+})(this);
+
+// 使用方法
+ready('.foo', function(element){
+  // ...
+});
+```
+
+## 事件
+
+### EventTarget 接口
+
+事件的本质是程序各个组成部分之间的一种通信方式，也是异步编程的一种实现。
+
+DOM 支持大量的事件，本章开始介绍 DOM 的事件编程。
+
+介绍具体的事件之前，先来看看如何让 DOM 节点监听事件。
+
+#### 概述
+
+DOM 节点的事件操作（监听和触发），都定义在`EventTarget`接口。所有节点对象都部署了这个接口，其他一些需要事件通信的浏览器内置对象（比如，`XMLHttpRequest`、`AudioNode`、`AudioContext`）也部署了这个接口。
+
+#### EventTarget.addEventListener()
+
+`EventTarget.addEventListener()`用于在当前节点或对象上（即部署了 EventTarget 接口的对象），定义一个特定事件的监听函数。
+
+一旦这个事件发生，就会执行监听函数。该方法没有返回值。
+
+```js
+target.addEventListener(type, listener[, useCapture]);
+```
+
+该方法接受三个参数。
+
+- `type`：事件名称，大小写敏感。
+- `listener`：监听函数。事件发生时，会调用该监听函数。
+- `useCapture`：布尔值，如果设为`true`，表示监听函数将在捕获阶段（capture）触发。该参数可选，默认值为`false`（监听函数只在冒泡阶段被触发）。
+
+```js
+function hello() {
+  console.log('Hello world');
+}
+
+var button = document.getElementById('btn');
+button.addEventListener('click', hello, false);
+```
+
+上面代码中，`button`节点的`addEventListener()`方法绑定`click`事件的监听函数`hello()`，该函数只在冒泡阶段触发。
+
+关于参数，有两个地方需要注意。
+
+首先，第二个参数除了监听函数，还可以是一个具有`handleEvent`方法的对象，效果与监听函数一样。
+
+```js
+buttonElement.addEventListener('click', {
+  handleEvent: function (event) {
+    console.log('click');
+  }
+});
+```
+
+第三个参数除了布尔值`useCapture`，还可以是一个监听器配置对象，定制事件监听行为。该对象有以下属性。
+
+- `capture`：布尔值，如果设为`true`，表示监听函数在捕获阶段触发，默认为`false`，在冒泡阶段触发。
+- `once`：布尔值，如果设为`true`，表示监听函数执行一次就会自动移除，后面将不再监听该事件。该属性默认值为`false`。
+- `passive`：布尔值，设为`true`时，表示禁止监听函数调用`preventDefault()`方法。如果调用了，浏览器将忽略这个要求，并在控制台输出一条警告。该属性默认值为`false`。
+- `signal`：该属性的值为一个 AbortSignal 对象，为监听器设置了一个信号通道，用来在需要时发出信号，移除监听函数。
+
+`addEventListener()`方法可以为针对当前对象的同一个事件，添加多个不同的监听函数。这些函数按照添加顺序触发，即先添加先触发。如果为同一个事件多次添加同一个监听函数，该函数只会执行一次，多余的添加将自动被去除（不必使用`removeEventListener()`方法手动去除）。
+
+如果希望向监听函数传递参数，可以用匿名函数包装一下监听函数。
+
+```js
+function print(x) {
+  console.log(x);
+}
+
+var el = document.getElementById('div1');
+el.addEventListener('click', function () { print('Hello'); }, false);
+```
+
+上面代码通过匿名函数，向监听函数`print`传递了一个参数。
+
+监听函数内部的`this`，指向当前事件所在的那个对象。
+
+```js
+// HTML 代码如下
+// <p id="para">Hello</p>
+var para = document.getElementById('para');
+para.addEventListener('click', function (e) {
+  console.log(this.nodeName); // "P"
+}, false);
+```
+
+#### EventTarget.removeEventListener()
+
+`EventTarget.removeEventListener()`方法用来移除`addEventListener()`方法添加的事件监听函数。该方法没有返回值。
+
+`removeEventListener()`方法的参数，与`addEventListener()`方法完全一致。它的第一个参数“事件类型”，大小写敏感。
+
+注意，**`removeEventListener()`方法移除的监听函数，必须是`addEventListener()`方法添加的那个监听函数，而且必须在同一个元素节点，否则无效。**
+
+```js
+div.addEventListener('click', function (e) {}, false);
+div.removeEventListener('click', function (e) {}, false);
+```
+
+上面代码中，`removeEventListener()`方法无效，因为监听函数不是同一个匿名函数。
+
+```js
+element.addEventListener('mousedown', handleMouseDown, true);
+element.removeEventListener("mousedown", handleMouseDown, false);
+```
+
+上面代码中，`removeEventListener()`方法也是无效的，因为第三个参数不一样。
+
+#### EventTarget.dispatchEvent()
+
+`EventTarget.dispatchEvent()`方法在当前节点上触发指定事件，从而触发监听函数的执行。该方法返回一个布尔值，只要有一个监听函数调用了`Event.preventDefault()`，则返回值为`false`，否则为`true`。
+
+```js
+target.dispatchEvent(event)
+```
+
+`dispatchEvent()`方法的参数是一个`Event`对象的实例。
+
+```js
+para.addEventListener('click', hello, false);
+var event = new Event('click');
+para.dispatchEvent(event);
+```
+
+上面代码在当前节点触发了`click`事件。
+
+如果`dispatchEvent()`方法的参数为空，或者不是一个有效的事件对象，将报错。
+
+下面代码根据`dispatchEvent()`方法的返回值，判断事件是否被取消了。
+
+```js
+var canceled = !cb.dispatchEvent(event);
+if (canceled) {
+  console.log('事件取消');
+} else {
+  console.log('事件未取消');
+}
+```
+
+### 事件模型
+
+#### 监听函数
+
+浏览器的事件模型，就是通过监听函数（listener）对事件做出反应。事件发生后，浏览器监听到了这个事件，就会执行对应的监听函数。这是事件驱动编程模式（event-driven）的主要编程方式。	
+
+JavaScript 有三种方法，可以为事件绑定监听函数。
+
+##### HTML 的 on- 属性 
+
+HTML 语言允许在元素的属性中，直接定义某些事件的监听代码。
+
+```js
+<body onload="doSomething()">
+<div onclick="console.log('触发事件')">
+```
+
+上面代码为`body`节点的`load`事件、`div`节点的`click`事件，指定了监听代码。一旦事件发生，就会执行这段代码。
+
+元素的事件监听属性，都是`on`加上事件名，比如`onload`就是`on + load`，表示`load`事件的监听代码。
+
+注意，这些属性的值是将会执行的代码，而不是一个函数。
+
+```js
+<!-- 正确 -->
+<body onload="doSomething()">
+
+<!-- 错误 -->
+<body onload="doSomething">
+```
+
+一旦指定的事件发生，`on-`属性的值是原样传入 JavaScript 引擎执行。因此如果要执行函数，不要忘记加上一对圆括号。
+
+使用这个方法指定的监听代码，只会在冒泡阶段触发。
+
+```html
+<div onclick="console.log(2)">
+  <button onclick="console.log(1)">点击</button>
+</div>
+```
+
+上面代码中，`<button>`是`<div>`的子元素。`<button>`的`click`事件，也会触发`<div>`的`click`事件。
+
+由于`on-`属性的监听代码，只在冒泡阶段触发，所以点击结果是先输出`1`，再输出`2`，即事件从子元素开始冒泡到父元素。
+
+直接设置`on-`属性，与通过元素节点的`setAttribute`方法设置`on-`属性，效果是一样的。
+
+```js
+el.setAttribute('onclick', 'doSomething()');
+// 等同于
+// <Element onclick="doSomething()">
+```
+
+##### 元素节点的事件属性
+
+元素节点对象的事件属性，同样可以指定监听函数。
+
+```js
+window.onload = doSomething;
+
+div.onclick = function (event) {
+  console.log('触发事件');
+};
+```
+
+使用这个方法指定的监听函数，也是只会在冒泡阶段触发。
+
+注意，这种方法与 HTML 的`on-`属性的差异是，它的值是函数名（`doSomething`），而不像后者，必须给出完整的监听代码（`doSomething()`）。
+
+##### EventTarget.addEventListener()
+
+所有 DOM 节点实例都有`addEventListener`方法，用来为该节点定义事件的监听函数。
+
+```js
+window.addEventListener('load', doSomething, false);
+```
+
+##### 小结
+
+上面三种方法，第一种“HTML 的 on- 属性”，违反了 HTML 与 JavaScript 代码相分离的原则，将两者写在一起，不利于代码分工，因此不推荐使用。
+
+第二种“元素节点的事件属性”的缺点在于，同一个事件只能定义一个监听函数，也就是说，如果定义两次`onclick`属性，后一次定义会覆盖前一次。因此，也不推荐使用。
+
+第三种`EventTarget.addEventListener`是推荐的指定监听函数的方法。它有如下优点：
+
+- 同一个事件可以添加多个监听函数。
+- 能够指定在哪个阶段（捕获阶段还是冒泡阶段）触发监听函数。
+- 除了 DOM 节点，其他对象（比如`window`、`XMLHttpRequest`等）也有这个接口，它等于是整个 JavaScript 统一的监听函数接口。
+
+#### this 的指向
+
+监听函数内部的`this`指向触发事件的那个元素节点。
+
+```js
+<button id="btn" onclick="console.log(this.id)">点击</button>
+```
+
+执行上面代码，点击后会输出`btn`。
+
+其他两种监听函数的写法，`this`的指向也是如此。
+
+#### 事件的传播
+
+一个事件发生后，会在子元素和父元素之间传播（propagation）。这种传播分成三个阶段。
+
+- **第一阶段**：从`window`对象传导到目标节点（上层传到底层），称为“捕获阶段”（capture phase）。
+- **第二阶段**：在目标节点上触发，称为“目标阶段”（target phase）。
+- **第三阶段**：从目标节点传导回`window`对象（从底层传回上层），称为“冒泡阶段”（bubbling phase）。
+
+这种三阶段的传播模型，使得同一个事件会在多个节点上触发。
+
+```html
+<div>
+  <p>点击</p>
+</div>
+```
+
+上面代码中，`<div>`节点之中有一个`<p>`节点。
+
+如果对这两个节点，都设置`click`事件的监听函数（每个节点的捕获阶段和冒泡阶段，各设置一个监听函数），共计设置四个监听函数。然后，对`<p>`点击，`click`事件会触发四次。
+
+```js
+var phases = {
+  1: 'capture',
+  2: 'target',
+  3: 'bubble'
+};
+
+var div = document.querySelector('div');
+var p = document.querySelector('p');
+
+div.addEventListener('click', callback, true);
+p.addEventListener('click', callback, true);
+div.addEventListener('click', callback, false);
+p.addEventListener('click', callback, false);
+
+function callback(event) {
+  var tag = event.currentTarget.tagName;
+  var phase = phases[event.eventPhase];
+  console.log("Tag: '" + tag + "'. EventPhase: '" + phase + "'");
+}
+
+// 点击以后的结果
+// Tag: 'DIV'. EventPhase: 'capture'
+// Tag: 'P'. EventPhase: 'target'
+// Tag: 'P'. EventPhase: 'target'
+// Tag: 'DIV'. EventPhase: 'bubble'
+```
+
+上面代码表示，`click`事件被触发了四次：`<div>`节点的捕获阶段和冒泡阶段各1次，`<p>`节点的目标阶段触发了2次。
+
+1. 捕获阶段：事件从`<div>`向`<p>`传播时，触发`<div>`的`click`事件；
+2. 目标阶段：事件从`<div>`到达`<p>`时，触发`<p>`的`click`事件；
+3. 冒泡阶段：事件从`<p>`传回`<div>`时，再次触发`<div>`的`click`事件。
