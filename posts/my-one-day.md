@@ -30,4 +30,6 @@ aside: false
 
 
 
-![author's logo](https://s21.ax1x.com/2025/02/15/pEKJAwF.png){title="作者的Logo" width="100" height="100" no-zoomable}
+![author's logo](https://image.yumeng.icu/images/logo.png){title="作者的Logo" width="100" height="100" no-zoomable}
+
+![Tom](https://image.yumeng.icu/images/tom.jpg){title="Tom" width="100" height="100" no-zoomable}

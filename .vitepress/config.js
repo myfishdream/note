@@ -87,12 +87,12 @@ export default defineConfig({
             { text: '首页', link: '/' },
             { text: '标签', link: '/pages/tags' },
             { text: '工具', link: '/pages/site' },
-            {
-                text: '回顾', items: [
-                    { text: '2024', link: '/pages/2024' },
-                    { text: '2023', link: '/pages/2023' },
-                ]
-            },
+            // {
+            //     text: '回顾', items: [
+            //         { text: '2024', link: '/pages/review/2024' },
+            //         { text: '2023', link: '/pages/review/2023' },
+            //     ]
+            // },
             { text: '关于我', link: '/pages/about' },
         ],
         search: {
