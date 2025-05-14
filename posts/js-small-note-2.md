@@ -5232,3 +5232,677 @@ function callback(event) {
 1. 捕获阶段：事件从`<div>`向`<p>`传播时，触发`<div>`的`click`事件；
 2. 目标阶段：事件从`<div>`到达`<p>`时，触发`<p>`的`click`事件；
 3. 冒泡阶段：事件从`<p>`传回`<div>`时，再次触发`<div>`的`click`事件。
+
+其中，`<p>`节点有两个监听函数（`addEventListener`方法第三个参数的不同，会导致绑定两个监听函数），因此它们都会因为`click`事件触发一次。所以，`<p>`会在`target`阶段有两次输出。
+
+注意，浏览器总是假定`click`事件的目标节点，就是点击位置嵌套最深的那个节点（本例是`<div>`节点里面的`<p>`节点）。所以，`<p>`节点的捕获阶段和冒泡阶段，都会显示为`target`阶段。
+
+事件传播的最上层对象是`window`，接着依次是`document`，`html`（`document.documentElement`）和`body`（`document.body`）。也就是说，上例的事件传播顺序，在捕获阶段依次为`window`、`document`、`html`、`body`、`div`、`p`，在冒泡阶段依次为`p`、`div`、`body`、`html`、`document`、`window`。
+
+#### 事件的代理
+
+由于事件会在冒泡阶段向上传播到父节点，因此可以把子节点的监听函数定义在父节点上，由父节点的监听函数统一处理多个子元素的事件。这种方法叫做事件的代理（delegation）。
+
+```js
+var ul = document.querySelector('ul');
+
+ul.addEventListener('click', function (event) {
+  if (event.target.tagName.toLowerCase() === 'li') {
+    // some code
+  }
+});
+```
+
+上面代码中，`click`事件的监听函数定义在`<ul>`节点，但是实际上，它处理的是子节点`<li>`的`click`事件。
+
+这样做的好处是，只要定义一个监听函数，就能处理多个子节点的事件，而不用在每个`<li>`节点上定义监听函数。而且以后再添加子节点，监听函数依然有效。
+
+如果希望事件到某个节点为止，不再传播，可以使用事件对象的`stopPropagation`方法。
+
+```js
+// 事件传播到 p 元素后，就不再向下传播了
+p.addEventListener('click', function (event) {
+  event.stopPropagation();
+}, true);
+
+// 事件冒泡到 p 元素后，就不再向上冒泡了
+p.addEventListener('click', function (event) {
+  event.stopPropagation();
+}, false);
+```
+
+上面代码中，`stopPropagation`方法分别在捕获阶段和冒泡阶段，阻止了事件的传播。
+
+但是，`stopPropagation`方法只会阻止事件的传播，不会阻止该事件触发`<p>`节点的其他`click`事件的监听函数。也就是说，不是彻底取消`click`事件。
+
+```js
+p.addEventListener('click', function (event) {
+  event.stopPropagation();
+  console.log(1);
+});
+
+p.addEventListener('click', function(event) {
+  // 会触发
+  console.log(2);
+});
+```
+
+上面代码中，`p`元素绑定了两个`click`事件的监听函数。`stopPropagation`方法只能阻止这个事件的传播，不能取消这个事件，因此，第二个监听函数会触发。输出结果会先是1，然后是2。
+
+如果想要彻底取消该事件，不再触发后面所有`click`的监听函数，可以使用`stopImmediatePropagation`方法。
+
+```js
+p.addEventListener('click', function (event) {
+  event.stopImmediatePropagation();
+  console.log(1);
+});
+
+p.addEventListener('click', function(event) {
+  // 不会被触发
+  console.log(2);
+});
+```
+
+上面代码中，`stopImmediatePropagation`方法可以彻底取消这个事件，使得后面绑定的所有`click`监听函数都不再触发。所以，只会输出1，不会输出2。
+
+### Event 对象
+
+#### 概述
+
+事件发生以后，会产生一个事件对象，作为参数传给监听函数。
+
+浏览器原生提供一个`Event`对象，所有的事件都是这个对象的实例，或者说继承了`Event.prototype`对象。
+
+`Event`对象本身就是一个构造函数，可以用来生成新的实例。
+
+```js
+event = new Event(type, options);
+```
+
+`Event`构造函数接受两个参数。第一个参数`type`是字符串，表示事件的名称；第二个参数`options`是一个对象，表示事件对象的配置。该对象主要有下面两个属性。
+
+- `bubbles`：布尔值，可选，默认为`false`，表示事件对象是否冒泡。
+- `cancelable`：布尔值，可选，默认为`false`，表示事件是否可以被取消，即能否用`Event.preventDefault()`取消这个事件。一旦事件被取消，就好像从来没有发生过，不会触发浏览器对该事件的默认行为。
+
+```js
+var ev = new Event(
+  'look',
+  {
+    'bubbles': true,
+    'cancelable': false
+  }
+);
+document.dispatchEvent(ev);
+```
+
+上面代码新建一个`look`事件实例，然后使用`dispatchEvent`方法触发该事件。
+
+注意，如果不是显式指定`bubbles`属性为`true`，生成的事件就只能在“捕获阶段”触发监听函数。
+
+```js
+// HTML 代码为
+// <div><p>Hello</p></div>
+var div = document.querySelector('div');
+var p = document.querySelector('p');
+
+function callback(event) {
+  var tag = event.currentTarget.tagName;
+  console.log('Tag: ' + tag); // 没有任何输出
+}
+
+div.addEventListener('click', callback, false);
+
+var click = new Event('click');
+p.dispatchEvent(click);
+```
+
+上面代码中，`p`元素发出一个`click`事件，该事件默认不会冒泡。`div.addEventListener`方法指定在冒泡阶段监听，因此监听函数不会触发。如果写成`div.addEventListener('click', callback, true)`，那么在“捕获阶段”可以监听到这个事件。
+
+#### 实例属性
+
+##### Event.bubbles
+
+`Event.bubbles`属性返回一个布尔值，表示当前事件是否会冒泡。该属性为只读属性，一般用来了解 Event 实例是否可以冒泡。前面说过，除非显式声明，`Event`构造函数生成的事件，默认是不冒泡的。
+
+##### Event.eventPhase
+
+`Event.eventPhase`属性返回一个整数常量，表示事件目前所处的阶段。该属性只读。
+
+```js
+var phase = event.eventPhase;
+```
+
+`Event.eventPhase`的返回值有四种可能。
+
+- 0，事件目前没有发生。
+- 1，事件目前处于捕获阶段，即处于从祖先节点向目标节点的传播过程中。
+- 2，事件到达目标节点，即`Event.target`属性指向的那个节点。
+- 3，事件处于冒泡阶段，即处于从目标节点向祖先节点的反向传播过程中。
+
+##### Event.cancelable
+
+`Event.cancelable`属性返回一个布尔值，表示事件是否可以取消。该属性为只读属性，一般用来了解 Event 实例的特性。
+
+大多数浏览器的原生事件是可以取消的。比如，取消`click`事件，点击链接将无效。但是除非显式声明，`Event`构造函数生成的事件，默认是不可以取消的。
+
+```js
+var evt = new Event('foo');
+evt.cancelable  // false
+```
+
+当`Event.cancelable`属性为`true`时，调用`Event.preventDefault()`就可以取消这个事件，阻止浏览器对该事件的默认行为。
+
+如果事件不能取消，调用`Event.preventDefault()`会没有任何效果。所以使用这个方法之前，最好用`Event.cancelable`属性判断一下是否可以取消。
+
+##### Event.cancelBubble
+
+`Event.cancelBubble`属性是一个布尔值，如果设为`true`，相当于执行`Event.stopPropagation()`，可以阻止事件的传播。
+
+##### event.defaultPrevented
+
+`Event.defaultPrevented`属性返回一个布尔值，表示该事件是否调用过`Event.preventDefault`方法。该属性只读。
+
+```js
+if (event.defaultPrevented) {
+  console.log('该事件已经取消了');
+}
+```
+
+##### Event.currentTarget
+
+##### Event.target
+
+事件发生以后，会经过捕获和冒泡两个阶段，依次通过多个 DOM 节点。因此，任意事件都有两个与事件相关的节点，一个是事件的原始触发节点（`Event.target`），另一个是事件当前正在通过的节点（`Event.currentTarget`）。前者通常是后者的后代节点。
+
+`Event.currentTarget`属性返回事件当前所在的节点，即事件当前正在通过的节点，也就是当前正在执行的监听函数所在的那个节点。随着事件的传播，这个属性的值会变。
+
+`Event.target`属性返回原始触发事件的那个节点，即事件最初发生的节点。这个属性不会随着事件的传播而改变。
+
+事件传播过程中，不同节点的监听函数内部的`Event.target`与`Event.currentTarget`属性的值是不一样的。
+
+```js
+// HTML 代码为
+// <p id="para">Hello <em>World</em></p>
+function hide(e) {
+  // 不管点击 Hello 或 World，总是返回 true
+  console.log(this === e.currentTarget);
+
+  // 点击 Hello，返回 true
+  // 点击 World，返回 false
+  console.log(this === e.target);
+}
+
+document.getElementById('para').addEventListener('click', hide, false);
+```
+
+`e.target`总是指向原始点击位置的那个节点。
+
+##### Event.type
+
+`Event.type`属性返回一个字符串，表示事件类型。事件的类型是在生成事件的时候指定的。该属性只读。
+
+```js
+var evt = new Event('foo');
+evt.type // "foo"
+```
+
+##### Event.timeStamp
+
+`Event.timeStamp`属性返回一个毫秒时间戳，表示事件发生的时间。它是相对于网页加载成功开始计算的。
+
+```js
+var evt = new Event('foo');
+evt.timeStamp // 3683.6999999995896
+```
+
+##### Event.isTrusted
+
+`Event.isTrusted`属性返回一个布尔值，表示该事件是否由真实的用户行为产生。比如，用户点击链接会产生一个`click`事件，该事件是用户产生的；`Event`构造函数生成的事件，则是脚本产生的。
+
+```js
+var evt = new Event('foo');
+evt.isTrusted // false
+```
+
+##### Event.detail
+
+`Event.detail`属性只有浏览器的 UI （用户界面）事件才具有。该属性返回一个数值，表示事件的某种信息。具体含义与事件类型相关。
+
+比如，对于`click`和`dblclick`事件，`Event.detail`是鼠标按下的次数（`1`表示单击，`2`表示双击，`3`表示三击）；对于鼠标滚轮事件，`Event.detail`是滚轮正向滚动的距离，负值就是负向滚动的距离，返回值总是3的倍数。
+
+#### 实例方法
+
+##### Event.preventDefault() 
+
+`Event.preventDefault`方法取消浏览器对当前事件的默认行为。
+
+比如点击链接后，浏览器默认会跳转到另一个页面，使用这个方法以后，就不会跳转了；
+
+再比如，按一下空格键，页面向下滚动一段距离，使用这个方法以后也不会滚动了。
+
+该方法生效的前提是，事件对象的`cancelable`属性为`true`，如果为`false`，调用该方法没有任何效果。
+
+注意，该方法只是取消事件对当前元素的默认影响，**不会阻止事件的传播**。
+
+如果要阻止传播，可以使用`stopPropagation()`或`stopImmediatePropagation()`方法。
+
+##### Event.stopPropagation()
+
+`stopPropagation`方法阻止事件在 DOM 中继续传播，防止再触发定义在别的节点上的监听函数，但是不包括在当前节点上其他的事件监听函数。
+
+```js
+function stopEvent(e) {
+  e.stopPropagation();
+}
+
+el.addEventListener('click', stopEvent, false);
+```
+
+上面代码中，`click`事件将不会进一步冒泡到`el`节点的父节点。
+
+##### Event.stopImmediatePropagation()
+
+`Event.stopImmediatePropagation`方法阻止同一个事件的其他监听函数被调用，不管监听函数定义在当前节点还是其他节点。也就是说，该方法阻止事件的传播，比`Event.stopPropagation()`更彻底。
+
+如果同一个节点对于同一个事件指定了多个监听函数，这些函数会根据添加的顺序依次调用。只要其中有一个监听函数调用了`Event.stopImmediatePropagation`方法，其他的监听函数就不会再执行了。
+
+```javascript
+function l1(e){
+  e.stopImmediatePropagation();
+}
+
+function l2(e){
+  console.log('hello world');
+}
+
+el.addEventListener('click', l1, false);
+el.addEventListener('click', l2, false);
+```
+
+上面代码在`el`节点上，为`click`事件添加了两个监听函数`l1`和`l2`。由于`l1`调用了`event.stopImmediatePropagation`方法，所以`l2`不会被调用。
+
+##### Event.composedPath()
+
+`Event.composedPath()`返回一个数组，成员是事件的最底层节点和依次冒泡经过的所有上层节点。
+
+```js
+// HTML 代码如下
+// <div>
+//   <p>Hello</p>
+// </div>
+var div = document.querySelector('div');
+var p = document.querySelector('p');
+
+div.addEventListener('click', function (e) {
+  console.log(e.composedPath());
+}, false);
+// [p, div, body, html, document, Window]
+```
+
+上面代码中，`click`事件的最底层节点是`p`，向上依次是`div`、`body`、`html`、`document`、`Window`。
+
+### 鼠标事件	
+
+#### 种类
+
+鼠标事件主要有下面这些，所有事件都继承了`MouseEvent`接口。
+
+##### （1）点击事件
+
+鼠标点击相关的有四个事件。
+
+- `click`：按下鼠标（通常是按下主按钮）时触发。
+- `dblclick`：在同一个元素上双击鼠标时触发。
+- `mousedown`：按下鼠标键时触发。
+- `mouseup`：释放按下的鼠标键时触发。
+
+`click`事件可以看成是两个事件组成的：用户在同一个位置先触发`mousedown`，再触发`mouseup`。因此，触发顺序是，`mousedown`首先触发，`mouseup`接着触发，`click`最后触发。
+
+双击时，`dblclick`事件则会在`mousedown`、`mouseup`、`click`之后触发。
+
+##### （2）移动事件
+
+鼠标移动相关的有五个事件。
+
+- `mousemove`：当鼠标在一个节点内部移动时触发。当鼠标持续移动时，该事件会连续触发。为了避免性能问题，建议对该事件的监听函数做一些限定，比如限定一段时间内只能运行一次。
+- `mouseenter`：鼠标进入一个节点时触发，进入子节点不会触发这个事件（详见后文）。
+- `mouseover`：鼠标进入一个节点时触发，进入子节点会再一次触发这个事件（详见后文）。
+- `mouseout`：鼠标离开一个节点时触发，离开父节点也会触发这个事件（详见后文）。
+- `mouseleave`：鼠标离开一个节点时触发，离开父节点不会触发这个事件（详见后文）。
+
+`mouseover`事件和`mouseenter`事件，都是鼠标进入一个节点时触发。两者的区别是，`mouseenter`事件只触发一次，而只要鼠标在节点内部移动，`mouseover`事件会在子节点上触发多次。
+
+```js
+/* HTML 代码如下
+ <ul>
+   <li>item 1</li>
+   <li>item 2</li>
+   <li>item 3</li>
+ </ul>
+*/
+
+var ul = document.querySelector('ul');
+
+// 进入 ul 节点以后，mouseenter 事件只会触发一次
+// 以后只要鼠标在节点内移动，都不会再触发这个事件
+// event.target 是 ul 节点
+ul.addEventListener('mouseenter', function (event) {
+  event.target.style.color = 'purple';
+  setTimeout(function () {
+    event.target.style.color = '';
+  }, 500);
+}, false);
+
+// 进入 ul 节点以后，只要在子节点上移动，mouseover 事件会触发多次
+// event.target 是 li 节点
+ul.addEventListener('mouseover', function (event) {
+  event.target.style.color = 'orange';
+  setTimeout(function () {
+    event.target.style.color = '';
+  }, 500);
+}, false);
+```
+
+上面代码中，在父节点内部进入子节点，不会触发`mouseenter`事件，但是会触发`mouseover`事件。
+
+`mouseout`事件和`mouseleave`事件，都是鼠标离开一个节点时触发。两者的区别是，在父元素内部离开一个子元素时，`mouseleave`事件不会触发，而`mouseout`事件会触发。
+
+```js
+/* HTML 代码如下
+ <ul>
+   <li>item 1</li>
+   <li>item 2</li>
+   <li>item 3</li>
+ </ul>
+*/
+
+var ul = document.querySelector('ul');
+
+// 先进入 ul 节点，然后在节点内部移动，不会触发 mouseleave 事件
+// 只有离开 ul 节点时，触发一次 mouseleave
+// event.target 是 ul 节点
+ul.addEventListener('mouseleave', function (event) {
+  event.target.style.color = 'purple';
+  setTimeout(function () {
+    event.target.style.color = '';
+  }, 500);
+}, false);
+
+// 先进入 ul 节点，然后在节点内部移动，mouseout 事件会触发多次
+// event.target 是 li 节点
+ul.addEventListener('mouseout', function (event) {
+  event.target.style.color = 'orange';
+  setTimeout(function () {
+    event.target.style.color = '';
+  }, 500);
+}, false);
+```
+
+上面代码中，在父节点内部离开子节点，不会触发`mouseleave`事件，但是会触发`mouseout`事件。
+
+##### （3）其他事件
+
+- `contextmenu`：按下鼠标右键时（上下文菜单出现前）触发，或者按下“上下文”菜单键时触发。
+- `wheel`：滚动鼠标的滚轮时触发，该事件继承的是`WheelEvent`接口。
+
+#### MouseEvent 接口
+
+`MouseEvent`接口代表了鼠标相关的事件，单击（click）、双击（dblclick）、松开鼠标键（mouseup）、按下鼠标键（mousedown）等动作，所产生的事件对象都是`MouseEvent`实例。此外，滚轮事件和拖拉事件也是`MouseEvent`实例。
+
+`MouseEvent`接口继承了`Event`接口，所以拥有`Event`的所有属性和方法，并且还提供鼠标独有的属性和方法。
+
+浏览器原生提供一个`MouseEvent()`构造函数，用于新建一个`MouseEvent`实例。
+
+```js
+var event = new MouseEvent(type, options);
+```
+
+`MouseEvent()`构造函数接受两个参数。第一个参数是字符串，表示事件名称；第二个参数是一个事件配置对象，该参数可选。除了`Event`接口的实例配置属性，该对象可以配置以下属性，所有属性都是可选的。
+
+- `screenX`：数值，鼠标相对于屏幕的水平位置（单位像素），默认值为0，设置该属性不会移动鼠标。
+
+- `screenY`：数值，鼠标相对于屏幕的垂直位置（单位像素），其他与`screenX`相同。
+
+- `clientX`：数值，鼠标相对于程序窗口的水平位置（单位像素），默认值为0，设置该属性不会移动鼠标。
+
+- `clientY`：数值，鼠标相对于程序窗口的垂直位置（单位像素），其他与`clientX`相同。
+
+- `ctrlKey`：布尔值，是否同时按下了 Ctrl 键，默认值为`false`。
+
+- `shiftKey`：布尔值，是否同时按下了 Shift 键，默认值为`false`。
+
+- `altKey`：布尔值，是否同时按下 Alt 键，默认值为`false`。
+
+- `metaKey`：布尔值，是否同时按下 Meta 键，默认值为`false`。
+
+- `button`：数值，表示按下了哪一个鼠标按键，默认值为`0`，表示按下主键（通常是鼠标的左键）或者当前事件没有定义这个属性；`1`表示按下辅助键（通常是鼠标的中间键），`2`表示按下次要键（通常是鼠标的右键）。
+
+- `buttons`：数值，表示按下了鼠标的哪些键，是一个三个比特位的二进制值，默认为`0`（没有按下任何键）。`1`（二进制`001`）表示按下主键（通常是左键），`2`（二进制`010`）表示按下次要键（通常是右键），`4`（二进制`100`）表示按下辅助键（通常是中间键）。因此，如果返回`3`（二进制`011`）就表示同时按下了左键和右键。
+
+- `relatedTarget`：节点对象，表示事件的相关节点，默认为`null`。`mouseenter`和`mouseover`事件时，表示鼠标刚刚离开的那个元素节点；`mouseout`和`mouseleave`事件时，表示鼠标正在进入的那个元素节点。
+
+#### MouseEvent 接口的实例属性
+
+##### MouseEvent.altKey
+
+##### MouseEvent.ctrlKey
+
+##### MouseEvent.metaKey
+
+##### MouseEvent.shiftKey
+
+`MouseEvent.altKey`、`MouseEvent.ctrlKey`、`MouseEvent.metaKey`、`MouseEvent.shiftKey`这四个属性都返回一个布尔值，表示事件发生时，是否按下对应的键。它们都是只读属性。
+
+- `altKey`属性：Alt 键
+- `ctrlKey`属性：Ctrl 键
+- `metaKey`属性：Meta 键（Mac 键盘是一个四瓣的小花，Windows 键盘是 Windows 键）
+- `shiftKey`属性：Shift 键
+
+```js
+// HTML 代码如下
+// <body onclick="showKey(event)">
+function showKey(e) {
+  console.log('ALT key pressed: ' + e.altKey);
+  console.log('CTRL key pressed: ' + e.ctrlKey);
+  console.log('META key pressed: ' + e.metaKey);
+  console.log('SHIFT key pressed: ' + e.shiftKey);
+}
+```
+
+上面代码中，点击网页会输出是否同时按下对应的键。
+
+##### MouseEvent.button
+
+`MouseEvent.button`属性返回一个数值，表示事件发生时按下了鼠标的哪个键。该属性只读。
+
+- 0：按下主键（通常是左键），或者该事件没有初始化这个属性（比如`mousemove`事件）。
+- 1：按下辅助键（通常是中键或者滚轮键）。
+- 2：按下次键（通常是右键）。
+
+```js
+// HTML 代码为
+// <button onmouseup="whichButton(event)">点击</button>
+var whichButton = function (e) {
+  switch (e.button) {
+    case 0:
+      console.log('Left button clicked.');
+      break;
+    case 1:
+      console.log('Middle button clicked.');
+      break;
+    case 2:
+      console.log('Right button clicked.');
+      break;
+    default:
+      console.log('Unexpected code: ' + e.button);
+  }
+}
+```
+
+##### MouseEvent.buttons
+
+`MouseEvent.buttons`属性返回一个三个比特位的值，表示同时按下了哪些键。它用来处理同时按下多个鼠标键的情况。该属性只读。
+
+- 1：二进制为`001`（十进制的1），表示按下左键。
+- 2：二进制为`010`（十进制的2），表示按下右键。
+- 4：二进制为`100`（十进制的4），表示按下中键或滚轮键。
+
+同时按下多个键的时候，每个按下的键对应的比特位都会有值。比如，同时按下左键和右键，会返回3（二进制为011）。
+
+##### MouseEvent.clientX
+
+##### MouseEvent.clientY
+
+`MouseEvent.clientX`属性返回鼠标位置相对于浏览器窗口左上角的水平坐标（单位像素），`MouseEvent.clientY`属性返回垂直坐标。这两个属性都是只读属性。
+
+```js
+// HTML 代码为
+// <body onmousedown="showCoords(event)">
+function showCoords(evt){
+  console.log(
+    'clientX value: ' + evt.clientX + '\n' +
+    'clientY value: ' + evt.clientY + '\n'
+  );
+}
+```
+
+这两个属性还分别有一个别名`MouseEvent.x`和`MouseEvent.y`。
+
+##### MouseEvent.movementX
+
+##### MouseEvent.movementY
+
+`MouseEvent.movementX`属性返回当前位置与上一个`mousemove`事件之间的水平距离（单位像素）。数值上，它等于下面的计算公式。
+
+```js
+currentEvent.movementX = currentEvent.screenX - previousEvent.screenX
+```
+
+`MouseEvent.movementY`属性返回当前位置与上一个`mousemove`事件之间的垂直距离（单位像素）。数值上，它等于下面的计算公式。
+
+```js
+currentEvent.movementY = currentEvent.screenY - previousEvent.screenY。
+```
+
+这两个属性都是只读属性。
+
+##### MouseEvent.screenX
+
+##### MouseEvent.screenY
+
+`MouseEvent.screenX`属性返回鼠标位置相对于屏幕左上角的水平坐标（单位像素），`MouseEvent.screenY`属性返回垂直坐标。这两个属性都是只读属性。
+
+```js
+// HTML 代码如下
+// <body onmousedown="showCoords(event)">
+function showCoords(evt) {
+  console.log(
+    'screenX value: ' + evt.screenX + '\n',
+    'screenY value: ' + evt.screenY + '\n'
+  );
+}
+```
+
+##### MouseEvent.offsetX
+
+##### MouseEvent.offsetY
+
+`MouseEvent.offsetX`属性返回鼠标位置与目标节点左侧的`padding`边缘的水平距离（单位像素），`MouseEvent.offsetY`属性返回与目标节点上方的`padding`边缘的垂直距离。这两个属性都是只读属性。
+
+```js
+/* HTML 代码如下
+  <style>
+    p {
+      width: 100px;
+      height: 100px;
+      padding: 100px;
+    }
+  </style>
+  <p>Hello</p>
+*/
+var p = document.querySelector('p');
+p.addEventListener(
+  'click',
+  function (e) {
+    console.log(e.offsetX);
+    console.log(e.offsetY);
+  },
+  false
+);
+```
+
+上面代码中，鼠标如果在`p`元素的中心位置点击，会返回`150 150`。因此中心位置距离左侧和上方的`padding`边缘，等于`padding`的宽度（100像素）加上元素内容区域一半的宽度（50像素）。
+
+##### MouseEvent.pageX
+
+##### MouseEvent.pageY
+
+`MouseEvent.pageX`属性返回鼠标位置与文档左侧边缘的距离（单位像素），`MouseEvent.pageY`属性返回与文档上侧边缘的距离（单位像素）。它们的返回值都包括文档不可见的部分。这两个属性都是只读。
+
+```js
+/* HTML 代码如下
+  <style>
+    body {
+      height: 2000px;
+    }
+  </style>
+*/
+document.body.addEventListener(
+  'click',
+  function (e) {
+    console.log(e.pageX);
+    console.log(e.pageY);
+  },
+  false
+);
+```
+
+上面代码中，页面高度为2000像素，会产生垂直滚动条。滚动到页面底部，点击鼠标输出的`pageY`值会接近2000。
+
+##### MouseEvent.relatedTarget
+
+`MouseEvent.relatedTarget`属性返回事件的相关节点。对于那些没有相关节点的事件，该属性返回`null`。该属性只读。
+
+下表列出不同事件的`target`属性值和`relatedTarget`属性值义。
+
+| 事件名称   | target 属性    | relatedTarget 属性 |
+| ---------- | -------------- | ------------------ |
+| focusin    | 接受焦点的节点 | 丧失焦点的节点     |
+| focusout   | 丧失焦点的节点 | 接受焦点的节点     |
+| mouseenter | 将要进入的节点 | 将要离开的节点     |
+| mouseleave | 将要离开的节点 | 将要进入的节点     |
+| mouseout   | 将要离开的节点 | 将要进入的节点     |
+| mouseover  | 将要进入的节点 | 将要离开的节点     |
+| dragenter  | 将要进入的节点 | 将要离开的节点     |
+| dragexit   | 将要离开的节点 | 将要进入的节点     |
+
+```js
+/*
+  HTML 代码如下
+  <div id="outer" style="height:50px;width:50px;border:1px solid black;">
+    <div id="inner" style="height:25px;width:25px;border:1px solid black;"></div>
+  </div>
+*/
+
+var inner = document.getElementById('inner');
+inner.addEventListener('mouseover', function (event) {
+  console.log('进入' + event.target.id + ' 离开' + event.relatedTarget.id);
+}, false);
+inner.addEventListener('mouseenter', function (event) {
+  console.log('进入' + event.target.id + ' 离开' + event.relatedTarget.id);
+});
+inner.addEventListener('mouseout', function (event) {
+  console.log('离开' + event.target.id + ' 进入' + event.relatedTarget.id);
+});
+inner.addEventListener("mouseleave", function (event){
+  console.log('离开' + event.target.id + ' 进入' + event.relatedTarget.id);
+});
+
+// 鼠标从 outer 进入inner，输出
+// 进入inner 离开outer
+// 进入inner 离开outer
+
+// 鼠标从 inner进入 outer，输出
+// 离开inner 进入outer
+// 离开inner 进入outer
+```
