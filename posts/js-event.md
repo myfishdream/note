@@ -2563,3 +2563,359 @@ window.addEventListener('optimizedScroll', function() {
 });
 ```
 
+上面代码中，`throttle()`函数用于控制事件触发频率，它有一个内部函数`func()`，每次`scroll`事件实际上触发的是这个函数。`func()`函数内部使用`requestAnimationFrame()`方法，保证只有每次页面重绘时（每秒60次），才可能会触发`optimizedScroll`事件，从而实际上将`scroll`事件转换为`optimizedScroll`事件，触发频率被控制在每秒最多60次。
+
+改用`setTimeout()`方法，可以放置更大的时间间隔。
+
+```js
+(function() {
+  window.addEventListener('scroll', scrollThrottler, false);
+
+  var scrollTimeout;
+  function scrollThrottler() {
+    if (!scrollTimeout) {
+      scrollTimeout = setTimeout(function () {
+        scrollTimeout = null;
+        actualScrollHandler();
+      }, 66);
+    }
+  }
+
+  function actualScrollHandler() {
+    // ...
+  }
+}());
+```
+
+上面代码中，每次`scroll`事件都会执行`scrollThrottler`函数。该函数里面有一个定时器`setTimeout`，每66毫秒触发一次（每秒15次）真正执行的任务`actualScrollHandler`。
+
+下面是一个更一般的`throttle`函数的写法。
+
+```js
+function throttle(fn, wait) {
+  var time = Date.now();
+  return function() {
+    if ((time + wait - Date.now()) < 0) {
+      fn();
+      time = Date.now();
+    }
+  }
+}
+
+window.addEventListener('scroll', throttle(callback, 1000));
+```
+
+上面的代码将`scroll`事件的触发频率，限制在一秒一次。
+
+[`Lodash`](https://www.lodashjs.com/)函数库提供了现成的`throttle`函数，可以直接使用。
+
+```js
+window.addEventListener('scroll', _.throttle(callback, 1000));
+```
+
+本书前面介绍过`debounce`的概念，`throttle`与它区别在于，`throttle`是“节流”，确保一段时间内只执行一次，而`debounce`是“防抖”，要连续操作结束后再执行。
+
+以网页滚动为例，`debounce`要等到用户停止滚动后才执行，`throttle`则是如果用户一直在滚动网页，那么在滚动过程中还是会执行。
+
+##### resize 事件
+
+`resize`事件在改变浏览器窗口大小时触发，主要发生在`window`对象上面。
+
+```js
+var resizeMethod = function () {
+  if (document.body.clientWidth < 768) {
+    console.log('移动设备的视口');
+  }
+};
+
+window.addEventListener('resize', resizeMethod, true);
+```
+
+该事件也会连续地大量触发，所以最好像上面的`scroll`事件一样，通过`throttle`函数控制事件触发频率。
+
+##### fullscreenchange 事件
+
+##### fullscreenerror 事件
+
+`fullscreenchange`事件在进入或退出全屏状态时触发，该事件发生在`document`对象上面。
+
+```js
+document.addEventListener('fullscreenchange', function (event) {
+  console.log(document.fullscreenElement);
+});
+```
+
+`fullscreenerror`事件在浏览器无法切换到全屏状态时触发。
+
+#### 剪贴板事件
+
+以下三个事件属于剪贴板操作的相关事件。
+
+- `cut`：将选中的内容从文档中移除，加入剪贴板时触发。
+- `copy`：进行复制动作时触发。
+- `paste`：剪贴板内容粘贴到文档后触发。
+
+举例来说，如果希望禁止输入框的粘贴事件，可以使用下面的代码。
+
+```js
+inputElement.addEventListener('paste', e => e.preventDefault());
+```
+
+上面的代码使得用户无法在`<input>`输入框里面粘贴内容。
+
+`cut`、`copy`、`paste`这三个事件的事件对象都是`ClipboardEvent`接口的实例。
+
+`ClipboardEvent`有一个实例属性`clipboardData`，是一个 DataTransfer 对象，存放剪贴的数据。
+
+```js
+document.addEventListener('copy', function (e) {
+  e.clipboardData.setData('text/plain', 'Hello, world!');
+  e.clipboardData.setData('text/html', '<b>Hello, world!</b>');
+  e.preventDefault();
+});
+```
+
+上面的代码使得复制进入剪贴板的，都是开发者指定的数据，而不是用户想要拷贝的数据。
+
+#### 焦点事件
+
+焦点事件发生在元素节点和`document`对象上面，与获得或失去焦点相关。它主要包括以下四个事件。
+
+- `focus`：元素节点获得焦点后触发，该事件不会冒泡。
+- `blur`：元素节点失去焦点后触发，该事件不会冒泡。
+- `focusin`：元素节点将要获得焦点时触发，发生在`focus`事件之前。该事件会冒泡。
+- `focusout`：元素节点将要失去焦点时触发，发生在`blur`事件之前。该事件会冒泡。
+
+这四个事件的事件对象都继承了`FocusEvent`接口。`FocusEvent`实例具有以下属性。
+
+- `FocusEvent.target`：事件的目标节点。
+- `FocusEvent.relatedTarget`：对于`focusin`事件，返回失去焦点的节点；对于`focusout`事件，返回将要接受焦点的节点；对于`focus`和`blur`事件，返回`null`。
+
+由于`focus`和`blur`事件不会冒泡，只能在捕获阶段触发，所以`addEventListener`方法的第三个参数需要设为`true`。
+
+```js
+form.addEventListener('focus', function (event) {
+  event.target.style.background = 'pink';
+}, true);
+
+form.addEventListener('blur', function (event) {
+  event.target.style.background = '';
+}, true);
+```
+
+上面代码针对表单的文本输入框，接受焦点时设置背景色，失去焦点时去除背景色。
+
+#### CustomEvent 接口
+
+CustomEvent 接口用于生成自定义的事件实例。那些浏览器预定义的事件，虽然可以手动生成，但是往往不能在事件上绑定数据。如果需要在触发事件的同时，传入指定的数据，就可以使用 CustomEvent 接口生成的自定义事件对象。
+
+浏览器原生提供`CustomEvent()`构造函数，用来生成 CustomEvent 事件实例。
+
+```js
+new CustomEvent(type, options)
+```
+
+`CustomEvent()`构造函数接受两个参数。第一个参数是字符串，表示事件的名字，这是必须的。第二个参数是事件的配置对象，这个参数是可选的。`CustomEvent`的配置对象除了接受 Event 事件的配置属性，只有一个自己的属性。
+
+- `detail`：表示事件的附带数据，默认为`null`。
+
+下面是一个例子。
+
+```js
+var event = new CustomEvent('build', { 'detail': 'hello' });
+
+function eventHandler(e) {
+  console.log(e.detail);
+}
+
+document.body.addEventListener('build', function (e) {
+  console.log(e.detail);
+});
+
+document.body.dispatchEvent(event);
+```
+
+上面代码中，我们手动定义了`build`事件。该事件触发后，会被监听到，从而输出该事件实例的`detail`属性（即字符串`hello`）。
+
+下面是另一个例子。
+
+```js
+var myEvent = new CustomEvent('myevent', {
+  detail: {
+    foo: 'bar'
+  },
+  bubbles: true,
+  cancelable: false
+});
+
+el.addEventListener('myevent', function (event) {
+  console.log('Hello ' + event.detail.foo);
+});
+
+el.dispatchEvent(myEvent);
+```
+
+上面代码也说明，CustomEvent 的事件实例，除了具有 Event 接口的实例属性，还具有`detail`属性。
+
+### GlobalEventHandlers 接口
+
+指定事件的回调函数，推荐使用的方法是元素的`addEventListener`方法。
+
+```js
+div.addEventListener('click', clickHandler, false);
+```
+
+除了之外，还有一种方法可以直接指定事件的回调函数。
+
+```js
+div.onclick = clickHandler;
+```
+
+这个接口是由`GlobalEventHandlers`接口提供的。它的优点是使用比较方便，缺点是只能为每个事件指定一个回调函数，并且无法指定事件触发的阶段（捕获阶段还是冒泡阶段）。
+
+`HTMLElement`、`Document`和`Window`都继承了这个接口，也就是说，各种 HTML 元素、`document`对象、`window`对象上面都可以使用`GlobalEventHandlers`接口提供的属性。下面就列出这个接口提供的主要的事件属性。
+
+#### GlobalEventHandlers.onabort
+
+某个对象的`abort`事件（停止加载）发生时，就会调用`onabort`属性指定的回调函数。
+
+#### GlobalEventHandlers.onerror
+
+`error`事件发生时，就会调用`onerror`属性指定的回调函数。
+
+`error`事件分成两种。
+
+一种是 JavaScript 的运行时错误，这会传到`window`对象，导致`window.onerror()`。
+
+```js
+window.onerror = function (message, source, lineno, colno, error) {
+  // ...
+}
+```
+
+`window.onerror`的处理函数共接受五个参数，含义如下。
+
+- message：错误信息字符串
+- source：报错脚本的 URL
+- lineno：报错的行号，是一个整数
+- colno：报错的列号，是一个整数
+- error： 错误对象
+
+另一种是资源加载错误，比如`<img>`或`<script>`加载的资源出现加载错误。这时，Error 对象会传到对应的元素，导致该元素的`onerror`属性开始执行。
+
+```js
+element.onerror = function (event) {
+  // ...
+}
+```
+
+注意，一般来说，资源的加载错误不会触发`window.onerror`。
+
+#### GlobalEventHandlers.onload
+
+#### GlobalEventHandlers.onloadstart
+
+元素完成加载时，会触发`load`事件，执行`onload()`。它的典型使用场景是`window`对象和`<img>`元素。对于`window`对象来说，只有页面的所有资源加载完成（包括图片、脚本、样式表、字体等所有外部资源），才会触发`load`事件。
+
+对于`<img>`和`<video>`等元素，加载开始时还会触发`loadstart`事件，导致执行`onloadstart`。
+
+#### GlobalEventHandlers.onfocus
+
+#### GlobalEventHandlers.onblur
+
+当前元素获得焦点时，会触发`element.onfocus`；失去焦点时，会触发`element.onblur`。
+
+```js
+element.onfocus = function () {
+  console.log("onfocus event detected!");
+};
+element.onblur = function () {
+  console.log("onblur event detected!");
+};
+```
+
+注意，如果不是可以接受用户输入的元素，要触发`onfocus`，该元素必须有`tabindex`属性。
+
+#### GlobalEventHandlers.onscroll
+
+页面或元素滚动时，会触发`scroll`事件，导致执行`onscroll()`。
+
+#### GlobalEventHandlers.oncontextmenu
+
+#### GlobalEventHandlers.onshow
+
+用户在页面上按下鼠标的右键，会触发`contextmenu`事件，导致执行`oncontextmenu()`。
+
+如果该属性执行后返回`false`，就等于禁止了右键菜单。`document.oncontextmenu`与`window.oncontextmenu`效果一样。
+
+```js
+document.oncontextmenu = function () {
+  return false;
+};
+```
+
+上面代码中，`oncontextmenu`属性执行后返回`false`，右键菜单就不会出现。
+
+元素的右键菜单显示时，会触发该元素的`onshow`监听函数。
+
+#### 其他的事件属性
+
+鼠标的事件属性。
+
+- onclick
+- ondblclick
+- onmousedown
+- onmouseenter
+- onmouseleave
+- onmousemove
+- onmouseout
+- onmouseover
+- onmouseup
+- onwheel
+
+键盘的事件属性。
+
+- onkeydown
+- onkeypress
+- onkeyup
+
+焦点的事件属性。
+
+- onblur
+- onfocus
+
+表单的事件属性。
+
+- oninput
+- onchange
+- onsubmit
+- onreset
+- oninvalid
+- onselect
+
+触摸的事件属性。
+
+- ontouchcancel
+- ontouchend
+- ontouchmove
+- ontouchstart
+
+拖动的事件属性分成两类：一类与被拖动元素相关，另一类与接收被拖动元素的容器元素相关。
+
+被拖动元素的事件属性。
+
+- ondragstart：拖动开始
+- ondrag：拖动过程中，每隔几百毫秒触发一次
+- ondragend：拖动结束
+
+接收被拖动元素的容器元素的事件属性。
+
+- ondragenter：被拖动元素进入容器元素。
+- ondragleave：被拖动元素离开容器元素。
+- ondragover：被拖动元素在容器元素上方，每隔几百毫秒触发一次。
+- ondrop：松开鼠标后，被拖动元素放入容器元素。
+
+`<dialog>`对话框元素的事件属性。
+
+- oncancel
+- onclose

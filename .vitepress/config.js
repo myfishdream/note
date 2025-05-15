@@ -4,7 +4,7 @@ import timeline from "vitepress-markdown-timeline";
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { fileURLToPath } from 'url'
 //每页的文章数量
-const pageSize = 19
+const pageSize = 10
 
 // RSS 配置
 const baseUrl = 'https://yumeng.icu'
@@ -64,7 +64,6 @@ export default defineConfig({
         ['meta', { name: 'keywords', content: '博客,前端,JavaScript' }],
     ],
     themeConfig: {
-        logo: 'https://image.yumeng.icu/images/logo.png',
         darkModeSwitchLabel: '主题',
         lightModeSwitchTitle: '浅色模式',
         darkModeSwitchTitle: '深色模式',
