@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="head">
-      <h2>近期文章</h2>
+      <h2 class="title">近期文章</h2>
       <div @click="getSentence" class="sentence">{{ sentence }}</div>
     </div>
     <div v-for="(article, index) in posts" :key="index" class="post-row">
@@ -70,6 +70,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+
+  .title {
+    font-weight: bold !important;
+  }
 
   h2 {
     border-bottom: none !important;
