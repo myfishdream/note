@@ -115,6 +115,10 @@ export default defineConfig({
                 }
             }
         },
+        footer: {
+            message: 'Released under the MIT License',
+            copyright: 'Copyright © 2024-present <a style="text-decoration: none !important;" href="/pages/about">YuMeng</a>'
+        },
         outline: {
             label: '本页目录',
             level: [2, 3]
