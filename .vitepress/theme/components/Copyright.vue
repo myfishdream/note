@@ -25,6 +25,7 @@ const isHome = computed(() => route.path === '/')
     font-size: 0.75rem;
     width: 100%;
     overflow: auto;
+    margin: 50px 0 20px;
 }
 
 .home-footer {
